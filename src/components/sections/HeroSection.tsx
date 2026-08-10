@@ -1,6 +1,7 @@
-import { Instagram, Mail, Linkedin, User, Github } from "lucide-react";
+import { Instagram, Mail, Linkedin, Github } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { socialLinks, type SocialLink } from "@/data/portfolio";
+import ProfileCarousel from "@/components/ProfileCarousel";
 
 const renderSocialIcon = (iconName: SocialLink["iconName"]) => {
   switch (iconName) {
@@ -32,13 +33,8 @@ const HeroSection = () => {
   return (
     <section className="min-h-screen flex items-center justify-center relative z-10 px-6 pt-16">
       <div className="text-center max-w-3xl mx-auto animate-fade-in">
-        <div
-          role="img"
-          aria-label="Avatar de Mateus Mendonça Monteiro"
-          className="w-36 h-36 rounded-2xl mx-auto mb-8 flex items-center justify-center overflow-hidden glass-card backdrop-blur-xl shadow-lg border border-border/40"
-        >
-          <User size={48} className="text-muted-foreground" aria-hidden="true" />
-        </div>
+        {/* Profile Avatar & Teaching Carousel */}
+        <ProfileCarousel />
 
         <h1 className="text-4xl md:text-5xl font-display font-bold tracking-tight text-foreground mb-3">
           Mateus Mendonça Monteiro

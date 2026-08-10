@@ -27,13 +27,23 @@ export const translations: Translations = {
     en: "I build backends that hold up at scale: microservices, message queues, cloud infrastructure. Four years doing this at Itaú Unibanco, LuizaLabs, and ANBIMA. Pursuing an MSc at UNESP on the side.",
     es: "Construyo backends que aguantan escala: microservicios, colas de mensajes, infraestructura en la nube. Cuatro años haciendo esto en Itaú Unibanco, LuizaLabs y ANBIMA. Cursando maestría en la UNESP en paralelo.",
   },
+  "hero.photoProfile": {
+    pt: "Perfil",
+    en: "Profile",
+    es: "Perfil",
+  },
+  "hero.photoTeaching": {
+    pt: "Instrutor & Palestras",
+    en: "Instructor & Talks",
+    es: "Instructor y Charlas",
+  },
 
   // About
   "about.title": { pt: "Sobre Mim", en: "About Me", es: "Sobre Mí" },
   "about.text": {
     pt: "Trabalho com backend, microserviços e infraestrutura cloud. Minha stack do dia a dia inclui Java, TypeScript, Node.js, Python e Go, orquestrados com Kubernetes, Kafka, RabbitMQ e Pub/Sub rodando em GCP, AWS e Magalu Cloud. Entrego serviços que se mantêm de pé sob carga, com pipelines de CI/CD, observabilidade via Datadog e Grafana, e práticas de segurança desde o design. Gosto de desafios de arquitetura e de times onde todo mundo contribui de verdade.",
     en: "I work on backend systems, microservices, and cloud infrastructure. My day-to-day stack covers Java, TypeScript, Node.js, Python, and Go, orchestrated with Kubernetes, Kafka, RabbitMQ, and Pub/Sub on GCP, AWS, and Magalu Cloud. I ship services that stay up under load, with CI/CD pipelines, Datadog and Grafana observability, and security baked in from the design phase. I look for architecture challenges and teams where everyone pulls their weight.",
-    es: "Trabajo con backend, microservicios e infraestructura cloud. Mi stack del día a día incluye Java, TypeScript, Node.js, Python y Go, orquestados con Kubernetes, Kafka, RabbitMQ y Pub/Sub en GCP, AWS y Magalu Cloud. Entrego servicios que se mantienen en pie bajo carga, con pipelines de CI/CD, observabilidad vía Datadog y Grafana, y seguridad integrada desde el diseño. Me gustan los desafíos de arquitectura y los equipos donde todos contribuyen de verdad.",
+    es: "Trabajo con backend, microservicios e infraestructura cloud. Mi stack del día a día incluye Java, TypeScript, Node.js, Python y Go, orquestados con Kubernetes, Kafka, RabbitMQ y Pub/Sub en GCP, AWS y Magalu Cloud. Entrego servicios que se mantienen en pie bajo carga, con pipelines de CI/CD, observabilidad vía Datadog e Grafana, y seguridad integrada desde el diseño. Me gustan los desafíos de arquitectura y los equipos donde todos contribuyen de verdad.",
   },
 
   // Experience

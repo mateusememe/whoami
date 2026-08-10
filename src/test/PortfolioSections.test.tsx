@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import React from "react";
 import { LanguageProvider } from "@/contexts/LanguageContext";
@@ -9,9 +9,10 @@ import EducationSection from "@/components/sections/EducationSection";
 import SkillsSection from "@/components/sections/SkillsSection";
 import ProjectsSection from "@/components/sections/ProjectsSection";
 import ContactFooter from "@/components/sections/ContactFooter";
+import ProfileCarousel from "@/components/ProfileCarousel";
 
 describe("Portfolio Sections", () => {
-  it("renders HeroSection with name and title", () => {
+  it("renders HeroSection with name, title, and profile carousel", () => {
     render(
       <LanguageProvider defaultLanguage="pt">
         <HeroSection />
@@ -20,6 +21,22 @@ describe("Portfolio Sections", () => {
 
     expect(screen.getByText("Mateus Mendonça Monteiro")).toBeInTheDocument();
     expect(screen.getByText("Backend Software Engineer")).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: /carrossel de fotos/i })).toBeInTheDocument();
+  });
+
+  it("renders ProfileCarousel and cycles through photos with buttons", () => {
+    render(
+      <LanguageProvider defaultLanguage="pt">
+        <ProfileCarousel />
+      </LanguageProvider>
+    );
+
+    expect(screen.getByText("Perfil")).toBeInTheDocument();
+
+    const nextBtn = screen.getByLabelText("Próxima foto");
+    fireEvent.click(nextBtn);
+
+    expect(screen.getByText("Instrutor & Palestras")).toBeInTheDocument();
   });
 
   it("renders AboutSection", () => {

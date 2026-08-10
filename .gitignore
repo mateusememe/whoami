@@ -144,3 +144,4 @@ vite.config.ts.timestamp-*
 
 # Graphify analysis output
 graphify-out/
+.DS_Store
