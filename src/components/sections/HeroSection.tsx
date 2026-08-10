@@ -1,4 +1,4 @@
-import { Instagram, Mail, Linkedin, Github } from "lucide-react";
+import { ChevronDown, Instagram, Mail, Linkedin, Github } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { socialLinks, type SocialLink } from "@/data/portfolio";
 import ProfileCarousel from "@/components/ProfileCarousel";
@@ -31,8 +31,8 @@ const HeroSection = () => {
   );
 
   return (
-    <section className="flex items-center justify-center relative z-10 px-4 sm:px-6 pt-20 sm:pt-24 pb-8 sm:pb-12">
-      <div className="text-center max-w-3xl mx-auto animate-fade-in">
+    <section className="min-h-[100dvh] flex flex-col items-center justify-center relative z-10 px-4 sm:px-6 pt-16 sm:pt-20 pb-12">
+      <div className="text-center max-w-3xl mx-auto animate-fade-in my-auto">
         {/* Profile Avatar & Teaching Carousel */}
         <ProfileCarousel />
 
@@ -67,6 +67,16 @@ const HeroSection = () => {
           ))}
         </div>
       </div>
+
+      {/* Subtle animated scroll down indicator */}
+      <a
+        href="#about"
+        aria-label="Rolar para a seção sobre mim"
+        className="mt-auto pt-4 flex flex-col items-center text-muted-foreground/50 hover:text-foreground transition-colors group focus:outline-none"
+      >
+        <span className="sr-only">Scroll down</span>
+        <ChevronDown size={20} className="animate-bounce" />
+      </a>
     </section>
   );
 };
