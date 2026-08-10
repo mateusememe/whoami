@@ -29,6 +29,7 @@ export interface ProjectItem {
   id: string;
   name: string;
   desc: LocalizedString;
+  stars?: number;
   tech?: string[];
   githubUrl?: string;
   liveUrl?: string;
@@ -89,7 +90,7 @@ export const experiences: Experience[] = [
     desc: {
       pt: "Desenvolvimento de ferramentas para migração de dados entre contas AWS e plataformas de dados de clientes (CDP). Criação de microsserviços em Python e Go usando arquitetura orientada a eventos e Data Mesh. Construção de pipelines ETL com AWS Step Functions, Glue e Lambda, com monitoramento via CloudWatch, X-Ray, Datadog e Grafana.",
       en: "Built tools for data migration between AWS accounts and Customer Data Platforms (CDP). Wrote microservices in Python and Go using event-driven architecture and Data Mesh. Built ETL pipelines with AWS Step Functions, Glue, and Lambda, monitored via CloudWatch, X-Ray, Datadog, and Grafana.",
-      es: "Desarrollo de herramientas para migración de datos entre cuentas AWS y plataformas de datos de clientes (CDP). Creación de microservicios en Python y Go usando arquitectura orientada a eventos y Data Mesh. Construcción de pipelines ETL con AWS Step Functions, Glue y Lambda, monitoreados con CloudWatch, X-Ray, Datadog y Grafana.",
+      es: "Desarrollo de herramientas para migración de datos entre cuentas AWS y plataformas de datos de clientes (CDP). Creación de microservicios en Python e Go usando arquitectura orientada a eventos y Data Mesh. Construcción de pipelines ETL con AWS Step Functions, Glue y Lambda, monitoreados con CloudWatch, X-Ray, Datadog y Grafana.",
     },
     tech: [
       "Python",
@@ -341,6 +342,78 @@ export const education: EducationItem[] = [
 
 export const projects: ProjectItem[] = [
   {
+    id: "8-puzzle",
+    name: "8-puzzle",
+    stars: 17,
+    desc: {
+      pt: "Resolução do quebra-cabeça 8-puzzle utilizando busca heurística com os algoritmos A* e Best-First Search baseados na distância de Manhattan.",
+      en: "8-puzzle solver using heuristic search with A* and Best-First Search algorithms based on Manhattan distance.",
+      es: "Resolución del rompecabezas 8-puzzle mediante búsqueda heurística con algoritmos A* y Best-First Search basados en distancia de Manhattan.",
+    },
+    tech: ["Python", "A* Algorithm", "Heuristics", "BFS"],
+    githubUrl: "https://github.com/mateusememe/8-puzzle",
+  },
+  {
+    id: "git-github-in-action",
+    name: "git-github-in-action",
+    stars: 5,
+    desc: {
+      pt: "Material e exemplos práticos do minicurso 'Git e GitHub em Ação' ministrado na 35ª Infoeste, cobrindo controle de versão e fluxos colaborativos.",
+      en: "Code examples and resources for the 'Git and GitHub in Action' workshop at 35th Infoeste, covering version control and workflows.",
+      es: "Ejemplos de código y recursos del taller 'Git y GitHub en Acción' en la 35ª Infoeste, cubriendo control de versiones y flujos colaborativos.",
+    },
+    tech: ["Git", "GitHub", "Workflows", "C++"],
+    githubUrl: "https://github.com/mateusememe/git-github-in-action",
+  },
+  {
+    id: "codecash",
+    name: "codecash",
+    stars: 4,
+    desc: {
+      pt: "API transacional desenvolvida para o minicurso 'API Hero' no DevFest 2025. Utiliza Spring Boot, consultas em GraphQL, banco PostgreSQL e cache em Redis.",
+      en: "Transactional API built for the 'API Hero' workshop at DevFest 2025. Uses Spring Boot, GraphQL queries, PostgreSQL storage, and Redis caching.",
+      es: "API transaccional desarrollada para el taller 'API Hero' en DevFest 2025. Utiliza Spring Boot, consultas en GraphQL, base PostgreSQL y caché en Redis.",
+    },
+    tech: ["Java", "Spring Boot", "GraphQL", "PostgreSQL", "Redis"],
+    githubUrl: "https://github.com/mateusememe/codecash",
+  },
+  {
+    id: "matarazzoProject",
+    name: "matarazzoProject",
+    stars: 4,
+    desc: {
+      pt: "Plataforma web para gestão e agendamento de espaços culturais com interface interativa e serviços backend em JavaScript e Node.js.",
+      en: "Web platform for cultural space management and booking, with interactive frontend and backend services in JavaScript and Node.js.",
+      es: "Plataforma web para gestión y reserva de espacios culturales, con frontend interactivo y servicios backend en JavaScript y Node.js.",
+    },
+    tech: ["JavaScript", "Node.js", "Express", "Full Stack"],
+    githubUrl: "https://github.com/mateusememe/matarazzoProject",
+  },
+  {
+    id: "algorithm-forest",
+    name: "AlgorithmForest",
+    stars: 2,
+    desc: {
+      pt: "Implementação de algoritmos e estruturas de dados de árvores em Java, incluindo Árvores Binárias de Busca (BST) e balanceamento AVL.",
+      en: "Implementation of tree data structures and algorithms in Java, including Binary Search Trees (BST) and AVL balancing.",
+      es: "Implementación de estructuras de datos y algoritmos de árboles en Java, incluyendo Árboles Binarios de Búsqueda (BST) y balanceo AVL.",
+    },
+    tech: ["Java", "Data Structures", "BST", "AVL"],
+    githubUrl: "https://github.com/mateusememe/AlgorithmForest",
+  },
+  {
+    id: "zhang-suen-thinning",
+    name: "zhang-suen-thinning",
+    stars: 2,
+    desc: {
+      pt: "Implementação em Python do algoritmo morfológico de esqueletização e afinamento de imagens binárias de Zhang-Suen.",
+      en: "Python implementation of the Zhang-Suen morphological thinning and skeletonization algorithm for binary images.",
+      es: "Implementación en Python del algoritmo morfológico de esqueletización y afinamiento de imágenes binarias de Zhang-Suen.",
+    },
+    tech: ["Python", "Computer Vision", "Algorithms", "Image Processing"],
+    githubUrl: "https://github.com/mateusememe/zhang-suen-thinning",
+  },
+  {
     id: "transaction-ledger",
     name: "transaction.ledger",
     desc: {
@@ -352,34 +425,12 @@ export const projects: ProjectItem[] = [
     githubUrl: "https://github.com/mateusememe/transaction.ledger",
   },
   {
-    id: "codecash",
-    name: "codecash",
-    desc: {
-      pt: "API transacional desenvolvida para o minicurso 'API Hero' no DevFest 2025. Utiliza Spring Boot, consultas em GraphQL, banco PostgreSQL e camada de cache em Redis.",
-      en: "Transactional API built for the 'API Hero' workshop at DevFest 2025. Uses Spring Boot, GraphQL queries, PostgreSQL storage, and Redis caching.",
-      es: "API transaccional desarrollada para el taller 'API Hero' en DevFest 2025. Utiliza Spring Boot, consultas en GraphQL, base PostgreSQL y caché en Redis.",
-    },
-    tech: ["Java", "Spring Boot", "GraphQL", "PostgreSQL", "Redis"],
-    githubUrl: "https://github.com/mateusememe/codecash",
-  },
-  {
-    id: "8-puzzle",
-    name: "8-puzzle",
-    desc: {
-      pt: "Resolução do quebra-cabeça 8-puzzle utilizando busca heurística com os algoritmos A* e Best-First Search baseados na distância de Manhattan.",
-      en: "8-puzzle solver using heuristic search with A* and Best-First Search algorithms based on Manhattan distance.",
-      es: "Resolución del rompecabezas 8-puzzle mediante búsqueda heurística con algoritmos A* y Best-First Search basados en distancia de Manhattan.",
-    },
-    tech: ["Python", "A* Algorithm", "Heuristics", "BFS"],
-    githubUrl: "https://github.com/mateusememe/8-puzzle",
-  },
-  {
     id: "lime-stability",
     name: "lime.stability.imputation",
     desc: {
       pt: "Pesquisa experimental de mestrado sobre a estabilidade do método LIME com técnicas de imputação de dados em modelos RandomForest e GradientBoosting.",
       en: "MSc experimental research on LIME stability with data imputation techniques across RandomForest and GradientBoosting models.",
-      es: "Investigación experimental de maestría sobre la estabilidad del método LIME con técnicas de imputación de datos en modelos RandomForest e GradientBoosting.",
+      es: "Investigación experimental de maestría sobre la estabilidad del método LIME con técnicas de imputación de dados en modelos RandomForest e GradientBoosting.",
     },
     tech: ["Python", "Machine Learning", "XAI", "LIME", "Research"],
     githubUrl: "https://github.com/mateusememe/lime.stability.imputation",

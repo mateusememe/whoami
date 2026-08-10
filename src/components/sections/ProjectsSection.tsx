@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
-import { ChevronLeft, ChevronRight, ExternalLink, Github } from "lucide-react";
+import { ChevronLeft, ChevronRight, ExternalLink, Github, Star } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { projects } from "@/data/portfolio";
 
@@ -7,6 +7,7 @@ const ProjectsSection = () => {
   const { language, t } = useLanguage();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
 
@@ -17,12 +18,48 @@ const ProjectsSection = () => {
     setCanScrollLeft(el.scrollLeft > 10);
     setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 10);
 
-    const cardWidth = el.querySelector<HTMLElement>(".project-card")?.offsetWidth || 320;
-    const gap = 16;
-    const currentIndex = Math.round(el.scrollLeft / (cardWidth + gap));
+    const card = el.querySelector<HTMLElement>(".project-card");
+    const cardWidth = card ? card.offsetWidth + 16 : 336;
+    const currentIndex = Math.round(el.scrollLeft / cardWidth);
     setActiveIndex(Math.min(Math.max(currentIndex, 0), projects.length - 1));
   }, []);
 
+  const scrollToIndex = useCallback((index: number) => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+
+    const targetIndex = (index + projects.length) % projects.length;
+    const card = el.querySelector<HTMLElement>(".project-card");
+    const cardWidth = card ? card.offsetWidth + 16 : 336;
+
+    el.scrollTo({
+      left: targetIndex * cardWidth,
+      behavior: "smooth",
+    });
+  }, []);
+
+  const handlePrev = () => {
+    const target = (activeIndex - 1 + projects.length) % projects.length;
+    scrollToIndex(target);
+  };
+
+  const handleNext = useCallback(() => {
+    const target = (activeIndex + 1) % projects.length;
+    scrollToIndex(target);
+  }, [activeIndex, scrollToIndex]);
+
+  // Auto-scroll loop
+  useEffect(() => {
+    if (isPaused) return;
+
+    const interval = setInterval(() => {
+      handleNext();
+    }, 4500);
+
+    return () => clearInterval(interval);
+  }, [isPaused, handleNext]);
+
+  // Scroll listener for updating active index
   useEffect(() => {
     const el = scrollContainerRef.current;
     if (!el) return;
@@ -37,55 +74,40 @@ const ProjectsSection = () => {
     };
   }, [checkScroll]);
 
-  const scrollToIndex = (index: number) => {
-    const el = scrollContainerRef.current;
-    if (!el) return;
-
-    const cards = el.querySelectorAll<HTMLElement>(".project-card");
-    if (cards[index]) {
-      cards[index].scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-        inline: "center",
-      });
-    }
-  };
-
-  const handlePrev = () => {
-    const target = Math.max(activeIndex - 1, 0);
-    scrollToIndex(target);
-  };
-
-  const handleNext = () => {
-    const target = Math.min(activeIndex + 1, projects.length - 1);
-    scrollToIndex(target);
+  // Keyboard navigation
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "ArrowRight") handleNext();
+    if (e.key === "ArrowLeft") handlePrev();
   };
 
   return (
     <section id="projects" className="relative z-10 py-16 sm:py-20 md:py-24 px-4 sm:px-6">
       <div className="container mx-auto max-w-3xl">
         <div className="flex items-center justify-between mb-6 sm:mb-8">
-          <h2 className="text-xl sm:text-2xl font-display font-bold text-foreground">
-            {t("projects.title")}
-          </h2>
+          <div className="flex items-center gap-3">
+            <h2 className="text-xl sm:text-2xl font-display font-bold text-foreground">
+              {t("projects.title")}
+            </h2>
+            <span className="text-xs font-mono text-muted-foreground/80 px-2 py-0.5 rounded-md bg-accent/40 border border-border/30">
+              {projects.length} repos
+            </span>
+          </div>
 
           {/* Carousel Navigation Arrows */}
           <div className="flex items-center gap-1.5" role="group" aria-label="Controles do carrossel de projetos">
             <button
               type="button"
               onClick={handlePrev}
-              disabled={!canScrollLeft}
               aria-label="Projeto anterior"
-              className="w-8 h-8 rounded-lg flex items-center justify-center bg-accent/40 hover:bg-accent disabled:opacity-30 disabled:pointer-events-none text-muted-foreground hover:text-foreground transition-all border border-border/30"
+              className="w-8 h-8 rounded-lg flex items-center justify-center bg-accent/40 hover:bg-accent text-muted-foreground hover:text-foreground transition-all border border-border/30"
             >
               <ChevronLeft size={16} />
             </button>
             <button
               type="button"
               onClick={handleNext}
-              disabled={!canScrollRight}
               aria-label="Próximo projeto"
-              className="w-8 h-8 rounded-lg flex items-center justify-center bg-accent/40 hover:bg-accent disabled:opacity-30 disabled:pointer-events-none text-muted-foreground hover:text-foreground transition-all border border-border/30"
+              className="w-8 h-8 rounded-lg flex items-center justify-center bg-accent/40 hover:bg-accent text-muted-foreground hover:text-foreground transition-all border border-border/30"
             >
               <ChevronRight size={16} />
             </button>
@@ -96,8 +118,15 @@ const ProjectsSection = () => {
         <div
           ref={scrollContainerRef}
           role="region"
-          aria-label="Carrossel de projetos"
+          aria-label="Carrossel de projetos com autorolagem"
           tabIndex={0}
+          onKeyDown={handleKeyDown}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          onFocus={() => setIsPaused(true)}
+          onBlur={() => setIsPaused(false)}
+          onTouchStart={() => setIsPaused(true)}
+          onTouchEnd={() => setIsPaused(false)}
           className="flex gap-4 sm:gap-5 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 pt-1 px-1 -mx-1 focus:outline-none focus:ring-1 focus:ring-primary/40 rounded-2xl scrollbar-none"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
@@ -108,10 +137,19 @@ const ProjectsSection = () => {
             >
               <div>
                 <div className="flex items-start justify-between gap-2 mb-3">
-                  <h3 className="font-mono font-semibold text-foreground text-sm tracking-tight group-hover:text-primary transition-colors">
-                    {p.name}
-                  </h3>
-                  <div className="flex items-center gap-1 sm:gap-1.5">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="font-mono font-semibold text-foreground text-sm tracking-tight group-hover:text-primary transition-colors">
+                      {p.name}
+                    </h3>
+                    {typeof p.stars === "number" && (
+                      <span className="inline-flex items-center gap-1 text-[11px] font-mono text-amber-500 dark:text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded-md border border-amber-500/20">
+                        <Star size={11} className="fill-amber-500 dark:fill-amber-400" />
+                        {p.stars}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
                     {p.githubUrl && (
                       <a
                         href={p.githubUrl}
