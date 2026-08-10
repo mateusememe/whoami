@@ -29,6 +29,7 @@ export interface ProjectItem {
   id: string;
   name: string;
   desc: LocalizedString;
+  tech?: string[];
   githubUrl?: string;
   liveUrl?: string;
 }
@@ -233,7 +234,7 @@ export const experiences: Experience[] = [
     role: {
       pt: "Estagiário de Desenvolvimento de Software",
       en: "Software Development Intern",
-      es: "Pasante de Desarrollo de Software",
+      es: "Pasante de Desenvolvimento de Software",
     },
     period: {
       pt: "Abr 2022 – Set 2022",
@@ -340,30 +341,36 @@ export const education: EducationItem[] = [
 
 export const projects: ProjectItem[] = [
   {
-    id: "project-1",
-    name: "Project 1",
+    id: "transaction-ledger",
+    name: "transaction.ledger",
     desc: {
-      pt: "Em breve...",
-      en: "Coming soon...",
-      es: "Próximamente...",
+      pt: "Serviço financeiro de registro de ordens em arquitetura serverless AWS. Implementa escrita condicional para idempotência, padrão outbox com CDC, circuit breakers e observabilidade via CloudWatch.",
+      en: "Financial order registration service on AWS serverless. Implements conditional writes for idempotency, outbox pattern with CDC, circuit breakers, and CloudWatch observability.",
+      es: "Servicio financiero de registro de órdenes en arquitectura serverless de AWS. Implementa escrituras condicionales para idempotencia, patrón outbox con CDC, circuit breakers y observabilidad en CloudWatch.",
     },
+    tech: ["Python", "AWS Lambda", "DynamoDB", "SQS", "Clean Arch"],
+    githubUrl: "https://github.com/mateusememe/transaction.ledger",
   },
   {
-    id: "project-2",
-    name: "Project 2",
+    id: "codecash",
+    name: "codecash",
     desc: {
-      pt: "Em breve...",
-      en: "Coming soon...",
-      es: "Próximamente...",
+      pt: "API transacional desenvolvida para o minicurso 'API Hero' no DevFest 2025. Utiliza Spring Boot, consultas em GraphQL, banco PostgreSQL e camada de cache em Redis.",
+      en: "Transactional API built for the 'API Hero' workshop at DevFest 2025. Uses Spring Boot, GraphQL queries, PostgreSQL storage, and Redis caching.",
+      es: "API transaccional desarrollada para el taller 'API Hero' en DevFest 2025. Utiliza Spring Boot, consultas en GraphQL, base PostgreSQL y caché en Redis.",
     },
+    tech: ["Java", "Spring Boot", "GraphQL", "PostgreSQL", "Redis"],
+    githubUrl: "https://github.com/mateusememe/codecash",
   },
   {
-    id: "project-3",
-    name: "Project 3",
+    id: "text-search-engine",
+    name: "text.search.engine",
     desc: {
-      pt: "Em breve...",
-      en: "Coming soon...",
-      es: "Próximamente...",
+      pt: "Motor de busca textual baseado em Arquitetura Hexagonal e Domain-Driven Design. Indexação em tempo real com Elasticsearch, persistência em MongoDB e cache em Redis.",
+      en: "Full-text search engine built with Hexagonal Architecture and Domain-Driven Design. Features real-time indexing with Elasticsearch, MongoDB storage, and Redis caching.",
+      es: "Motor de búsqueda textual basado en Arquitectura Hexagonal y Domain-Driven Design. Indexación en tiempo real con Elasticsearch, persistencia en MongoDB y caché en Redis.",
     },
+    tech: ["Node.js", "Elasticsearch", "MongoDB", "Redis", "DDD"],
+    githubUrl: "https://github.com/mateusememe/text.search.engine",
   },
 ];

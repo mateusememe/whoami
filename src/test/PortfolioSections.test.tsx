@@ -84,7 +84,7 @@ describe("Portfolio Sections", () => {
     expect(screen.getByText("Kubernetes")).toBeInTheDocument();
   });
 
-  it("renders ProjectsSection with projects", () => {
+  it("renders ProjectsSection with the 3 main projects", () => {
     render(
       <LanguageProvider defaultLanguage="pt">
         <ProjectsSection />
@@ -92,6 +92,9 @@ describe("Portfolio Sections", () => {
     );
 
     expect(screen.getByText("Projetos")).toBeInTheDocument();
+    expect(screen.getByText("transaction.ledger")).toBeInTheDocument();
+    expect(screen.getByText("codecash")).toBeInTheDocument();
+    expect(screen.getByText("text.search.engine")).toBeInTheDocument();
     expect(screen.getByText("Ver no GitHub")).toBeInTheDocument();
   });
 
