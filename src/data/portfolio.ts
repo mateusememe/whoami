@@ -86,9 +86,9 @@ export const experiences: Experience[] = [
       es: "May 2026 – Presente",
     },
     desc: {
-      pt: "Construo ferramentas que simplificam migrações de dados entre contas AWS e Customer Data Platforms. Projeto produtos internos usando Data Mesh e arquitetura orientada a eventos, com microserviços serverless em Python e Go. Monto pipelines de integração e ETL com Step Functions, Glue e Lambda. Monitoramento via CloudWatch, X-Ray, Datadog e Grafana; criptografia e auditoria com KMS e CloudTrail.",
-      en: "I build tools that simplify data migrations across multi-account AWS environments and Customer Data Platforms. I design internal products using Data Mesh and event-driven architecture, with serverless microservices in Python and Go. I wire up integration and ETL pipelines with Step Functions, Glue, and Lambda. Monitoring runs on CloudWatch, X-Ray, Datadog, and Grafana; encryption and audit through KMS and CloudTrail.",
-      es: "Construyo herramientas que simplifican migraciones de datos entre cuentas AWS y Customer Data Platforms. Diseño productos internos usando Data Mesh y arquitectura orientada a eventos, con microservicios serverless en Python y Go. Armo pipelines de integración y ETL con Step Functions, Glue y Lambda. Monitoreo vía CloudWatch, X-Ray, Datadog y Grafana; cifrado y auditoría con KMS y CloudTrail.",
+      pt: "Desenvolvimento de ferramentas para migração de dados entre contas AWS e plataformas de dados de clientes (CDP). Criação de microsserviços em Python e Go usando arquitetura orientada a eventos e Data Mesh. Construção de pipelines ETL com AWS Step Functions, Glue e Lambda, com monitoramento via CloudWatch, X-Ray, Datadog e Grafana.",
+      en: "Built tools for data migration between AWS accounts and Customer Data Platforms (CDP). Wrote microservices in Python and Go using event-driven architecture and Data Mesh. Built ETL pipelines with AWS Step Functions, Glue, and Lambda, monitored via CloudWatch, X-Ray, Datadog, and Grafana.",
+      es: "Desarrollo de herramientas para migración de datos entre cuentas AWS y plataformas de datos de clientes (CDP). Creación de microservicios en Python y Go usando arquitectura orientada a eventos y Data Mesh. Construcción de pipelines ETL con AWS Step Functions, Glue y Lambda, monitoreados con CloudWatch, X-Ray, Datadog y Grafana.",
     },
     tech: [
       "Python",
@@ -118,9 +118,9 @@ export const experiences: Experience[] = [
       es: "Ene 2025 – Abr 2026",
     },
     desc: {
-      pt: "Trabalhei no motor de busca e em microserviços que servem milhões de requisições por dia. Stack: Java (Spring Boot, Quarkus), Node.js com Fastify, TypeScript, MongoDB, Redis, Elasticsearch. APIs GraphQL com Apollo Federation e REST. Mensageria assíncrona com RabbitMQ e Google Pub/Sub. Observabilidade com Datadog e Grafana. Infraestrutura rodando em GCP, MagaluCloud, Kubernetes e ArgoCD.",
-      en: "I worked on the search engine and on microservices handling millions of daily requests. Stack: Java (Spring Boot, Quarkus), Node.js with Fastify, TypeScript, MongoDB, Redis, Elasticsearch. GraphQL APIs via Apollo Federation and REST. Async messaging with RabbitMQ and Google Pub/Sub. Observability through Datadog and Grafana. Infrastructure on GCP, MagaluCloud, Kubernetes, and ArgoCD.",
-      es: "Trabajé en el motor de búsqueda y en microservicios que procesan millones de solicitudes diarias. Stack: Java (Spring Boot, Quarkus), Node.js con Fastify, TypeScript, MongoDB, Redis, Elasticsearch. APIs GraphQL con Apollo Federation y REST. Mensajería asíncrona con RabbitMQ y Google Pub/Sub. Observabilidad con Datadog y Grafana. Infraestructura en GCP, MagaluCloud, Kubernetes y ArgoCD.",
+      pt: "Atuação no motor de busca e em microsserviços com alto volume de acessos. Stack com Java (Spring Boot, Quarkus), Node.js (Fastify) e TypeScript, integrando com MongoDB, Redis e Elasticsearch. Desenvolvimento de APIs GraphQL (Apollo Federation) e REST, mensageria com RabbitMQ e Google Pub/Sub, e deploy em Kubernetes e GCP via ArgoCD.",
+      en: "Worked on search engines and high-throughput microservices. Stack: Java (Spring Boot, Quarkus), Node.js (Fastify), and TypeScript, backed by MongoDB, Redis, and Elasticsearch. Built GraphQL (Apollo Federation) and REST APIs, async messaging with RabbitMQ and Pub/Sub, deployed to Kubernetes and GCP via ArgoCD.",
+      es: "Trabajo en el motor de búsqueda y en microservicios de alto tráfico. Stack con Java (Spring Boot, Quarkus), Node.js (Fastify) y TypeScript, integrando con MongoDB, Redis y Elasticsearch. Desarrollo de APIs GraphQL (Apollo Federation) y REST, mensajería con RabbitMQ y Pub/Sub, y despliegues en Kubernetes y GCP vía ArgoCD.",
     },
     tech: [
       "Java",
@@ -157,9 +157,9 @@ export const experiences: Experience[] = [
       es: "Abr 2023 – Dic 2024",
     },
     desc: {
-      pt: "Mantive e desenvolvi microserviços Java com Spring e Quarkus no Kubernetes. Reduzi tempo de startup, latência e consumo de memória em 10%. Projetei APIs REST para comunicação entre serviços, gerenciei bancos MySQL e trabalhei com MongoDB e Firestore. Segurança com Spring Security e JWT. Pipelines de CI/CD com Docker, Jenkins, SonarQube e Bitbucket. Time de 12 pessoas; melhoramos a velocidade de entrega em 20%.",
-      en: "I maintained and built Java microservices with Spring and Quarkus on Kubernetes. Cut startup time, latency, and memory usage by 10%. I designed REST APIs for inter-service communication, managed MySQL databases, and worked with MongoDB and Firestore. Security via Spring Security and JWT. CI/CD pipelines with Docker, Jenkins, SonarQube, and Bitbucket. Team of 12; we improved delivery speed by 20%.",
-      es: "Mantuve y desarrollé microservicios Java con Spring y Quarkus en Kubernetes. Reduje tiempo de arranque, latencia y consumo de memoria en un 10%. Diseñé APIs REST para comunicación entre servicios, administré bases MySQL y trabajé con MongoDB y Firestore. Seguridad con Spring Security y JWT. Pipelines de CI/CD con Docker, Jenkins, SonarQube y Bitbucket. Equipo de 12 personas; mejoramos la velocidad de entrega en un 20%.",
+      pt: "Desenvolvimento e sustentação de microsserviços Java com Spring e Quarkus rodando em Kubernetes. Otimização de tempo de inicialização e consumo de memória em 10%. Construção de APIs REST, autenticação com Spring Security e JWT, bancos MySQL e MongoDB, e automação de CI/CD com Docker, Jenkins, SonarQube e Bitbucket.",
+      en: "Maintained and deployed Java microservices with Spring and Quarkus on Kubernetes. Lowered startup time and memory use by 10%. Built REST APIs, authentication with Spring Security and JWT, MySQL and MongoDB storage, with CI/CD on Docker, Jenkins, SonarQube, and Bitbucket.",
+      es: "Desarrollo y mantenimiento de microservicios Java con Spring y Quarkus en Kubernetes. Optimización de tiempo de inicio y memoria en 10%. Construcción de APIs REST, autenticación con Spring Security y JWT, bases MySQL y MongoDB, y automatización de CI/CD con Docker, Jenkins, SonarQube y Bitbucket.",
     },
     tech: [
       "Java",
@@ -190,9 +190,9 @@ export const experiences: Experience[] = [
       es: "Sep 2022 – Abr 2023",
     },
     desc: {
-      pt: "Desenvolvi e mantive aplicações web com Next.js. Performance e SEO melhoraram 20%. Criei interfaces dinâmicas com React, responsivas em diferentes dispositivos. Integrei APIs para exibição de conteúdo em tempo real. Resolvi um problema de UI criando uma interface no-code com pontos e ligaduras que os usuários aprovaram por completo.",
-      en: "I built and maintained web applications with Next.js. Performance and SEO improved by 20%. I created dynamic React interfaces, responsive across devices. I integrated APIs for real-time content display. I solved a UI problem by building a no-code interface with dots and ties that users approved without reservations.",
-      es: "Desarrollé y mantuve aplicaciones web con Next.js. Rendimiento y SEO mejoraron un 20%. Creé interfaces dinámicas con React, responsivas en distintos dispositivos. Integré APIs para mostrar contenido en tiempo real. Resolví un problema de UI creando una interfaz no-code con puntos y ligaduras que los usuarios aprobaron sin objeciones.",
+      pt: "Desenvolvimento de interfaces e aplicações web com Next.js, React e TypeScript. Otimizações de renderização e SEO com ganho de 20% em métricas de performance. Integração com APIs REST e construção de interfaces interativas para configuração de fluxos sem código.",
+      en: "Built web applications using Next.js, React, and TypeScript. Improved rendering and SEO metrics by 20%. Integrated REST APIs and created interactive interfaces for no-code workflow builders.",
+      es: "Desarrollo de aplicaciones web con Next.js, React y TypeScript. Optimización de renderizado y SEO con 20% de mejora en métricas de rendimiento. Integración de APIs REST y creación de interfaces interactivas para constructores de flujo no-code.",
     },
     tech: ["Next.js", "React", "TypeScript", "API Integration", "SEO"],
   },
@@ -209,9 +209,9 @@ export const experiences: Experience[] = [
       es: "Dic 2022 – Jul 2024",
     },
     desc: {
-      pt: "Atuei no time de suporte do SRO (Sistema de Registro de Ofertas) para a CVM. Frontend com Angular.js, jQuery, HTML5, CSS3 e JavaScript; backend com Java EE, VRaptor, Quartz, Jacoco, Liquibase, EJB e APIs Javax. Liderei a migração do sistema de Java 8 para Java 11, com refactoring cuidadoso do código legado. Gerenciei o banco SQL Server, garantindo queries eficientes e integridade dos dados.",
-      en: "I worked on the SRO (Offer Registration System) support team for the CVM. Frontend: Angular.js, jQuery, HTML5, CSS3, JavaScript. Backend: Java EE, VRaptor, Quartz, Jacoco, Liquibase, EJB, Javax APIs. I led the migration from Java 8 to Java 11, refactoring legacy code throughout. I managed the SQL Server database, keeping queries efficient and data consistent.",
-      es: "Trabajé en el equipo de soporte del SRO (Sistema de Registro de Ofertas) para la CVM. Frontend: Angular.js, jQuery, HTML5, CSS3, JavaScript. Backend: Java EE, VRaptor, Quartz, Jacoco, Liquibase, EJB, APIs Javax. Lideré la migración del sistema de Java 8 a Java 11, refactorizando código legado a fondo. Administré la base SQL Server, manteniendo queries eficientes y datos consistentes.",
+      pt: "Manutenção e evolução do SRO (Sistema de Registro de Ofertas) integrado à CVM. Frontend com AngularJS e jQuery; backend em Java EE (VRaptor, EJB, Quartz, Liquibase). Migração do sistema de Java 8 para Java 11 e administração de banco SQL Server.",
+      en: "Maintained and updated the Offer Registration System (SRO) for the CVM. Frontend in AngularJS and jQuery; backend in Java EE (VRaptor, EJB, Quartz, Liquibase). Migrated the codebase from Java 8 to Java 11 and managed the SQL Server database.",
+      es: "Mantenimiento y evolución del SRO (Sistema de Registro de Ofertas) para la CVM. Frontend con AngularJS y jQuery; backend en Java EE (VRaptor, EJB, Quartz, Liquibase). Migración del código de Java 8 a Java 11 y administración de base de datos SQL Server.",
     },
     tech: [
       "Java EE",
@@ -241,9 +241,9 @@ export const experiences: Experience[] = [
       es: "Abr 2022 – Sep 2022",
     },
     desc: {
-      pt: "Desenvolvi funcionalidades para uma plataforma de planejamento e monitoramento de obras. O software roda em mais de 200 empresas e serve mais de 1.000 usuários, gerenciando mais de 2.600 canteiros. Trabalhei no time de User Insights. Deploy com Docker.",
-      en: "I built features for a construction planning and monitoring platform. The software runs in 200+ companies, serves 1,000+ users, and manages 2,600+ job sites. I worked on the User Insights team. Deployments ran on Docker.",
-      es: "Desarrollé funcionalidades para una plataforma de planificación y monitoreo de obras. El software corre en más de 200 empresas, sirve a más de 1.000 usuarios y administra más de 2.600 obras. Trabajé en el equipo de User Insights. Deploy con Docker.",
+      pt: "Desenvolvimento de funcionalidades para plataforma SaaS de gestão e planejamento de obras civis, atendendo mais de 200 empresas e 1.000 usuários em 2.600 canteiros. Atuação com React, Node.js e Docker no time de User Insights.",
+      en: "Built features for a construction planning SaaS platform used by 200+ companies and 1,000+ users across 2,600 job sites. Worked with React, Node.js, and Docker in the User Insights team.",
+      es: "Desarrollo de funciones para plataforma SaaS de planificación de obras civiles, atendiendo a más de 200 empresas y 1.000 usuarios en 2.600 obras. Trabajo con React, Node.js y Docker en el equipo de User Insights.",
     },
     tech: ["JavaScript", "React", "Node.js", "Docker"],
   },
@@ -252,7 +252,7 @@ export const experiences: Experience[] = [
     role: {
       pt: "Estagiário de Desenvolvimento de Software",
       en: "Software Development Intern",
-      es: "Pasante de Desarrollo de Software",
+      es: "Pasante de Desenvolvimento de Software",
     },
     period: {
       pt: "Fev 2021 – Mar 2022",
@@ -260,9 +260,9 @@ export const experiences: Experience[] = [
       es: "Feb 2021 – Mar 2022",
     },
     desc: {
-      pt: "Criei uma aplicação web para gestão de espaços de co-working, eventos e agendas, com check-in e check-out. Stack: HTML, CSS, JavaScript, PHP, jQuery, MySQL. Colaborei no design e manutenção do banco de dados. Deploy via Docker, testes automatizados com Robot Framework.",
-      en: "I built a web app for managing co-working spaces, events, and schedules, with check-in and check-out. Stack: HTML, CSS, JavaScript, PHP, jQuery, MySQL. I collaborated on database design and maintenance. Deployments via Docker, automated tests with Robot Framework.",
-      es: "Creé una aplicación web para gestión de espacios de co-working, eventos y agendas, con check-in y check-out. Stack: HTML, CSS, JavaScript, PHP, jQuery, MySQL. Colaboré en el diseño y mantenimiento de la base de datos. Deploy vía Docker, pruebas automatizadas con Robot Framework.",
+      pt: "Construção de sistema web para controle de espaços de coworking, reservas de salas e gestão de eventos com check-in. Stack com PHP, MySQL, JavaScript e jQuery, com containerização em Docker e testes com Robot Framework.",
+      en: "Created a web system for coworking space management, room booking, and event check-in. Stack: PHP, MySQL, JavaScript, and jQuery, containerized with Docker and tested using Robot Framework.",
+      es: "Creación de sistema web para gestión de espacios de coworking, reserva de salas y eventos con check-in. Stack con PHP, MySQL, JavaScript y jQuery, con Docker y pruebas en Robot Framework.",
     },
     tech: ["HTML", "CSS", "JavaScript", "PHP", "jQuery", "MySQL", "Docker", "Robot Framework"],
   },
