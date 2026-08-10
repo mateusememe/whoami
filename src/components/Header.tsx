@@ -26,6 +26,14 @@ const Header = () => {
     } catch {
       // ignore storage errors
     }
+
+    // Dynamically update favicon based on active theme
+    const svgFavicon = document.querySelector<HTMLLinkElement>("link[rel='icon'][type='image/svg+xml']");
+    if (svgFavicon) {
+      const basePath = import.meta.env.BASE_URL || "/";
+      const normalized = basePath.endsWith("/") ? basePath : `${basePath}/`;
+      svgFavicon.href = `${normalized}favicon-${dark ? "dark" : "light"}.svg`;
+    }
   }, [dark]);
 
   const navItems = ["about", "experience", "education", "skills", "projects", "contact"];
