@@ -65,7 +65,21 @@ export const translations: Translations = {
 
   // Skills
   "skills.title": { pt: "Conquistas & Skills", en: "Achievements & Skills", es: "Logros & Skills" },
-  "skills.scholarship": { pt: "Bolsa de Estudos", en: "Scholarship", es: "Beca de Estudios" },
+  "skills.scholarship": {
+    pt: "Bolsista 100% ProUni",
+    en: "ProUni Full Scholar (100%)",
+    es: "Becario 100% ProUni",
+  },
+  "skills.scholarshipIssuer": {
+    pt: "Emitido por ProUni • Associado à Universidade do Oeste Paulista",
+    en: "Issued by ProUni • Associated with Universidade do Oeste Paulista",
+    es: "Emitido por ProUni • Asociado a la Universidade do Oeste Paulista",
+  },
+  "skills.scholarshipDesc": {
+    pt: "Bolsista 100% do Programa Universidade para Todos no Curso de Bacharelado em Ciência da Computação na Universidade do Oeste Paulista.",
+    en: "100% full scholarship recipient from the University for All Program (ProUni) for the Bachelor's in Computer Science at Universidade do Oeste Paulista.",
+    es: "Becario 100% del Programa Universidad para Todos en la Licenciatura en Ciencias de la Computación en la Universidade do Oeste Paulista.",
+  },
   "skills.topSkills": { pt: "Principais Competências", en: "Top Skills", es: "Principales Competencias" },
   "skills.stack": { pt: "Stack Técnica", en: "Tech Stack", es: "Stack Técnico" },
 
@@ -79,7 +93,7 @@ export const translations: Translations = {
   "contact.cta": {
     pt: "Canais diretos para contato profissional e projetos.",
     en: "Direct channels for professional contact and projects.",
-    es: "Canales directos para contacto profesional y proyectos.",
+    es: "Canales directos para contacto profesional e projetos.",
   },
 
   // 404

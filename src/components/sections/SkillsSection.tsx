@@ -12,16 +12,25 @@ const SkillsSection = () => {
           {t("skills.title")}
         </h2>
 
-        <div className="glass-card rounded-2xl p-4 sm:p-5 mb-3 sm:mb-4 flex items-center gap-3.5 sm:gap-4 border border-border/40 hover:border-border/70 transition-all">
-          <div className="w-10 h-10 rounded-xl bg-accent/60 flex items-center justify-center shrink-0">
+        {/* ProUni Scholarship Card */}
+        <div className="glass-card rounded-2xl p-4 sm:p-5 mb-3 sm:mb-4 flex items-start gap-3.5 sm:gap-4 border border-border/40 hover:border-border/70 transition-all">
+          <div className="w-10 h-10 rounded-xl bg-accent/60 flex items-center justify-center shrink-0 mt-0.5">
             <Award size={20} className="text-foreground" />
           </div>
           <div>
-            <p className="font-display font-semibold text-foreground text-xs sm:text-sm">{t("skills.scholarship")}</p>
-            <p className="text-[11px] sm:text-xs text-muted-foreground">UNESP — 2025</p>
+            <p className="font-display font-semibold text-foreground text-xs sm:text-sm">
+              {t("skills.scholarship")}
+            </p>
+            <p className="text-[11px] sm:text-xs text-muted-foreground font-mono mt-0.5">
+              {t("skills.scholarshipIssuer")}
+            </p>
+            <p className="text-xs text-muted-foreground/90 mt-1.5 leading-relaxed">
+              {t("skills.scholarshipDesc")}
+            </p>
           </div>
         </div>
 
+        {/* Top Skills */}
         <div className="glass-card rounded-2xl p-4 sm:p-5 mb-3 sm:mb-4 border border-border/40">
           <p className="text-xs font-mono text-muted-foreground uppercase tracking-wider mb-2.5 sm:mb-3">
             {t("skills.topSkills")}
@@ -41,6 +50,7 @@ const SkillsSection = () => {
           </div>
         </div>
 
+        {/* Tech Stack */}
         <div className="glass-card rounded-2xl p-4 sm:p-5 border border-border/40">
           <p className="text-xs font-mono text-muted-foreground uppercase tracking-wider mb-2.5 sm:mb-3">
             {t("skills.stack")}

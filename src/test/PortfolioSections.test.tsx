@@ -72,7 +72,7 @@ describe("Portfolio Sections", () => {
     expect(screen.getByText("Universidade do Oeste Paulista")).toBeInTheDocument();
   });
 
-  it("renders SkillsSection with top skills and tech stack", () => {
+  it("renders SkillsSection with ProUni scholarship and tech stack", () => {
     render(
       <LanguageProvider defaultLanguage="pt">
         <SkillsSection />
@@ -80,6 +80,8 @@ describe("Portfolio Sections", () => {
     );
 
     expect(screen.getByText("Conquistas & Skills")).toBeInTheDocument();
+    expect(screen.getByText("Bolsista 100% ProUni")).toBeInTheDocument();
+    expect(screen.getByText("Emitido por ProUni • Associado à Universidade do Oeste Paulista")).toBeInTheDocument();
     expect(screen.getByText("Data Mesh & Pipelines")).toBeInTheDocument();
     expect(screen.getByText("Kubernetes")).toBeInTheDocument();
   });
