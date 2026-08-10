@@ -84,7 +84,7 @@ describe("Portfolio Sections", () => {
     expect(screen.getByText("Kubernetes")).toBeInTheDocument();
   });
 
-  it("renders ProjectsSection with the 3 main projects", () => {
+  it("renders ProjectsSection as fluid carousel with projects", () => {
     render(
       <LanguageProvider defaultLanguage="pt">
         <ProjectsSection />
@@ -94,7 +94,10 @@ describe("Portfolio Sections", () => {
     expect(screen.getByText("Projetos")).toBeInTheDocument();
     expect(screen.getByText("transaction.ledger")).toBeInTheDocument();
     expect(screen.getByText("codecash")).toBeInTheDocument();
-    expect(screen.getByText("text.search.engine")).toBeInTheDocument();
+    expect(screen.getByText("8-puzzle")).toBeInTheDocument();
+    expect(screen.getByText("lime.stability.imputation")).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "Carrossel de projetos" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Próximo projeto")).toBeInTheDocument();
     expect(screen.getByText("Ver no GitHub")).toBeInTheDocument();
   });
 

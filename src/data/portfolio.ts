@@ -244,7 +244,7 @@ export const experiences: Experience[] = [
     desc: {
       pt: "Desenvolvimento de funcionalidades para plataforma SaaS de gestão e planejamento de obras civis, atendendo mais de 200 empresas e 1.000 usuários em 2.600 canteiros. Atuação com React, Node.js e Docker no time de User Insights.",
       en: "Built features for a construction planning SaaS platform used by 200+ companies and 1,000+ users across 2,600 job sites. Worked with React, Node.js, and Docker in the User Insights team.",
-      es: "Desarrollo de funciones para plataforma SaaS de planificación de obras civiles, atendiendo a más de 200 empresas y 1.000 usuarios en 2.600 obras. Trabajo con React, Node.js y Docker en el equipo de User Insights.",
+      es: "Desarrollo de funciones para plataforma SaaS de planificación de obras civiles, atendiendo a más de 200 empresas y 1.000 usuarios en 2.600 obras. Trabajo con React, Node.js e Docker no time de User Insights.",
     },
     tech: ["JavaScript", "React", "Node.js", "Docker"],
   },
@@ -363,14 +363,25 @@ export const projects: ProjectItem[] = [
     githubUrl: "https://github.com/mateusememe/codecash",
   },
   {
-    id: "text-search-engine",
-    name: "text.search.engine",
+    id: "8-puzzle",
+    name: "8-puzzle",
     desc: {
-      pt: "Motor de busca textual baseado em Arquitetura Hexagonal e Domain-Driven Design. Indexação em tempo real com Elasticsearch, persistência em MongoDB e cache em Redis.",
-      en: "Full-text search engine built with Hexagonal Architecture and Domain-Driven Design. Features real-time indexing with Elasticsearch, MongoDB storage, and Redis caching.",
-      es: "Motor de búsqueda textual basado en Arquitectura Hexagonal y Domain-Driven Design. Indexación en tiempo real con Elasticsearch, persistencia en MongoDB y caché en Redis.",
+      pt: "Resolução do quebra-cabeça 8-puzzle utilizando busca heurística com os algoritmos A* e Best-First Search baseados na distância de Manhattan.",
+      en: "8-puzzle solver using heuristic search with A* and Best-First Search algorithms based on Manhattan distance.",
+      es: "Resolución del rompecabezas 8-puzzle mediante búsqueda heurística con algoritmos A* y Best-First Search basados en distancia de Manhattan.",
     },
-    tech: ["Node.js", "Elasticsearch", "MongoDB", "Redis", "DDD"],
-    githubUrl: "https://github.com/mateusememe/text.search.engine",
+    tech: ["Python", "A* Algorithm", "Heuristics", "BFS"],
+    githubUrl: "https://github.com/mateusememe/8-puzzle",
+  },
+  {
+    id: "lime-stability",
+    name: "lime.stability.imputation",
+    desc: {
+      pt: "Pesquisa experimental de mestrado sobre a estabilidade do método LIME com técnicas de imputação de dados em modelos RandomForest e GradientBoosting.",
+      en: "MSc experimental research on LIME stability with data imputation techniques across RandomForest and GradientBoosting models.",
+      es: "Investigación experimental de maestría sobre la estabilidad del método LIME con técnicas de imputación de datos en modelos RandomForest e GradientBoosting.",
+    },
+    tech: ["Python", "Machine Learning", "XAI", "LIME", "Research"],
+    githubUrl: "https://github.com/mateusememe/lime.stability.imputation",
   },
 ];
