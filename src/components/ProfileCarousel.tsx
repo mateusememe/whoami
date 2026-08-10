@@ -120,7 +120,8 @@ export const ProfileCarousel: React.FC = () => {
 
           {/* Bottom badge and indicator dots */}
           <div className="absolute bottom-2.5 inset-x-0 z-20 flex flex-col items-center gap-1.5 px-3">
-            <span className="px-2.5 py-0.5 rounded-full bg-black/50 backdrop-blur-md text-[11px] font-mono font-medium text-white/90 border border-white/10 shadow-sm transition-all">
+            {/* Label badge hidden on mobile, visible on sm: (>=640px) */}
+            <span className="hidden sm:inline-flex items-center px-2.5 py-0.5 rounded-full bg-black/50 backdrop-blur-md text-[11px] font-mono font-medium text-white/90 border border-white/10 shadow-sm transition-all">
               {slides[currentIndex].icon}
               {t(slides[currentIndex].labelKey)}
             </span>
