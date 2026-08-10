@@ -80,7 +80,7 @@ describe("Portfolio Sections", () => {
     );
 
     expect(screen.getByText("Conquistas & Skills")).toBeInTheDocument();
-    expect(screen.getByText("Data Mesh")).toBeInTheDocument();
+    expect(screen.getByText("Data Mesh & Pipelines")).toBeInTheDocument();
     expect(screen.getByText("Kubernetes")).toBeInTheDocument();
   });
 

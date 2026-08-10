@@ -245,7 +245,7 @@ export const experiences: Experience[] = [
     desc: {
       pt: "Desenvolvimento de funcionalidades para plataforma SaaS de gestão e planejamento de obras civis, atendendo mais de 200 empresas e 1.000 usuários em 2.600 canteiros. Atuação com React, Node.js e Docker no time de User Insights.",
       en: "Built features for a construction planning SaaS platform used by 200+ companies and 1,000+ users across 2,600 job sites. Worked with React, Node.js, and Docker in the User Insights team.",
-      es: "Desarrollo de funciones para plataforma SaaS de planificación de obras civiles, atendiendo a más de 200 empresas y 1.000 usuarios en 2.600 obras. Trabajo con React, Node.js e Docker no time de User Insights.",
+      es: "Desarrollo de funciones para plataforma SaaS de planificación de obras civiles, atendiendo a más de 200 empresas y 1.000 usuarios en 2.600 obras. Trabajo com React, Node.js e Docker no time de User Insights.",
     },
     tech: ["JavaScript", "React", "Node.js", "Docker"],
   },
@@ -270,15 +270,47 @@ export const experiences: Experience[] = [
   },
 ];
 
-export const topSkills: string[] = [
-  "Engenharia de dados",
-  "Design de software",
-  "Data Mesh",
-  "Backend",
-  "Scalable Systems",
-  "Research",
-  "AI",
-  "Machine Learning",
+export const topSkills: LocalizedString[] = [
+  {
+    pt: "Sistemas Distribuídos",
+    en: "Distributed Systems",
+    es: "Sistemas Distribuidos",
+  },
+  {
+    pt: "Engenharia de Dados",
+    en: "Data Engineering",
+    es: "Ingeniería de Datos",
+  },
+  {
+    pt: "Arquitetura de Software",
+    en: "Software Architecture",
+    es: "Arquitectura de Software",
+  },
+  {
+    pt: "Data Mesh & Pipelines",
+    en: "Data Mesh & Pipelines",
+    es: "Data Mesh & Pipelines",
+  },
+  {
+    pt: "Microsserviços & APIs",
+    en: "Microservices & APIs",
+    es: "Microservicios & APIs",
+  },
+  {
+    pt: "Infraestrutura Cloud (AWS / GCP)",
+    en: "Cloud Infrastructure (AWS / GCP)",
+    es: "Infraestructura Cloud (AWS / GCP)",
+  },
+  {
+    pt: "Mensageria & EDA",
+    en: "Messaging & Event-Driven",
+    es: "Mensajería & Event-Driven",
+  },
+  {
+    pt: "Machine Learning & XAI",
+    en: "Machine Learning & XAI",
+    es: "Machine Learning & XAI",
+  },
 ];
 
 export const techStack: string[] = [

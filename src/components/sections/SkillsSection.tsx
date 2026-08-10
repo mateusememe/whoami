@@ -3,7 +3,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { topSkills, techStack } from "@/data/portfolio";
 
 const SkillsSection = () => {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
 
   return (
     <section id="skills" className="relative z-10 py-8 sm:py-10 md:py-12 px-4 sm:px-6">
@@ -27,14 +27,17 @@ const SkillsSection = () => {
             {t("skills.topSkills")}
           </p>
           <div className="flex flex-wrap gap-1.5 sm:gap-2">
-            {topSkills.map((s) => (
-              <span
-                key={s}
-                className="text-xs px-2.5 sm:px-3 py-1 rounded-full bg-accent text-accent-foreground font-medium border border-border/20"
-              >
-                {s}
-              </span>
-            ))}
+            {topSkills.map((s, idx) => {
+              const label = typeof s === "string" ? s : s[language] || s.en;
+              return (
+                <span
+                  key={typeof s === "string" ? s : s.en || idx}
+                  className="text-xs px-2.5 sm:px-3 py-1 rounded-full bg-accent text-accent-foreground font-medium border border-border/20"
+                >
+                  {label}
+                </span>
+              );
+            })}
           </div>
         </div>
 
