@@ -25,21 +25,21 @@ const ContactFooter = () => {
   const { t } = useLanguage();
 
   return (
-    <footer id="contact" className="relative z-10 py-20 px-6">
+    <footer id="contact" className="relative z-10 py-16 sm:py-20 px-4 sm:px-6">
       <div className="container mx-auto max-w-3xl text-center">
-        <h2 className="text-2xl font-display font-bold text-foreground mb-2">
+        <h2 className="text-xl sm:text-2xl font-display font-bold text-foreground mb-2">
           {t("contact.title")}
         </h2>
-        <p className="text-sm text-muted-foreground mb-10">{t("contact.cta")}</p>
+        <p className="text-xs sm:text-sm text-muted-foreground mb-8 sm:mb-10 px-2">{t("contact.cta")}</p>
 
-        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6" aria-label="Contatos e Redes">
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6" aria-label="Contatos e Redes">
           {socialLinks.map((link) => (
             <a
               key={link.label}
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-accent/30 hover:bg-accent text-sm text-muted-foreground hover:text-foreground transition-all border border-border/30"
+              className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-accent/30 hover:bg-accent text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-all border border-border/30 min-h-[40px]"
               aria-label={link.label}
             >
               {renderSocialIcon(link.iconName)}
@@ -48,8 +48,8 @@ const ContactFooter = () => {
           ))}
         </div>
 
-        <div className="mt-16 pt-8 border-t border-border/50">
-          <p className="font-mono text-xs text-muted-foreground/60">
+        <div className="mt-12 sm:mt-16 pt-6 sm:pt-8 border-t border-border/50">
+          <p className="font-mono text-[11px] sm:text-xs text-muted-foreground/60 leading-relaxed">
             © {new Date().getFullYear()} Mateus Mendonça Monteiro — Crafted with React, Vite & Tailwind
           </p>
         </div>

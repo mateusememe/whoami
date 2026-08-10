@@ -59,11 +59,13 @@ export const ProfileCarousel: React.FC = () => {
 
   return (
     <div
-      className="relative mx-auto mb-8 w-44 h-44 sm:w-52 sm:h-52 md:w-56 md:h-56 group select-none"
+      className="relative mx-auto mb-6 sm:mb-8 w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 group select-none"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onFocus={() => setIsPaused(true)}
       onBlur={() => setIsPaused(false)}
+      onTouchStart={() => setIsPaused(true)}
+      onTouchEnd={() => setIsPaused(false)}
       tabIndex={0}
       onKeyDown={handleKeyDown}
       role="region"
@@ -98,12 +100,12 @@ export const ProfileCarousel: React.FC = () => {
             );
           })}
 
-          {/* Navigation overlay arrows (visible on hover) */}
+          {/* Navigation overlay arrows (visible on touch mobile and hover desktop) */}
           <button
             type="button"
             onClick={prevSlide}
             aria-label="Foto anterior"
-            className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-black/40 hover:bg-black/70 backdrop-blur-md text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary"
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-black/40 hover:bg-black/70 backdrop-blur-md text-white flex items-center justify-center opacity-70 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary"
           >
             <ChevronLeft size={18} />
           </button>
@@ -111,7 +113,7 @@ export const ProfileCarousel: React.FC = () => {
             type="button"
             onClick={nextSlide}
             aria-label="Próxima foto"
-            className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-black/40 hover:bg-black/70 backdrop-blur-md text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary"
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-black/40 hover:bg-black/70 backdrop-blur-md text-white flex items-center justify-center opacity-70 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary"
           >
             <ChevronRight size={18} />
           </button>
@@ -123,8 +125,8 @@ export const ProfileCarousel: React.FC = () => {
               {t(slides[currentIndex].labelKey)}
             </span>
 
-            {/* Dots */}
-            <div className="flex items-center gap-1.5" role="tablist" aria-label="Slides">
+            {/* Dots with comfortable touch target */}
+            <div className="flex items-center gap-1.5 py-0.5" role="tablist" aria-label="Slides">
               {slides.map((slide, idx) => (
                 <button
                   key={slide.id}

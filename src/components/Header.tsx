@@ -40,10 +40,10 @@ const Header = () => {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass-card">
-      <div className="container mx-auto px-6 py-3 flex items-center justify-between">
+      <div className="container mx-auto px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between">
         <a
           href="#root"
-          className="font-mono text-sm font-semibold tracking-wider text-foreground/80 hover:text-foreground transition-colors"
+          className="font-mono text-sm sm:text-base font-semibold tracking-wider text-foreground/80 hover:text-foreground transition-colors p-1"
           aria-label="Ir para o topo"
         >
           MM
@@ -54,22 +54,22 @@ const Header = () => {
             <a
               key={item}
               href={`#${item}`}
-              className="text-xs font-medium tracking-wide text-muted-foreground hover:text-foreground transition-colors uppercase"
+              className="text-xs font-medium tracking-wide text-muted-foreground hover:text-foreground transition-colors uppercase py-1"
             >
               {t(`nav.${item}`)}
             </a>
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1" role="group" aria-label="Seleção de idioma">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-0.5 sm:gap-1" role="group" aria-label="Seleção de idioma">
             {(Object.keys(flags) as Language[]).map((lang) => (
               <button
                 key={lang}
                 onClick={() => setLanguage(lang)}
                 aria-label={`Mudar para ${langNames[lang]}`}
                 aria-pressed={language === lang}
-                className={`text-sm px-1.5 py-0.5 rounded transition-all ${
+                className={`min-w-[34px] min-h-[34px] sm:min-w-[30px] sm:min-h-[30px] flex items-center justify-center text-sm px-1.5 py-0.5 rounded-lg transition-all ${
                   language === lang
                     ? "bg-accent text-accent-foreground font-semibold"
                     : "text-muted-foreground hover:text-foreground"
@@ -83,7 +83,7 @@ const Header = () => {
           <button
             onClick={() => setDark((prev) => !prev)}
             aria-label={dark ? "Ativar modo claro" : "Ativar modo escuro"}
-            className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+            className="w-9 h-9 sm:w-8 sm:h-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
           >
             {dark ? <Sun size={16} /> : <Moon size={16} />}
           </button>

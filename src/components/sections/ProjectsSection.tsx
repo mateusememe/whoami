@@ -6,9 +6,9 @@ const ProjectsSection = () => {
   const { language, t } = useLanguage();
 
   return (
-    <section id="projects" className="relative z-10 py-24 px-6">
+    <section id="projects" className="relative z-10 py-16 sm:py-20 md:py-24 px-4 sm:px-6">
       <div className="container mx-auto max-w-3xl">
-        <h2 className="text-2xl font-display font-bold text-foreground mb-8">
+        <h2 className="text-xl sm:text-2xl font-display font-bold text-foreground mb-6 sm:mb-8">
           {t("projects.title")}
         </h2>
 
@@ -16,20 +16,20 @@ const ProjectsSection = () => {
           {projects.map((p) => (
             <div
               key={p.id}
-              className="glass-card rounded-2xl p-6 flex flex-col justify-between border border-border/40 hover:border-border/70 hover:bg-accent/20 transition-all group"
+              className="glass-card rounded-2xl p-5 sm:p-6 flex flex-col justify-between border border-border/40 hover:border-border/70 hover:bg-accent/20 transition-all group"
             >
               <div>
                 <div className="flex items-start justify-between gap-2 mb-3">
                   <h3 className="font-mono font-semibold text-foreground text-sm tracking-tight group-hover:text-primary transition-colors">
                     {p.name}
                   </h3>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1 sm:gap-2">
                     {p.githubUrl && (
                       <a
                         href={p.githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-muted-foreground hover:text-foreground transition-colors p-1"
+                        className="text-muted-foreground hover:text-foreground transition-colors p-1.5 rounded-lg hover:bg-accent/50"
                         aria-label={`Ver repositório ${p.name} no GitHub`}
                       >
                         <Github size={15} />
@@ -40,7 +40,7 @@ const ProjectsSection = () => {
                         href={p.liveUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-muted-foreground hover:text-foreground transition-colors p-1"
+                        className="text-muted-foreground hover:text-foreground transition-colors p-1.5 rounded-lg hover:bg-accent/50"
                         aria-label={`Ver demonstração de ${p.name}`}
                       >
                         <ExternalLink size={15} />
@@ -70,12 +70,12 @@ const ProjectsSection = () => {
           ))}
         </div>
 
-        <div className="mt-8 text-center">
+        <div className="mt-8 sm:mt-10 text-center">
           <a
             href="https://github.com/mateusememe"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors font-mono px-4 py-2 rounded-xl bg-accent/40 hover:bg-accent border border-border/30"
+            className="inline-flex items-center gap-2 text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors font-mono px-4 py-2.5 rounded-xl bg-accent/40 hover:bg-accent border border-border/30"
           >
             <Github size={16} />
             {t("projects.viewGithub")}
