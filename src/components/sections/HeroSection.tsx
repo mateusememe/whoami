@@ -1,34 +1,11 @@
-import { ChevronDown, Instagram, Mail, Linkedin, Github } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { socialLinks, type SocialLink } from "@/data/portfolio";
+import { socialLinks } from "@/data/portfolio";
 import ProfileCarousel from "@/components/ProfileCarousel";
-
-const renderSocialIcon = (iconName: SocialLink["iconName"]) => {
-  switch (iconName) {
-    case "Instagram":
-      return <Instagram size={18} />;
-    case "X":
-      return <span className="text-sm font-bold leading-none">𝕏</span>;
-    case "Discord":
-      return <span className="text-xs font-mono font-bold leading-none">DC</span>;
-    case "Linkedin":
-      return <Linkedin size={18} />;
-    case "Mail":
-      return <Mail size={18} />;
-    case "Github":
-      return <Github size={18} />;
-    default:
-      return null;
-  }
-};
+import { renderSocialIcon } from "@/components/SocialIcons";
 
 const HeroSection = () => {
   const { t } = useLanguage();
-
-  // Social links for the hero section
-  const heroSocials = socialLinks.filter((s) =>
-    ["Instagram", "X", "Discord", "Linkedin", "Mail"].includes(s.iconName)
-  );
 
   return (
     <section className="min-h-[100dvh] flex flex-col items-center justify-center relative z-10 px-4 sm:px-6 pt-16 sm:pt-20 pb-12">
@@ -52,8 +29,9 @@ const HeroSection = () => {
           {t("hero.summary")}
         </p>
 
-        <div className="flex items-center justify-center gap-2.5 sm:gap-3 flex-wrap" aria-label="Links de redes sociais">
-          {heroSocials.map((social) => (
+        {/* Channels / Profiles Links */}
+        <div className="flex items-center justify-center gap-2 sm:gap-2.5 flex-wrap" aria-label="Links de redes sociais e perfis acadêmicos">
+          {socialLinks.map((social) => (
             <a
               key={social.label}
               href={social.href}
@@ -62,7 +40,7 @@ const HeroSection = () => {
               className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent transition-all focus:outline-none focus:ring-2 focus:ring-ring border border-border/30"
               aria-label={social.label}
             >
-              {renderSocialIcon(social.iconName)}
+              {renderSocialIcon(social.iconName, 18)}
             </a>
           ))}
         </div>

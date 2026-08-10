@@ -1,5 +1,5 @@
 export interface SocialLink {
-  iconName: "Instagram" | "X" | "Discord" | "Linkedin" | "Mail" | "Github";
+  iconName: "Instagram" | "X" | "Discord" | "Linkedin" | "Mail" | "Github" | "Orcid" | "Lattes";
   href: string;
   label: string;
   displayText?: string;
@@ -37,28 +37,28 @@ export interface ProjectItem {
 
 export const socialLinks: SocialLink[] = [
   {
-    iconName: "Instagram",
-    href: "https://instagram.com/mateusememe",
-    label: "Instagram",
-    displayText: "@mateusememe",
-  },
-  {
-    iconName: "X",
-    href: "https://x.com/mateusememe",
-    label: "X (Twitter)",
-    displayText: "@mateusememe",
-  },
-  {
-    iconName: "Discord",
-    href: "https://discord.com/users/mateusememe",
-    label: "Discord",
-    displayText: "@mateusememe",
-  },
-  {
     iconName: "Linkedin",
     href: "https://linkedin.com/in/mateus-men",
     label: "LinkedIn",
     displayText: "mateus-men",
+  },
+  {
+    iconName: "Github",
+    href: "https://github.com/mateusememe",
+    label: "GitHub",
+    displayText: "mateusememe",
+  },
+  {
+    iconName: "Orcid",
+    href: "https://orcid.org/0009-0009-6468-8493",
+    label: "ORCID",
+    displayText: "0009-0009-6468-8493",
+  },
+  {
+    iconName: "Lattes",
+    href: "http://lattes.cnpq.br/2301165554095558",
+    label: "Currículo Lattes",
+    displayText: "Lattes CNPq",
   },
   {
     iconName: "Mail",
@@ -67,10 +67,22 @@ export const socialLinks: SocialLink[] = [
     displayText: "matt.mendon@gmail.com",
   },
   {
-    iconName: "Github",
-    href: "https://github.com/mateusememe",
-    label: "GitHub",
-    displayText: "mateusememe",
+    iconName: "X",
+    href: "https://x.com/mateusememe",
+    label: "X (Twitter)",
+    displayText: "@mateusememe",
+  },
+  {
+    iconName: "Instagram",
+    href: "https://instagram.com/mateusememe",
+    label: "Instagram",
+    displayText: "@mateusememe",
+  },
+  {
+    iconName: "Discord",
+    href: "https://discord.com/users/mateusememe",
+    label: "Discord",
+    displayText: "@mateusememe",
   },
 ];
 
@@ -90,7 +102,7 @@ export const experiences: Experience[] = [
     desc: {
       pt: "Desenvolvimento de ferramentas para migração de dados entre contas AWS e plataformas de dados de clientes (CDP). Criação de microsserviços em Python e Go usando arquitetura orientada a eventos e Data Mesh. Construção de pipelines ETL com AWS Step Functions, Glue e Lambda, com monitoramento via CloudWatch, X-Ray, Datadog e Grafana.",
       en: "Built tools for data migration between AWS accounts and Customer Data Platforms (CDP). Wrote microservices in Python and Go using event-driven architecture and Data Mesh. Built ETL pipelines with AWS Step Functions, Glue, and Lambda, monitored via CloudWatch, X-Ray, Datadog, and Grafana.",
-      es: "Desarrollo de herramientas para migración de datos entre cuentas AWS y plataformas de datos de clientes (CDP). Creación de microservicios en Python e Go usando arquitectura orientada a eventos y Data Mesh. Construcción de pipelines ETL con AWS Step Functions, Glue y Lambda, monitoreados con CloudWatch, X-Ray, Datadog y Grafana.",
+      es: "Desarrollo de herramientas para migración de datos entre cuentas AWS y plataformas de dados de clientes (CDP). Creación de microservicios en Python e Go usando arquitectura orientada a eventos y Data Mesh. Construcción de pipelines ETL con AWS Step Functions, Glue y Lambda, monitoreados con CloudWatch, X-Ray, Datadog y Grafana.",
     },
     tech: [
       "Python",
@@ -264,7 +276,7 @@ export const experiences: Experience[] = [
     desc: {
       pt: "Construção de sistema web para controle de espaços de coworking, reservas de salas e gestão de eventos com check-in. Stack com PHP, MySQL, JavaScript e jQuery, com containerização em Docker e testes com Robot Framework.",
       en: "Created a web system for coworking space management, room booking, and event check-in. Stack: PHP, MySQL, JavaScript, and jQuery, containerized with Docker and tested using Robot Framework.",
-      es: "Creación de sistema web para gestión de espacios de coworking, reserva de salas y eventos con check-in. Stack con PHP, MySQL, JavaScript y jQuery, con Docker y pruebas en Robot Framework.",
+      es: "Creación de sistema web para gestión de espaços de coworking, reserva de salas y eventos con check-in. Stack con PHP, MySQL, JavaScript y jQuery, con Docker y pruebas en Robot Framework.",
     },
     tech: ["HTML", "CSS", "JavaScript", "PHP", "jQuery", "MySQL", "Docker", "Robot Framework"],
   },
