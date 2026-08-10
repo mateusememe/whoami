@@ -33,7 +33,7 @@ export const LanguageContext = createContext<LanguageContextType | undefined>(un
 
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   children,
-  defaultLanguage = "pt",
+  defaultLanguage = "en",
 }) => {
   const [language, setLanguageState] = useState<Language>(() => getInitialLanguage(defaultLanguage));
 
