@@ -81,9 +81,9 @@ const ProjectsSection = () => {
   };
 
   return (
-    <section id="projects" className="relative z-10 py-16 sm:py-20 md:py-24 px-4 sm:px-6">
+    <section id="projects" className="relative z-10 py-8 sm:py-10 md:py-12 px-4 sm:px-6">
       <div className="container mx-auto max-w-3xl">
-        <div className="flex items-center justify-between mb-6 sm:mb-8">
+        <div className="flex items-center justify-between mb-4 sm:mb-6">
           <div className="flex items-center gap-3">
             <h2 className="text-xl sm:text-2xl font-display font-bold text-foreground">
               {t("projects.title")}
@@ -127,7 +127,7 @@ const ProjectsSection = () => {
           onBlur={() => setIsPaused(false)}
           onTouchStart={() => setIsPaused(true)}
           onTouchEnd={() => setIsPaused(false)}
-          className="flex gap-4 sm:gap-5 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 pt-1 px-1 -mx-1 focus:outline-none focus:ring-1 focus:ring-primary/40 rounded-2xl scrollbar-none"
+          className="flex gap-4 sm:gap-5 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-3 pt-1 px-1 -mx-1 focus:outline-none focus:ring-1 focus:ring-primary/40 rounded-2xl scrollbar-none"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {projects.map((p, idx) => (
@@ -197,7 +197,7 @@ const ProjectsSection = () => {
         </div>
 
         {/* Carousel Pagination Dots */}
-        <div className="flex items-center justify-center gap-1.5 mt-3 mb-6" role="tablist" aria-label="Navegação dos projetos">
+        <div className="flex items-center justify-center gap-1.5 mt-2.5 mb-5" role="tablist" aria-label="Navegação dos projetos">
           {projects.map((p, idx) => (
             <button
               key={`dot-${p.id}`}
@@ -221,7 +221,7 @@ const ProjectsSection = () => {
             href="https://github.com/mateusememe"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors font-mono px-4 py-2.5 rounded-xl bg-accent/40 hover:bg-accent border border-border/30"
+            className="inline-flex items-center gap-2 text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors font-mono px-4 py-2 rounded-xl bg-accent/40 hover:bg-accent border border-border/30"
           >
             <Github size={16} />
             {t("projects.viewGithub")}

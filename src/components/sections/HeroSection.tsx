@@ -31,12 +31,12 @@ const HeroSection = () => {
   );
 
   return (
-    <section className="min-h-screen flex items-center justify-center relative z-10 px-4 sm:px-6 pt-20 sm:pt-24 pb-12 sm:pb-16">
+    <section className="flex items-center justify-center relative z-10 px-4 sm:px-6 pt-20 sm:pt-24 pb-8 sm:pb-12">
       <div className="text-center max-w-3xl mx-auto animate-fade-in">
         {/* Profile Avatar & Teaching Carousel */}
         <ProfileCarousel />
 
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold tracking-tight text-foreground mb-3">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold tracking-tight text-foreground mb-2 sm:mb-3">
           Mateus Mendonça Monteiro
         </h1>
 
@@ -44,11 +44,11 @@ const HeroSection = () => {
           {t("hero.title")}
         </p>
 
-        <p className="font-mono text-[11px] sm:text-xs text-muted-foreground/70 mb-5 sm:mb-6 max-w-2xl mx-auto leading-relaxed px-2">
+        <p className="font-mono text-[11px] sm:text-xs text-muted-foreground/70 mb-4 sm:mb-5 max-w-2xl mx-auto leading-relaxed px-2">
           {t("hero.subtitle")}
         </p>
 
-        <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-8 sm:mb-10 max-w-xl mx-auto px-2">
+        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed mb-6 sm:mb-8 max-w-xl mx-auto px-2">
           {t("hero.summary")}
         </p>
 

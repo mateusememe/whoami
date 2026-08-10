@@ -5,12 +5,12 @@ const ExperienceSection = () => {
   const { language, t } = useLanguage();
 
   return (
-    <section id="experience" className="relative z-10 py-16 sm:py-20 md:py-24 px-4 sm:px-6">
+    <section id="experience" className="relative z-10 py-8 sm:py-10 md:py-12 px-4 sm:px-6">
       <div className="container mx-auto max-w-3xl">
-        <h2 className="text-xl sm:text-2xl font-display font-bold text-foreground mb-6 sm:mb-8">
+        <h2 className="text-xl sm:text-2xl font-display font-bold text-foreground mb-4 sm:mb-6">
           {t("exp.title")}
         </h2>
-        <div className="space-y-4 sm:space-y-5">
+        <div className="space-y-3.5 sm:space-y-4">
           {experiences.map((exp, i) => (
             <article
               key={`${exp.company}-${i}`}
