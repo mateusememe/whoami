@@ -83,7 +83,6 @@ whoami/
 │   │   │   ├── SkillsSection.tsx    # Core competencies & tech stack
 │   │   │   ├── ProjectsSection.tsx  # Featured projects
 │   │   │   └── ContactFooter.tsx    # Contact channels & footer
-│   │   ├── ui/                      # Core UI primitives (toast, tooltip, etc.)
 │   │   ├── BinaryBackground.tsx     # 2D canvas fallback background
 │   │   ├── ScrollProgress.tsx       # Header reading-progress bar
 │   │   └── Header.tsx               # Nav with scroll spy, theme/lang switchers
@@ -93,8 +92,7 @@ whoami/
 │   │   ├── navigation.ts            # Section order (nav + heading indexes)
 │   │   └── portfolio.ts             # Typed resume data (jobs, skills, socials)
 │   ├── hooks/
-│   │   ├── useLanguage.ts           # useLanguage consumer hook
-│   │   └── use-toast.ts             # Toast notification hook
+│   │   └── useLanguage.ts           # useLanguage consumer hook
 │   ├── i18n/
 │   │   └── translations.ts          # PT / EN / ES dictionary
 │   ├── lib/
