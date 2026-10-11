@@ -34,7 +34,7 @@ const ExperienceSection = () => {
                 </div>
                 <p className="text-xs sm:text-sm text-muted-foreground/90 font-medium mb-2">{exp.role[language]}</p>
                 <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed mb-4">{exp.desc[language]}</p>
-                <TagList items={exp.tech} label="Tecnologias utilizadas" />
+                <TagList items={exp.tech} label={t("a11y.expTech")} />
               </Surface>
             </li>
           );

@@ -72,7 +72,7 @@ export const ProfileCarousel: React.FC = () => {
       tabIndex={0}
       onKeyDown={handleKeyDown}
       role="region"
-      aria-label="Carrossel de fotos de Mateus Mendonça Monteiro"
+      aria-label={t("a11y.photoCarousel")}
     >
       {/* Outer ambient glow and glass border */}
       <div className="absolute -inset-1 rounded-[2rem] bg-gradient-to-tr from-signal/35 via-accent/30 to-primary/20 opacity-70 group-hover:opacity-100 blur-md transition-all duration-700 -z-10" />
@@ -107,7 +107,7 @@ export const ProfileCarousel: React.FC = () => {
           <button
             type="button"
             onClick={prevSlide}
-            aria-label="Foto anterior"
+            aria-label={t("a11y.prevPhoto")}
             className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-black/40 hover:bg-black/70 backdrop-blur-md text-white flex items-center justify-center opacity-70 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary"
           >
             <ChevronLeft size={18} />
@@ -115,7 +115,7 @@ export const ProfileCarousel: React.FC = () => {
           <button
             type="button"
             onClick={nextSlide}
-            aria-label="Próxima foto"
+            aria-label={t("a11y.nextPhoto")}
             className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-black/40 hover:bg-black/70 backdrop-blur-md text-white flex items-center justify-center opacity-70 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary"
           >
             <ChevronRight size={18} />
@@ -134,8 +134,8 @@ export const ProfileCarousel: React.FC = () => {
               count={slides.length}
               active={currentIndex}
               onSelect={setCurrentIndex}
-              label="Slides"
-              getItemLabel={(idx) => `Slide ${idx + 1}: ${t(slides[idx].labelKey)}`}
+              label={t("a11y.photoTabs")}
+              getItemLabel={(idx) => t("a11y.goToPhoto", { n: idx + 1, label: t(slides[idx].labelKey) })}
               tone="inverse"
               className="py-0.5"
             />

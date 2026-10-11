@@ -17,7 +17,7 @@ const ContactFooter = () => {
       align="center"
       className="py-10 sm:py-12 text-center"
     >
-      <ul className="mt-2 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 md:gap-4" aria-label="Contatos e Redes">
+      <ul className="mt-2 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 md:gap-4" aria-label={t("a11y.contactLinks")}>
         {socialLinks.map((link) => (
           <li key={link.label}>
             <a

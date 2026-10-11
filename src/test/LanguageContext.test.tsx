@@ -49,6 +49,25 @@ describe("LanguageContext", () => {
     expect(document.documentElement.lang).toBe("es");
   });
 
+  it("fills {placeholder} tokens from params", () => {
+    const { result } = renderHook(() => useLanguage(), { wrapper });
+
+    expect(result.current.t("a11y.goToProject", { n: 2, name: "codecash" })).toBe("Go to project 2: codecash");
+
+    act(() => {
+      result.current.setLanguage("pt");
+    });
+
+    expect(result.current.t("a11y.switchLanguage", { lang: "English" })).toBe("Mudar para English");
+  });
+
+  it("leaves tokens without a matching param untouched", () => {
+    const { result } = renderHook(() => useLanguage(), { wrapper });
+
+    expect(result.current.t("a11y.viewRepo", {})).toBe("View {name} repository on GitHub");
+    expect(result.current.t("a11y.viewRepo")).toBe("View {name} repository on GitHub");
+  });
+
   it("returns fallback key if translation is missing", () => {
     const { result } = renderHook(() => useLanguage(), { wrapper });
 

@@ -107,6 +107,32 @@ describe("Portfolio Sections", () => {
     expect(screen.getByText("Ver no GitHub")).toBeInTheDocument();
   });
 
+  it("renders ProjectsSection accessibility labels in English", () => {
+    render(
+      <LanguageProvider defaultLanguage="en">
+        <ProjectsSection />
+      </LanguageProvider>
+    );
+
+    expect(screen.getByRole("region", { name: /project carousel/i })).toBeInTheDocument();
+    expect(screen.getByLabelText("Next project")).toBeInTheDocument();
+    expect(screen.getByLabelText("View codecash repository on GitHub")).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Go to project 3: codecash" })).toBeInTheDocument();
+    expect(screen.queryByLabelText("Próximo projeto")).not.toBeInTheDocument();
+  });
+
+  it("renders ProfileCarousel accessibility labels in Spanish", () => {
+    render(
+      <LanguageProvider defaultLanguage="es">
+        <ProfileCarousel />
+      </LanguageProvider>
+    );
+
+    expect(screen.getByRole("region", { name: /carrusel de fotos/i })).toBeInTheDocument();
+    expect(screen.getByLabelText("Siguiente foto")).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Foto 1: Perfil" })).toBeInTheDocument();
+  });
+
   it("renders ContactFooter with contact options and copyright", () => {
     render(
       <LanguageProvider defaultLanguage="pt">

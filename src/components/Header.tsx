@@ -57,12 +57,12 @@ const Header = () => {
         <a
           href="#root"
           className="font-mono text-sm sm:text-base font-semibold tracking-wider text-foreground/80 hover:text-foreground transition-colors p-1"
-          aria-label="Ir para o topo"
+          aria-label={t("a11y.backToTop")}
         >
           MM
         </a>
 
-        <nav className="hidden md:flex items-center gap-6" aria-label="Navegação principal">
+        <nav className="hidden md:flex items-center gap-6" aria-label={t("a11y.mainNav")}>
           {NAV_ITEMS.map((item) => {
             const isActive = activeSection === item;
             return (
@@ -83,12 +83,12 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          <div className="flex items-center gap-0.5 sm:gap-1" role="group" aria-label="Seleção de idioma">
+          <div className="flex items-center gap-0.5 sm:gap-1" role="group" aria-label={t("a11y.languageSelect")}>
             {(Object.keys(flags) as Language[]).map((lang) => (
               <button
                 key={lang}
                 onClick={() => setLanguage(lang)}
-                aria-label={`Mudar para ${langNames[lang]}`}
+                aria-label={t("a11y.switchLanguage", { lang: langNames[lang] })}
                 aria-pressed={language === lang}
                 className={`min-w-[34px] min-h-[34px] sm:min-w-[30px] sm:min-h-[30px] flex items-center justify-center text-sm px-1.5 py-0.5 rounded-lg transition-all ${
                   language === lang
@@ -105,7 +105,7 @@ const Header = () => {
             tone="ghost"
             size="md"
             onClick={() => setDarkPreference(!dark)}
-            aria-label={dark ? "Ativar modo claro" : "Ativar modo escuro"}
+            aria-label={t(dark ? "a11y.enableLightMode" : "a11y.enableDarkMode")}
           >
             {dark ? <Sun size={16} /> : <Moon size={16} />}
           </IconButton>

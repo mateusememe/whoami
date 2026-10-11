@@ -39,6 +39,25 @@ describe("Header component", () => {
     expect(screen.getByText("Contact")).toBeInTheDocument();
   });
 
+  it("localizes accessibility labels after switching to English", () => {
+    render(
+      <LanguageProvider defaultLanguage="pt">
+        <Header />
+      </LanguageProvider>
+    );
+
+    expect(screen.getByRole("navigation", { name: "Navegação principal" })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByLabelText("Mudar para English"));
+
+    expect(screen.getByRole("navigation", { name: "Main navigation" })).toBeInTheDocument();
+    expect(screen.getByRole("group", { name: "Language selection" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Switch to Português")).toBeInTheDocument();
+    expect(screen.getByLabelText("Switch to light mode")).toBeInTheDocument();
+    expect(screen.getByLabelText("Go to top")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Ativar modo claro")).not.toBeInTheDocument();
+  });
+
   it("toggles theme when clicking theme button", () => {
     render(
       <LanguageProvider defaultLanguage="pt">

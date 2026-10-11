@@ -84,11 +84,11 @@ const ProjectsSection = () => {
       <Tag tone="subtle" shape="box" className="mr-1">
         {projects.length} repos
       </Tag>
-      <div className="flex items-center gap-1.5" role="group" aria-label="Controles do carrossel de projetos">
-        <IconButton onClick={handlePrev} aria-label="Projeto anterior">
+      <div className="flex items-center gap-1.5" role="group" aria-label={t("a11y.projectsControls")}>
+        <IconButton onClick={handlePrev} aria-label={t("a11y.prevProject")}>
           <ChevronLeft size={16} />
         </IconButton>
-        <IconButton onClick={handleNext} aria-label="Próximo projeto">
+        <IconButton onClick={handleNext} aria-label={t("a11y.nextProject")}>
           <ChevronRight size={16} />
         </IconButton>
       </div>
@@ -101,7 +101,7 @@ const ProjectsSection = () => {
       <div
         ref={scrollContainerRef}
         role="region"
-        aria-label="Carrossel de projetos com autorolagem"
+        aria-label={t("a11y.projectsCarousel")}
         tabIndex={0}
         onKeyDown={handleKeyDown}
         onMouseEnter={() => setIsPaused(true)}
@@ -136,14 +136,14 @@ const ProjectsSection = () => {
 
                 <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
                   {p.githubUrl && (
-                    <IconButton asChild tone="ghost" aria-label={`Ver repositório ${p.name} no GitHub`}>
+                    <IconButton asChild tone="ghost" aria-label={t("a11y.viewRepo", { name: p.name })}>
                       <a href={p.githubUrl} target="_blank" rel="noopener noreferrer">
                         <Github size={15} />
                       </a>
                     </IconButton>
                   )}
                   {p.liveUrl && (
-                    <IconButton asChild tone="ghost" aria-label={`Ver demonstração de ${p.name}`}>
+                    <IconButton asChild tone="ghost" aria-label={t("a11y.viewDemo", { name: p.name })}>
                       <a href={p.liveUrl} target="_blank" rel="noopener noreferrer">
                         <ExternalLink size={15} />
                       </a>
@@ -158,7 +158,7 @@ const ProjectsSection = () => {
             {p.tech && p.tech.length > 0 && (
               <TagList
                 items={p.tech}
-                label="Tecnologias do projeto"
+                label={t("a11y.projectTech")}
                 tone="subtle"
                 shape="box"
                 className="pt-3 border-t border-border/30"
@@ -172,8 +172,8 @@ const ProjectsSection = () => {
         count={projects.length}
         active={activeIndex}
         onSelect={scrollToIndex}
-        label="Navegação dos projetos"
-        getItemLabel={(idx) => `Ir para projeto ${idx + 1}: ${projects[idx].name}`}
+        label={t("a11y.projectsPagination")}
+        getItemLabel={(idx) => t("a11y.goToProject", { n: idx + 1, name: projects[idx].name })}
         className="justify-center mt-2.5 mb-5"
       />
 

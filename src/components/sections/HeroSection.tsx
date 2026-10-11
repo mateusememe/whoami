@@ -41,7 +41,7 @@ const HeroSection = () => {
         </p>
 
         {/* Channels / Profiles Links */}
-        <ul className="flex items-center justify-center gap-2 sm:gap-2.5 flex-wrap" aria-label="Links de redes sociais e perfis acadêmicos">
+        <ul className="flex items-center justify-center gap-2 sm:gap-2.5 flex-wrap" aria-label={t("a11y.socialLinks")}>
           {socialLinks.map((social) => (
             <li key={social.label}>
               <IconButton asChild tone="outline" size="lg" aria-label={social.label} className="hover:border-signal/30">
@@ -57,10 +57,9 @@ const HeroSection = () => {
       {/* Subtle animated scroll down indicator */}
       <a
         href="#about"
-        aria-label="Rolar para a seção sobre mim"
+        aria-label={t("a11y.scrollToAbout")}
         className="mt-auto pt-4 flex flex-col items-center text-muted-foreground/50 hover:text-foreground transition-colors group focus:outline-none"
       >
-        <span className="sr-only">Scroll down</span>
         <ChevronDown size={20} className="animate-bounce" />
       </a>
     </section>

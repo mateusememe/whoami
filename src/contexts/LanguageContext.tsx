@@ -5,10 +5,13 @@ import { useLanguage } from "@/hooks/useLanguage";
 export type { Language };
 export { translations, useLanguage };
 
+/** Values for `{placeholder}` tokens in a translation string, e.g. `{ name: "codecash" }`. */
+export type TranslationParams = Record<string, string | number>;
+
 export interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: string) => string;
+  t: (key: string, params?: TranslationParams) => string;
 }
 
 export interface LanguageProviderProps {
@@ -27,6 +30,12 @@ function getInitialLanguage(defaultLanguage: Language): Language {
   }
 
   return defaultLanguage;
+}
+
+function interpolate(template: string, params: TranslationParams): string {
+  return template.replace(/\{(\w+)\}/g, (match, name: string) =>
+    params[name] !== undefined ? String(params[name]) : match
+  );
 }
 
 export const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -58,8 +67,9 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
     document.documentElement.lang = language === "pt" ? "pt-BR" : language;
   }, [language]);
 
-  const t = (key: string): string => {
-    return translations[key]?.[language] ?? key;
+  const t = (key: string, params?: TranslationParams): string => {
+    const template = translations[key]?.[language] ?? key;
+    return params ? interpolate(template, params) : template;
   };
 
   return (
