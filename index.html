@@ -10,6 +10,14 @@
     />
     <meta name="author" content="Mateus Mendonça Monteiro" />
 
+    <!-- Apply the saved theme before first paint (dark unless the user chose light). -->
+    <script>
+      try {
+        if (localStorage.getItem("portfolio_theme") !== "light") document.documentElement.classList.add("dark");
+      } catch {
+        document.documentElement.classList.add("dark");
+      }
+    </script>
     <link rel="canonical" href="https://mateusememe.github.io/whoami/" />
 
     <!-- Favicons & Touch Icons -->
