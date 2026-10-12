@@ -17,6 +17,7 @@
     "prebuild": "tsx scripts/generate-sitemap.ts && tsx scripts/generate-llms.ts",
     "build": "vite build",
     "postbuild": "cp dist/index.html dist/404.html",
+    "og:image": "tsx scripts/render-og-image.ts",
     "typecheck": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json",
     "lint": "eslint .",
     "preview": "vite preview",
