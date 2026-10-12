@@ -1,6 +1,11 @@
 import { Moon, Sun } from "lucide-react";
 import { useLanguage, type Language } from "@/contexts/LanguageContext";
 import { useEffect, useState } from "react";
+import { IconButton } from "@/components/ds";
+import ScrollProgress from "@/components/ScrollProgress";
+import { NAV_ITEMS } from "@/data/navigation";
+import { useActiveSection } from "@/hooks/useActiveSection";
+import { cn } from "@/lib/utils";
 
 const flags: Record<Language, string> = { pt: "🇧🇷", en: "🇺🇸", es: "🇪🇸" };
 const langNames: Record<Language, string> = { pt: "Português", en: "English", es: "Español" };
@@ -18,6 +23,7 @@ function getInitialTheme(): boolean {
 const Header = () => {
   const { language, setLanguage, t } = useLanguage();
   const [dark, setDark] = useState<boolean>(getInitialTheme);
+  const activeSection = useActiveSection(NAV_ITEMS);
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
@@ -36,8 +42,6 @@ const Header = () => {
     }
   }, [dark]);
 
-  const navItems = ["about", "experience", "education", "skills", "projects", "contact"];
-
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass-card">
       <div className="container mx-auto px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between">
@@ -50,15 +54,23 @@ const Header = () => {
         </a>
 
         <nav className="hidden md:flex items-center gap-6" aria-label="Navegação principal">
-          {navItems.map((item) => (
-            <a
-              key={item}
-              href={`#${item}`}
-              className="text-xs font-medium tracking-wide text-muted-foreground hover:text-foreground transition-colors uppercase py-1"
-            >
-              {t(`nav.${item}`)}
-            </a>
-          ))}
+          {NAV_ITEMS.map((item) => {
+            const isActive = activeSection === item;
+            return (
+              <a
+                key={item}
+                href={`#${item}`}
+                aria-current={isActive ? "true" : undefined}
+                className={cn(
+                  "relative py-1 text-xs font-medium uppercase tracking-wide transition-colors duration-fast",
+                  "after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:bg-signal after:transition-transform after:duration-base after:ease-expo",
+                  isActive ? "text-foreground after:scale-x-100" : "text-muted-foreground hover:text-foreground after:scale-x-0",
+                )}
+              >
+                {t(`nav.${item}`)}
+              </a>
+            );
+          })}
         </nav>
 
         <div className="flex items-center gap-2 sm:gap-3">
@@ -80,15 +92,17 @@ const Header = () => {
             ))}
           </div>
 
-          <button
+          <IconButton
+            tone="ghost"
+            size="md"
             onClick={() => setDark((prev) => !prev)}
             aria-label={dark ? "Ativar modo claro" : "Ativar modo escuro"}
-            className="w-9 h-9 sm:w-8 sm:h-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
           >
             {dark ? <Sun size={16} /> : <Moon size={16} />}
-          </button>
+          </IconButton>
         </div>
       </div>
+      <ScrollProgress />
     </header>
   );
 };
