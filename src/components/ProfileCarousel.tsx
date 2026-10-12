@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight, User, Presentation } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { PaginationDots } from "@/components/ds";
 
 interface PhotoSlide {
   id: string;
@@ -72,7 +73,7 @@ export const ProfileCarousel: React.FC = () => {
       aria-label="Carrossel de fotos de Mateus Mendonça Monteiro"
     >
       {/* Outer ambient glow and glass border */}
-      <div className="absolute -inset-1 rounded-[2rem] bg-gradient-to-tr from-primary/40 via-accent/30 to-primary/20 opacity-70 group-hover:opacity-100 blur-md transition-all duration-700 -z-10" />
+      <div className="absolute -inset-1 rounded-[2rem] bg-gradient-to-tr from-signal/35 via-accent/30 to-primary/20 opacity-70 group-hover:opacity-100 blur-md transition-all duration-700 -z-10" />
 
       <div className="relative w-full h-full rounded-[1.85rem] overflow-hidden glass-card backdrop-blur-2xl border border-border/50 shadow-2xl p-1">
         {/* Slides container */}
@@ -127,23 +128,15 @@ export const ProfileCarousel: React.FC = () => {
             </span>
 
             {/* Dots with comfortable touch target */}
-            <div className="flex items-center gap-1.5 py-0.5" role="tablist" aria-label="Slides">
-              {slides.map((slide, idx) => (
-                <button
-                  key={slide.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={idx === currentIndex}
-                  aria-label={`Slide ${idx + 1}: ${t(slide.labelKey)}`}
-                  onClick={() => setCurrentIndex(idx)}
-                  className={`h-1.5 rounded-full transition-all duration-500 focus:outline-none ${
-                    idx === currentIndex
-                      ? "w-6 bg-white shadow-sm"
-                      : "w-1.5 bg-white/40 hover:bg-white/70"
-                  }`}
-                />
-              ))}
-            </div>
+            <PaginationDots
+              count={slides.length}
+              active={currentIndex}
+              onSelect={setCurrentIndex}
+              label="Slides"
+              getItemLabel={(idx) => `Slide ${idx + 1}: ${t(slides[idx].labelKey)}`}
+              tone="inverse"
+              className="py-0.5"
+            />
           </div>
         </div>
       </div>

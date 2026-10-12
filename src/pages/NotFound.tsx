@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import SceneBackground from "@/components/scene/SceneBackground";
 import Header from "@/components/Header";
+import { Surface } from "@/components/ds";
 
 const NotFound = () => {
   const location = useLocation();
@@ -32,7 +33,8 @@ const NotFound = () => {
       <SceneBackground />
       <Header />
       <main className="relative z-10 flex-1 flex items-center justify-center px-6 py-24">
-        <div className="glass-card rounded-2xl p-8 max-w-md w-full text-center border border-border/50 shadow-xl">
+        <Surface className="p-8 sm:p-8 max-w-md w-full text-center border-border/50 shadow-xl">
+          <span className="font-mono text-xs text-signal block mb-3">$ curl -I {location.pathname}</span>
           <span className="font-mono text-5xl font-bold text-foreground block mb-2">404</span>
           <h1 className="font-display text-xl font-semibold text-foreground mb-2">
             {t("notFound.title")}
@@ -46,7 +48,7 @@ const NotFound = () => {
           >
             {t("notFound.backHome")}
           </Link>
-        </div>
+        </Surface>
       </main>
     </div>
   );
