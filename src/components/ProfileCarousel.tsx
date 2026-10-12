@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight, User, Presentation } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PaginationDots } from "@/components/ds";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 interface PhotoSlide {
   id: string;
@@ -14,6 +15,7 @@ export const ProfileCarousel: React.FC = () => {
   const { t } = useLanguage();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const reducedMotion = usePrefersReducedMotion();
 
   const basePath = import.meta.env.BASE_URL || "/";
   const normalizedBase = basePath.endsWith("/") ? basePath : `${basePath}/`;
@@ -41,16 +43,16 @@ export const ProfileCarousel: React.FC = () => {
     setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
   }, [slides.length]);
 
-  // Auto-play timer
+  // Auto-play timer (off when the user prefers reduced motion)
   useEffect(() => {
-    if (isPaused) return;
+    if (isPaused || reducedMotion) return;
 
     const timer = setInterval(() => {
       nextSlide();
     }, 5000);
 
     return () => clearInterval(timer);
-  }, [isPaused, nextSlide]);
+  }, [isPaused, reducedMotion, nextSlide]);
 
   // Keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {

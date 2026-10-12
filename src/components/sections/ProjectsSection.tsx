@@ -4,12 +4,14 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { IconButton, PaginationDots, Section, Surface, Tag, TagList } from "@/components/ds";
 import { projects } from "@/data/portfolio";
 import { sectionIndex } from "@/data/navigation";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 const ProjectsSection = () => {
   const { language, t } = useLanguage();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const reducedMotion = usePrefersReducedMotion();
 
   const checkScroll = useCallback(() => {
     const el = scrollContainerRef.current;
@@ -31,9 +33,9 @@ const ProjectsSection = () => {
 
     el.scrollTo({
       left: targetIndex * cardWidth,
-      behavior: "smooth",
+      behavior: reducedMotion ? "auto" : "smooth",
     });
-  }, []);
+  }, [reducedMotion]);
 
   const handlePrev = () => {
     const target = (activeIndex - 1 + projects.length) % projects.length;
@@ -45,16 +47,16 @@ const ProjectsSection = () => {
     scrollToIndex(target);
   }, [activeIndex, scrollToIndex]);
 
-  // Auto-scroll loop
+  // Auto-scroll loop (off when the user prefers reduced motion)
   useEffect(() => {
-    if (isPaused) return;
+    if (isPaused || reducedMotion) return;
 
     const interval = setInterval(() => {
       handleNext();
     }, 4500);
 
     return () => clearInterval(interval);
-  }, [isPaused, handleNext]);
+  }, [isPaused, reducedMotion, handleNext]);
 
   // Scroll listener for updating active index
   useEffect(() => {
