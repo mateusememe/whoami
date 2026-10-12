@@ -7,17 +7,23 @@ interface RevealProps {
 }
 
 /**
- * Fades content in the first time it enters the viewport. Without
- * IntersectionObserver (old browsers, jsdom) content renders visible.
+ * Fades content in the first time it enters the viewport.
+ *
+ * Renders visible, so prerendered HTML reads fine without JavaScript. After
+ * mount, content that starts below the fold is hidden (off screen, so no
+ * flicker) and revealed when it scrolls in. Without IntersectionObserver
+ * (old browsers, jsdom) content stays visible.
  */
 export const Reveal = ({ children, className }: RevealProps) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(() => typeof IntersectionObserver === "undefined");
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
     const element = ref.current;
-    if (!element || visible) return;
+    if (!element || typeof IntersectionObserver === "undefined") return;
+    if (element.getBoundingClientRect().top < window.innerHeight) return;
 
+    setVisible(false);
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return;
@@ -28,7 +34,7 @@ export const Reveal = ({ children, className }: RevealProps) => {
     );
     observer.observe(element);
     return () => observer.disconnect();
-  }, [visible]);
+  }, []);
 
   return (
     <div ref={ref} data-visible={visible} className={cn("reveal", className)}>

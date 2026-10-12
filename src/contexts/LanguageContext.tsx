@@ -35,7 +35,14 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   children,
   defaultLanguage = "en",
 }) => {
-  const [language, setLanguageState] = useState<Language>(() => getInitialLanguage(defaultLanguage));
+  // First render uses the default so it matches the prerendered HTML; the
+  // saved choice is applied right after mount.
+  const [language, setLanguageState] = useState<Language>(defaultLanguage);
+
+  useEffect(() => {
+    const saved = getInitialLanguage(defaultLanguage);
+    if (saved !== defaultLanguage) setLanguageState(saved);
+  }, [defaultLanguage]);
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);

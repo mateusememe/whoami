@@ -157,16 +157,16 @@
     opacity: 1;
   }
 
-  /* Scroll reveal. Reveal toggles data-visible. */
+  /* Scroll reveal. Visible by default, so prerendered HTML reads without JS.
+     Reveal sets data-visible="false" on below-the-fold content until it
+     scrolls into view. */
   .reveal {
-    opacity: 0;
-    transform: translateY(14px);
     transition:
       opacity var(--duration-slow) var(--ease-expo),
       transform var(--duration-slow) var(--ease-expo);
   }
-  .reveal[data-visible="true"] {
-    opacity: 1;
-    transform: none;
+  .reveal[data-visible="false"] {
+    opacity: 0;
+    transform: translateY(14px);
   }
 }

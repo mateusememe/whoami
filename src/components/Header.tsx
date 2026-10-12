@@ -22,10 +22,19 @@ function getInitialTheme(): boolean {
 
 const Header = () => {
   const { language, setLanguage, t } = useLanguage();
-  const [dark, setDark] = useState<boolean>(getInitialTheme);
+  // null until mounted: the first render matches the prerendered HTML (dark),
+  // then the saved preference is read. index.html applies the class before
+  // first paint, so there is no theme flash.
+  const [darkPreference, setDarkPreference] = useState<boolean | null>(null);
+  const dark = darkPreference ?? true;
   const activeSection = useActiveSection(NAV_ITEMS);
 
   useEffect(() => {
+    setDarkPreference(getInitialTheme());
+  }, []);
+
+  useEffect(() => {
+    if (darkPreference === null) return;
     document.documentElement.classList.toggle("dark", dark);
     try {
       localStorage.setItem(THEME_STORAGE_KEY, dark ? "dark" : "light");
@@ -40,7 +49,7 @@ const Header = () => {
       const normalized = basePath.endsWith("/") ? basePath : `${basePath}/`;
       svgFavicon.href = `${normalized}favicon-${dark ? "dark" : "light"}.svg`;
     }
-  }, [dark]);
+  }, [darkPreference, dark]);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass-card">
@@ -95,7 +104,7 @@ const Header = () => {
           <IconButton
             tone="ghost"
             size="md"
-            onClick={() => setDark((prev) => !prev)}
+            onClick={() => setDarkPreference(!dark)}
             aria-label={dark ? "Ativar modo claro" : "Ativar modo escuro"}
           >
             {dark ? <Sun size={16} /> : <Moon size={16} />}

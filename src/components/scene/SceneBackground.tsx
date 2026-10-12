@@ -1,4 +1,4 @@
-import { Component, lazy, Suspense, useCallback, useState, type ReactNode } from "react";
+import { Component, lazy, Suspense, useCallback, useEffect, useState, type ReactNode } from "react";
 import BinaryBackground from "@/components/BinaryBackground";
 import { supportsWebGL2 } from "@/webgl/core/capabilities";
 
@@ -21,11 +21,19 @@ class FallbackBoundary extends Component<{ fallback: ReactNode; children: ReactN
  * Background layer selector:
  *   WebGL 2 available  -> three.js service mesh (lazy chunk)
  *   otherwise / error  -> 2D canvas binary rain
+ *
+ * Renders nothing until mounted, so the prerendered HTML and the first
+ * client render agree.
  */
 const SceneBackground = () => {
-  const [mode, setMode] = useState<"webgl" | "canvas">(() => (supportsWebGL2() ? "webgl" : "canvas"));
+  const [mode, setMode] = useState<"pending" | "webgl" | "canvas">("pending");
   const fallBack = useCallback(() => setMode("canvas"), []);
 
+  useEffect(() => {
+    setMode(supportsWebGL2() ? "webgl" : "canvas");
+  }, []);
+
+  if (mode === "pending") return null;
   if (mode === "canvas") return <BinaryBackground />;
 
   return (
