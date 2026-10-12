@@ -13,6 +13,10 @@ export default defineConfig(() => ({
     },
   },
   plugins: [react()],
+  build: {
+    // three.js ships as one lazy chunk (~540 kB, ~136 kB gzip) loaded after first paint.
+    chunkSizeWarningLimit: 600,
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
