@@ -12,3 +12,8 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+# Crawlers read robots.txt only at the domain root; this copy documents intent.
+Sitemap: https://mateusememe.github.io/whoami/sitemap.xml
+
+# Agent context (https://llmstxt.org): https://mateusememe.github.io/whoami/llms.txt
