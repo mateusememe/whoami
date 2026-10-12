@@ -25,7 +25,10 @@
 - 🎨 **Design System**: Token set (one signal accent, motion tokens) and typed primitives (`Section`, `Surface`, `Tag`, `IconButton`, `PaginationDots`, `Reveal`). See [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md).
 - 🌓 **Dark & Light Mode**: Modern glassmorphism UI with theme toggle and preference persistence.
 - 📱 **100% Responsive Design**: Fluid layout tailored for mobile, tablet, and desktop viewports.
-- 🔍 **SEO & AI Crawler Optimized**:
+- 🔍 **SEO & AI Agent Ready**:
+  - Home page prerendered to static HTML at build time, then hydrated.
+  - `llms.txt` (llmstxt.org), `llms-full.txt` and Markdown profiles in PT/EN/ES, generated from the portfolio data.
+  - Open Graph / Twitter card image (1200x630).
   - Semantic HTML5 with structured JSON-LD `Person` metadata.
   - Automated `sitemap.xml` generation on build.
   - `robots.txt` and `llms.txt` crawler context for AI models and search engines.

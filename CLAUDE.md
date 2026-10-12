@@ -7,7 +7,8 @@ This file provides key commands, architectural guidelines, and writing constrain
 ```bash
 # Development
 npm run dev               # Start dev server with predev sitemap generation (port 8080)
-npm run build             # Build production bundle with sitemap + 404.html SPA fallback
+npm run build             # Sitemap + llms files, client + SSR build, prerender, 404.html shell
+npm run og:image          # Re-render public/og-image.png (manual, needs Chrome)
 npm run preview           # Preview production build locally
 
 # Validation
@@ -59,4 +60,5 @@ Use **Conventional Commits + Gitmoji** in **English**:
 
 - **Host**: GitHub Pages (`https://mateusememe.github.io/whoami/`)
 - **Router**: `<BrowserRouter basename={import.meta.env.BASE_URL}>` in [`src/App.tsx`](src/App.tsx).
-- **SPA Fallback**: Handled via `postbuild: "cp dist/index.html dist/404.html"`.
+- **Prerender & SPA Fallback**: `postbuild` runs `scripts/prerender.ts`: `dist/index.html` gets the rendered home page, `dist/404.html` stays the empty shell. Components must not read browser state during their first render (see `docs/ARCHITECTURE.md` §9).
+- **Agent Files**: `public/llms.txt`, `llms-full.txt`, `index{,.pt,.es}.md` are generated from `src/data/portfolio.ts` by `scripts/generate-llms.ts` (predev/prebuild). Do not edit them by hand.

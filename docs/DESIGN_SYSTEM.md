@@ -194,7 +194,7 @@ Use `interactive` on cards that respond to hover (experience, projects, educatio
 
 ### `Reveal`
 
-Fades and lifts children 14 px the first time they enter the viewport. `Section` already wraps its content in one; use it directly only outside sections. Without `IntersectionObserver` it renders visible.
+Fades and lifts children 14 px the first time they enter the viewport. It renders visible (prerendered HTML reads without JavaScript); after mount it hides only content that starts below the fold. `Section` already wraps its content in one; use it directly only outside sections.
 
 ## 4. Patterns
 

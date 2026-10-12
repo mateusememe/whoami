@@ -66,7 +66,8 @@ Never use these overrepresented AI words and phrases:
 - **Subpath Handling**: 
   - `vite.config.ts`: `base: process.env.VITE_BASE_PATH || "/"`
   - `App.tsx`: `<BrowserRouter basename={import.meta.env.BASE_URL}>`
-- **SPA Fallback**: `postbuild` script executes `cp dist/index.html dist/404.html` so direct subpath refreshes load the Single Page Application without 404 errors.
+- **Prerender & SPA Fallback**: `postbuild` runs `scripts/prerender.ts`, which writes the empty shell to `dist/404.html` (unknown paths render client-side) and the prerendered home page to `dist/index.html`.
+- **Agent Files**: `llms.txt`, `llms-full.txt` and `index{,.pt,.es}.md` in `public/` are generated from portfolio data; never edit them by hand.
 - **Workflows**: `.github/workflows/deploy.yml` runs on push to `main` with Node 22 LTS, `pages: write`, and `id-token: write` permissions.
 
 ---
@@ -82,7 +83,7 @@ npm run typecheck
 # Linting
 npm run lint
 
-# Unit tests (44 tests)
+# Unit tests (73 tests)
 npm test
 
 # Production build + sitemap + 404 SPA fallback

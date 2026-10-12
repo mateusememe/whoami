@@ -1,6 +1,6 @@
 # Architecture
 
-System design of `whoami`: a static React SPA on GitHub Pages with a WebGL background layer. This document covers the runtime layers, the WebGL engine, data flow, performance budget and failure handling. Visual rules live in [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md).
+System design of `whoami`: a React SPA on GitHub Pages, prerendered at build time, with a WebGL background layer and agent-readable Markdown files. This document covers the runtime layers, the WebGL engine, data flow, performance budget and failure handling. Visual rules live in [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md).
 
 ## 1. Runtime layers
 
@@ -63,6 +63,11 @@ The DOM and the background never talk to each other through React. The engine re
 | `src/webgl/scene/MeshScene.ts` | Builds GPU buffers and materials. Per-frame uniforms. | yes |
 | `src/lib/motion.ts` | `damp`, `scrollProgress`. Shared by DOM and engine. | no |
 | `src/hooks/useActiveSection.ts` | Scroll spy for the nav. | no |
+| `src/entry-server.tsx` | Renders the home route to HTML at build time (StaticRouter). | no |
+| `src/seo/llms.ts`, `src/seo/site.ts` | Render llms.txt, llms-full.txt and index{,.pt,.es}.md from portfolio data. | no |
+| `scripts/prerender.ts` | Injects the rendered HTML into dist/index.html, writes the 404.html shell. | no |
+| `scripts/generate-llms.ts`, `scripts/generate-sitemap.ts` | Write agent files and sitemap to public/ (predev, prebuild). | no |
+| `scripts/render-og-image.ts` | Manual: draws the mesh as SVG and screenshots the 1200x630 share card with headless Chrome. | no |
 
 Rule: only `Engine.ts`, `MeshScene.ts` and `WebGLBackground.tsx` may import `three`. Everything else stays in the main bundle or in unit tests without a GPU.
 
@@ -173,7 +178,8 @@ One scroll position drives three consumers, each on its own schedule:
 
 | Chunk | Minified | Gzip | Loaded |
 | :--- | ---: | ---: | :--- |
-| `index-*.js` | 367 kB | 117.6 kB | Always (114.5 kB gzip before this change: +3.1 kB) |
+| `index-*.js` | 249 kB | 80.8 kB | Always (117.6 kB before the unused providers were removed) |
+| `index.html` (prerendered) | 92 kB | 12 kB | Always; full page content as HTML |
 | `WebGLBackground-*.js` | 537 kB | 136 kB | Lazy, only on WebGL 2 devices, after first paint |
 | `index-*.css` | 40 kB | 7.9 kB | Always |
 
@@ -237,11 +243,27 @@ jsdom has no WebGL, so tests run the fallback path. GPU code stays thin: geometr
 
 | Step | Command | Notes |
 | :--- | :--- | :--- |
-| Sitemap | `prebuild` | `scripts/generate-sitemap.ts` |
-| Bundle | `vite build` | `base` from `VITE_BASE_PATH` (`/whoami/` in CI) |
-| SPA fallback | `postbuild` | copies `index.html` to `404.html` |
-| CI | `.github/workflows/ci.yml` | typecheck (app + node configs), lint, test, build |
+| Sitemap + agent files | `prebuild` | `generate-sitemap.ts`, `generate-llms.ts` write to `public/` |
+| Client bundle | `vite build` | `base` from `VITE_BASE_PATH` (`/whoami/` in CI) |
+| Server entry | `vite build --ssr src/entry-server.tsx` | to `dist-ssr/`, removed after prerender |
+| Prerender + SPA fallback | `postbuild` | `scripts/prerender.ts`: 404.html = empty shell, index.html = rendered home page |
+| CI | `.github/workflows/ci.yml` | typecheck (app + node configs, incl. scripts), lint, test, build |
 | Deploy | `.github/workflows/deploy.yml` | GitHub Pages on push to `main` |
+
+### Prerender and hydration rules
+
+`main.tsx` hydrates on the home route and renders from scratch elsewhere. Hydration needs the first client render to match the build output, so **no component may read browser state (localStorage, matchMedia, WebGL, window size) during its first render**. Read it in an effect instead, as Header (theme), LanguageContext (saved language), SceneBackground (WebGL probe) and Reveal (below-the-fold check) do. The inline script in `index.html` sets the `dark` class before paint. `src/test/prerender.test.tsx` fails on any mismatch.
+
+### Agent and crawler surface
+
+| File | Content |
+| :--- | :--- |
+| `llms.txt` | llmstxt.org index: summary, profile / project / contact links, `## Optional` |
+| `index.md`, `index.pt.md`, `index.es.md` | The home page as Markdown per language |
+| `llms-full.txt` | All three profiles in one file |
+| `og-image.png` | 1200x630 share card |
+
+`index.html` links them with `rel="describedby"` and `rel="alternate" type="text/markdown"` (GitHub Pages cannot send Link headers). robots.txt under `/whoami/` is not read by crawlers (only the domain root counts); submit the sitemap in Search Console instead. `src/test/llms.test.ts` fails if the files in `public/` drift from the data.
 
 ## 10. Extending
 
