@@ -36,9 +36,21 @@
 
     --radius: 0.75rem;
 
+    /* Signal: the single accent hue. Reserved for live state (active nav,
+       current role, WebGL packets, focus). Never for body text. */
+    --signal: 174 78% 26%;
+    --signal-foreground: 0 0% 98%;
+
     --binary-color: 0 0% 75%;
     --glass-bg: 0 0% 96% / 0.6;
     --glass-border: 0 0% 80% / 0.3;
+    --surface-blur: 16px;
+
+    /* Motion */
+    --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --duration-fast: 150ms;
+    --duration-base: 300ms;
+    --duration-slow: 700ms;
   }
 
   .dark {
@@ -70,6 +82,9 @@
     --input: 0 0% 18%;
     --ring: 0 0% 60%;
 
+    --signal: 172 66% 52%;
+    --signal-foreground: 0 0% 8%;
+
     --binary-color: 0 0% 25%;
     --glass-bg: 0 0% 12% / 0.6;
     --glass-border: 0 0% 25% / 0.3;
@@ -86,14 +101,72 @@
   }
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 4.5rem;
+  }
+  ::selection {
+    background: hsl(var(--signal) / 0.3);
+  }
+  :focus-visible {
+    outline: 2px solid hsl(var(--signal));
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
 @layer components {
   .glass-card {
     background: hsl(var(--glass-bg));
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(var(--surface-blur));
+    -webkit-backdrop-filter: blur(var(--surface-blur));
     border: 1px solid hsl(var(--glass-border));
+  }
+
+  /* Pointer-following highlight. Surface sets --spot-x / --spot-y. */
+  .spotlight {
+    position: relative;
+    isolation: isolate;
+  }
+  .spotlight::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    background: radial-gradient(
+      380px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+      hsl(var(--signal) / 0.09),
+      transparent 60%
+    );
+    opacity: 0;
+    transition: opacity var(--duration-base) var(--ease-expo);
+  }
+  .spotlight:hover::before {
+    opacity: 1;
+  }
+
+  /* Scroll reveal. Reveal toggles data-visible. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity var(--duration-slow) var(--ease-expo),
+      transform var(--duration-slow) var(--ease-expo);
+  }
+  .reveal[data-visible="true"] {
+    opacity: 1;
+    transform: none;
   }
 }

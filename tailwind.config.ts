@@ -53,6 +53,18 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        signal: {
+          DEFAULT: "hsl(var(--signal))",
+          foreground: "hsl(var(--signal-foreground))",
+        },
+      },
+      transitionTimingFunction: {
+        expo: "var(--ease-expo)",
+      },
+      transitionDuration: {
+        fast: "var(--duration-fast)",
+        base: "var(--duration-base)",
+        slow: "var(--duration-slow)",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -72,11 +84,22 @@ export default {
           "0%": { opacity: "0", transform: "translateY(20px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+        "signal-pulse": {
+          "0%": { boxShadow: "0 0 0 0 hsl(var(--signal) / 0.45)" },
+          "70%": { boxShadow: "0 0 0 8px hsl(var(--signal) / 0)" },
+          "100%": { boxShadow: "0 0 0 0 hsl(var(--signal) / 0)" },
+        },
+        "caret-blink": {
+          "0%, 49%": { opacity: "1" },
+          "50%, 100%": { opacity: "0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.6s ease-out forwards",
+        "signal-pulse": "signal-pulse 2.4s var(--ease-expo) infinite",
+        "caret-blink": "caret-blink 1.1s steps(1) infinite",
       },
     },
   },
