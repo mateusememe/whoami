@@ -14,8 +14,8 @@ Object.defineProperty(window, "matchMedia", {
   }),
 });
 
-// Mock HTMLCanvasElement getContext for JSDOM testing
-HTMLCanvasElement.prototype.getContext = () => {
+// Mock HTMLCanvasElement getContext for JSDOM testing (2D only; WebGL stays unavailable)
+HTMLCanvasElement.prototype.getContext = (() => {
   return {
     fillRect: () => {},
     clearRect: () => {},
@@ -42,4 +42,4 @@ HTMLCanvasElement.prototype.getContext = () => {
     rect: () => {},
     clip: () => {},
   } as unknown as CanvasRenderingContext2D;
-};
+}) as unknown as typeof HTMLCanvasElement.prototype.getContext;
