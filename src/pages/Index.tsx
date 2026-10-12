@@ -1,4 +1,4 @@
-import BinaryBackground from "@/components/BinaryBackground";
+import SceneBackground from "@/components/scene/SceneBackground";
 import Header from "@/components/Header";
 import HeroSection from "@/components/sections/HeroSection";
 import AboutSection from "@/components/sections/AboutSection";
@@ -11,7 +11,7 @@ import ContactFooter from "@/components/sections/ContactFooter";
 const Index = () => {
   return (
     <div className="min-h-screen bg-background relative overflow-x-hidden">
-      <BinaryBackground />
+      <SceneBackground />
       <Header />
       <main>
         <HeroSection />

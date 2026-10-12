@@ -1,7 +1,7 @@
 import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import BinaryBackground from "@/components/BinaryBackground";
+import SceneBackground from "@/components/scene/SceneBackground";
 import Header from "@/components/Header";
 
 const NotFound = () => {
@@ -29,7 +29,7 @@ const NotFound = () => {
 
   return (
     <div className="min-h-screen bg-background relative overflow-x-hidden flex flex-col justify-between">
-      <BinaryBackground />
+      <SceneBackground />
       <Header />
       <main className="relative z-10 flex-1 flex items-center justify-center px-6 py-24">
         <div className="glass-card rounded-2xl p-8 max-w-md w-full text-center border border-border/50 shadow-xl">
