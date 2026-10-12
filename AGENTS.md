@@ -15,6 +15,8 @@ This document outlines the core architecture, writing standards, Git conventions
 - **Language State**: Managed via [`src/contexts/LanguageContext.tsx`](src/contexts/LanguageContext.tsx) with automatic `localStorage` synchronization and browser language fallback.
 - **Dynamic Assets**: Favicons dynamically switch color (black on light theme, white on dark theme) via [`src/components/Header.tsx`](src/components/Header.tsx).
 - **Hero Carousel**: [`src/components/ProfileCarousel.tsx`](src/components/ProfileCarousel.tsx) handles photo cycling with smooth cross-fade, auto-play, and pause-on-hover.
+- **Design System**: Primitives in [`src/components/ds/`](src/components/ds/), tokens in [`src/index.css`](src/index.css). Build cards with `Surface`, sections with `Section`, tags with `TagList`. Full rules in [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md).
+- **WebGL Background**: [`src/webgl/`](src/webgl/) holds a three.js engine that renders a service-mesh constellation over a 3D binary field. It loads as a lazy chunk and falls back to the 2D canvas without WebGL 2. Keep `three` imports inside `Engine.ts`, `MeshScene.ts` and `WebGLBackground.tsx`. System design in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ---
 
@@ -80,7 +82,7 @@ npm run typecheck
 # Linting
 npm run lint
 
-# Unit tests (16 tests)
+# Unit tests (44 tests)
 npm test
 
 # Production build + sitemap + 404 SPA fallback

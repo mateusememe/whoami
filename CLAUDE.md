@@ -11,7 +11,7 @@ npm run build             # Build production bundle with sitemap + 404.html SPA 
 npm run preview           # Preview production build locally
 
 # Validation
-npm run typecheck         # TypeScript check (tsc --noEmit)
+npm run typecheck         # TypeScript check (app + node tsconfigs)
 npm run lint              # ESLint check
 npm test                  # Run Vitest test suite once
 npm run test:watch        # Run Vitest in watch mode
@@ -25,7 +25,10 @@ npm run test:watch        # Run Vitest in watch mode
 - **Sections**: [`src/components/sections/`](src/components/sections/) — Modular sections (`HeroSection`, `AboutSection`, `ExperienceSection`, `EducationSection`, `SkillsSection`, `ProjectsSection`, `ContactFooter`).
 - **Interactive Components**: [`src/components/ProfileCarousel.tsx`](src/components/ProfileCarousel.tsx) — Photo carousel with auto-play and pause on hover.
 - **Dynamic Favicon**: [`src/components/Header.tsx`](src/components/Header.tsx) switches between `favicon-light.svg` (black) and `favicon-dark.svg` (white).
-- **Tests**: [`src/test/`](src/test/) — Vitest + `@testing-library/react`. Canvas is mocked in [`src/test/setup.ts`](src/test/setup.ts).
+- **Design System**: [`src/components/ds/`](src/components/ds/) — `Section`, `Surface`, `Tag`/`TagList`, `IconButton`, `PaginationDots`, `Reveal`. Tokens (incl. the single `--signal` accent and motion tokens) in [`src/index.css`](src/index.css). Rules: [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md).
+- **Section Order**: [`src/data/navigation.ts`](src/data/navigation.ts) — `NAV_ITEMS` drives nav order and the `01`..`06` heading indexes.
+- **WebGL Layer**: [`src/webgl/`](src/webgl/) — vanilla three.js engine (service-mesh scene + 3D binary field). Lazy-loaded by [`src/components/scene/SceneBackground.tsx`](src/components/scene/SceneBackground.tsx), which falls back to the 2D `BinaryBackground` without WebGL 2 or on any error. Only `Engine.ts`, `MeshScene.ts` and `WebGLBackground.tsx` may import `three`. System design: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+- **Tests**: [`src/test/`](src/test/) — Vitest + `@testing-library/react`. Canvas 2D is mocked in [`src/test/setup.ts`](src/test/setup.ts); jsdom has no WebGL, so test geometry and logic through the pure modules (`graph.ts`, `capabilities.ts`, `palette.ts`, `governor.ts`).
 
 ## Prose & Writing Rules (No-Slop)
 

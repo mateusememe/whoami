@@ -20,15 +20,16 @@
 
 ## ✨ Features
 
-- 🌐 **Trilingual Localization (i18n)**: Seamless instant switching between **Português (PT-BR)**, **English (EN)**, and **Español (ES)**, with persistent `localStorage` memory.
-- ⚡ **Interactive Binary Matrix Canvas**: Lightweight HTML5 Canvas effect rendering animated binary code streams that automatically adapt to light/dark themes and viewport resizing.
+- 🌐 **Trilingual Localization (i18n)**: Instant switching between **Português (PT-BR)**, **English (EN)**, and **Español (ES)**, with persistent `localStorage` memory.
+- 🛰️ **WebGL Service Mesh Background**: three.js scene of service clusters, links and message packets over a 3D binary field. All animation runs on the GPU, and colors come from the same CSS tokens as the page. Lazy-loaded, with quality tiers, adaptive resolution, a reduced-motion still frame and a 2D canvas fallback.
+- 🎨 **Design System**: Token set (one signal accent, motion tokens) and typed primitives (`Section`, `Surface`, `Tag`, `IconButton`, `PaginationDots`, `Reveal`). See [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md).
 - 🌓 **Dark & Light Mode**: Modern glassmorphism UI with theme toggle and preference persistence.
 - 📱 **100% Responsive Design**: Fluid layout tailored for mobile, tablet, and desktop viewports.
 - 🔍 **SEO & AI Crawler Optimized**:
   - Semantic HTML5 with structured JSON-LD `Person` metadata.
   - Automated `sitemap.xml` generation on build.
   - `robots.txt` and `llms.txt` crawler context for AI models and search engines.
-- 🧪 **Comprehensive Automated Testing**: Full Vitest + Testing Library test suites verifying context state, internationalization, navigation, and section rendering.
+- 🧪 **Automated Testing**: Vitest + Testing Library suites for context state, internationalization, navigation, section rendering, design-system primitives and WebGL scene generation.
 - 🚀 **Full CI/CD Automation**:
   - **CI Workflow**: Automatic typechecking, linting, testing, and production build checks on pull requests and pushes.
   - **Deploy Workflow**: Automated zero-config deployment to **GitHub Pages**.
@@ -42,6 +43,7 @@
 | **Frontend Framework** | [React 18](https://react.dev/), [TypeScript 5](https://www.typescriptlang.org/) |
 | **Build & Tooling** | [Vite 5](https://vitejs.dev/), [SWC](https://swc.rs/), [TSX](https://github.com/privatenumber/tsx) |
 | **Styling & UI** | [Tailwind CSS](https://tailwindcss.com/), Glassmorphism, [Lucide React Icons](https://lucide.dev/) |
+| **3D / Graphics** | [three.js](https://threejs.org/) (WebGL 2, custom GLSL shaders) |
 | **State & Data** | React Context API (`LanguageContext`), `localStorage` sync |
 | **Routing** | [React Router v6](https://reactrouter.com/) |
 | **Testing** | [Vitest](https://vitest.dev/), [@testing-library/react](https://testing-library.com/), JSDOM |
@@ -50,6 +52,8 @@
 ---
 
 ## 📂 Project Architecture
+
+System design (runtime layers, WebGL engine, data flow, performance budget, failure modes): [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ```
 whoami/
@@ -67,8 +71,10 @@ whoami/
 │   └── generate-sitemap.ts      # Automated sitemap generator script
 ├── src/
 │   ├── components/
-│   │   ├── background/
-│   │   │   └── BinaryBackground.tsx # Interactive matrix canvas background
+│   │   ├── ds/                      # Design system primitives (Section, Surface, Tag, ...)
+│   │   ├── scene/
+│   │   │   ├── SceneBackground.tsx  # WebGL / 2D fallback selector
+│   │   │   └── WebGLBackground.tsx  # Lazy three.js mount
 │   │   ├── sections/
 │   │   │   ├── HeroSection.tsx      # Intro & social links
 │   │   │   ├── AboutSection.tsx     # Bio & summary
@@ -78,11 +84,13 @@ whoami/
 │   │   │   ├── ProjectsSection.tsx  # Featured projects
 │   │   │   └── ContactFooter.tsx    # Contact channels & footer
 │   │   ├── ui/                      # Core UI primitives (toast, tooltip, etc.)
-│   │   ├── BinaryBackground.tsx
-│   │   └── Header.tsx               # Top navigation with theme/lang switchers
+│   │   ├── BinaryBackground.tsx     # 2D canvas fallback background
+│   │   ├── ScrollProgress.tsx       # Header reading-progress bar
+│   │   └── Header.tsx               # Nav with scroll spy, theme/lang switchers
 │   ├── contexts/
 │   │   └── LanguageContext.tsx      # i18n context provider & state
 │   ├── data/
+│   │   ├── navigation.ts            # Section order (nav + heading indexes)
 │   │   └── portfolio.ts             # Typed resume data (jobs, skills, socials)
 │   ├── hooks/
 │   │   ├── useLanguage.ts           # useLanguage consumer hook
@@ -90,6 +98,7 @@ whoami/
 │   ├── i18n/
 │   │   └── translations.ts          # PT / EN / ES dictionary
 │   ├── lib/
+│   │   ├── motion.ts                # damp, scroll progress (DOM + WebGL)
 │   │   └── utils.ts                 # ClassName merging utilities (cn)
 │   ├── pages/
 │   │   ├── Index.tsx                # Main single-page portfolio view
@@ -100,9 +109,15 @@ whoami/
 │   │   ├── LanguageContext.test.tsx # i18n & localStorage unit tests
 │   │   ├── NotFound.test.tsx        # 404 page test
 │   │   └── PortfolioSections.test.tsx# Sections rendering test
+│   ├── webgl/
+│   │   ├── core/                    # Engine, capabilities, input, governor, palette
+│   │   └── scene/                   # Graph generation, GLSL shaders, MeshScene
 │   ├── App.tsx                      # Root application & providers
 │   ├── index.css                    # Design tokens, fonts & Tailwind layers
 │   └── main.tsx                     # React DOM entry point
+├── docs/
+│   ├── ARCHITECTURE.md              # System design
+│   └── DESIGN_SYSTEM.md             # Tokens, primitives, WebGL art direction
 ├── eslint.config.js                 # ESLint flat config
 ├── package.json                     # Project manifest & scripts
 ├── tailwind.config.ts               # Tailwind CSS theme extension
