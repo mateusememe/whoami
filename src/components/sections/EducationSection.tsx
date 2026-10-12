@@ -4,7 +4,7 @@ import { education } from "@/data/portfolio";
 import { sectionIndex } from "@/data/navigation";
 
 const EducationSection = () => {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
 
   return (
     <Section id="education" index={sectionIndex("education")} title={t("edu.title")}>
@@ -13,7 +13,7 @@ const EducationSection = () => {
           <Surface key={item.school} interactive>
             <h3 className="font-display font-semibold text-foreground text-base sm:text-lg mb-1">{item.school}</h3>
             <p className="text-xs sm:text-sm text-muted-foreground">{t(item.degreeKey)}</p>
-            <p className="font-mono text-[11px] sm:text-xs text-muted-foreground/70 mt-2">{item.period}</p>
+            <p className="font-mono text-[11px] sm:text-xs text-muted-foreground/70 mt-2">{item.period[language]}</p>
           </Surface>
         ))}
       </div>

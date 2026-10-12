@@ -22,7 +22,7 @@ export interface Experience {
 export interface EducationItem {
   school: string;
   degreeKey: string;
-  period: string;
+  period: LocalizedString;
 }
 
 export interface ProjectItem {
@@ -375,12 +375,20 @@ export const education: EducationItem[] = [
   {
     school: "UNESP",
     degreeKey: "edu.masters",
-    period: "Set 2025 – Mar 2028",
+    period: {
+      pt: "Set 2025 – Mar 2028",
+      en: "Sep 2025 – Mar 2028",
+      es: "Sep 2025 – Mar 2028",
+    },
   },
   {
     school: "Universidade do Oeste Paulista",
     degreeKey: "edu.bachelors",
-    period: "Fev 2019 – Jun 2023",
+    period: {
+      pt: "Fev 2019 – Jun 2023",
+      en: "Feb 2019 – Jun 2023",
+      es: "Feb 2019 – Jun 2023",
+    },
   },
 ];
 
