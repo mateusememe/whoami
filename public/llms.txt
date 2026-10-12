@@ -1,7 +1,40 @@
 # Mateus Mendonça Monteiro
 
-> Portfólio de Mateus Mendonça Monteiro, engenheiro de software backend especializado em microserviços, mensageria, Kubernetes e cloud.
+> Backend Software Engineer. I build backend services in Go, Python, and Java, focusing on messaging and cloud infrastructure. Currently at Itaú Unibanco and doing MSc research at UNESP.
 
-## Pages
+Portfolio and résumé of a backend software engineer: experience, education, skills, open-source projects and contact channels. The website is a single-page React app with the same content in Portuguese, English and Spanish. The Markdown files below carry that content as plain text, one file per language, rendered at build time from the same data source as the page.
 
-- [Home](/): Perfil, experiência, formação, skills, projetos e contato.
+## Profile
+
+- [Profile (English)](https://mateusememe.github.io/whoami/index.md): About, experience, education, skills, projects and contact
+- [Perfil (Português)](https://mateusememe.github.io/whoami/index.pt.md): Same content in Brazilian Portuguese
+- [Perfil (Español)](https://mateusememe.github.io/whoami/index.es.md): Same content in Spanish
+- [Full context](https://mateusememe.github.io/whoami/llms-full.txt): All profiles in one file
+
+## Projects
+
+- [8-puzzle](https://github.com/mateusememe/8-puzzle): 8-puzzle solver using heuristic search with A* and Best-First Search algorithms based on Manhattan distance.
+- [git-github-in-action](https://github.com/mateusememe/git-github-in-action): Code examples and resources for the 'Git and GitHub in Action' workshop at 35th Infoeste, covering version control and workflows.
+- [codecash](https://github.com/mateusememe/codecash): Transactional API built for the 'API Hero' workshop at DevFest 2025. Uses Spring Boot, GraphQL queries, PostgreSQL storage, and Redis caching.
+- [matarazzoProject](https://github.com/mateusememe/matarazzoProject): Web platform for cultural space management and booking, with interactive frontend and backend services in JavaScript and Node.js.
+- [AlgorithmForest](https://github.com/mateusememe/AlgorithmForest): Implementation of tree data structures and algorithms in Java, including Binary Search Trees (BST) and AVL balancing.
+- [zhang-suen-thinning](https://github.com/mateusememe/zhang-suen-thinning): Python implementation of the Zhang-Suen morphological thinning and skeletonization algorithm for binary images.
+- [transaction.ledger](https://github.com/mateusememe/transaction.ledger): Financial order registration service on AWS serverless. Implements conditional writes for idempotency, outbox pattern with CDC, circuit breakers, and CloudWatch observability.
+- [lime.stability.imputation](https://github.com/mateusememe/lime.stability.imputation): MSc experimental research on LIME stability with data imputation techniques across RandomForest and GradientBoosting models.
+
+## Contact
+
+- [LinkedIn](https://linkedin.com/in/mateus-men): mateus-men
+- [GitHub](https://github.com/mateusememe): mateusememe
+- [ORCID](https://orcid.org/0009-0009-6468-8493): 0009-0009-6468-8493
+- [Currículo Lattes](http://lattes.cnpq.br/2301165554095558): Lattes CNPq
+- [Email](mailto:matt.mendon@gmail.com): matt.mendon@gmail.com
+- [X (Twitter)](https://x.com/mateusememe): @mateusememe
+- [Instagram](https://instagram.com/mateusememe): @mateusememe
+- [Discord](https://discord.com/users/mateusememe): @mateusememe
+
+## Optional
+
+- [Website](https://mateusememe.github.io/whoami/): Interactive version of the profile with a WebGL background
+- [Source code](https://github.com/mateusememe/whoami): React, TypeScript, Vite, Tailwind CSS and three.js
+- [Sitemap](https://mateusememe.github.io/whoami/sitemap.xml): XML sitemap

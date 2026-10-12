@@ -12,9 +12,9 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "predev": "tsx scripts/generate-sitemap.ts",
+    "predev": "tsx scripts/generate-sitemap.ts && tsx scripts/generate-llms.ts",
     "dev": "vite",
-    "prebuild": "tsx scripts/generate-sitemap.ts",
+    "prebuild": "tsx scripts/generate-sitemap.ts && tsx scripts/generate-llms.ts",
     "build": "vite build",
     "postbuild": "cp dist/index.html dist/404.html",
     "typecheck": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json",

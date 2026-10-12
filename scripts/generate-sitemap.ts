@@ -2,8 +2,9 @@
 
 import { writeFileSync } from "fs";
 import { resolve } from "path";
+import { DEFAULT_SITE_URL } from "../src/seo/site";
 
-const BASE_URL = process.env.VITE_SITE_URL || "https://mateusememe.github.io/whoami";
+const BASE_URL = process.env.VITE_SITE_URL || DEFAULT_SITE_URL;
 
 interface SitemapEntry {
   path: string;
