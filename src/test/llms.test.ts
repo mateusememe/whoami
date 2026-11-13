@@ -1,8 +1,15 @@
 import { readFileSync } from "fs";
 import { resolve } from "path";
 import { describe, it, expect } from "vitest";
-import { education, experiences, projects, socialLinks } from "@/data/portfolio";
-import { PROFILE_FILES, renderAgentFiles, renderLlmsFull, renderLlmsTxt, renderProfileMarkdown } from "@/seo/llms";
+import { contributions, education, experiences, profile, projects, socialLinks } from "@/data/portfolio";
+import {
+  PROFILE_FILES,
+  RESUME_FILES,
+  renderAgentFiles,
+  renderLlmsFull,
+  renderLlmsTxt,
+  renderProfileMarkdown,
+} from "@/seo/llms";
 import { DEFAULT_SITE_URL, siteHref } from "@/seo/site";
 
 const SITE = "https://example.test/whoami";
@@ -34,25 +41,36 @@ describe("llms.txt", () => {
     expect(h2.at(-1)).toBe("## Optional");
   });
 
-  it("uses list items of the form - [name](url): notes", () => {
-    const items = lines.filter((line) => line.startsWith("- "));
+  it("uses file-list items of the form - [name](url): notes under every H2", () => {
+    const firstH2 = lines.findIndex((line) => line.startsWith("## "));
+    const items = lines.slice(firstH2).filter((line) => line.startsWith("- "));
     expect(items.length).toBeGreaterThan(10);
     for (const item of items) expect(item).toMatch(/^- \[[^\]]+\]\([^)]+\)(: .+)?$/);
+  });
+
+  it("states the key facts before the link sections", () => {
+    const firstH2 = lines.findIndex((line) => line.startsWith("## "));
+    const facts = lines.slice(0, firstH2).filter((line) => line.startsWith("- "));
+    expect(facts.some((line) => line.startsWith("- Current role: ") && line.includes(experiences[0].company))).toBe(true);
+    expect(facts).toContain(`- Location: ${profile.city}, Brazil`);
+    expect(facts).toContain(`- Last updated: ${profile.updatedAt}`);
   });
 
   it("only links to absolute URLs", () => {
     for (const href of links(text)) expect(href).toMatch(/^(https?:|mailto:)/);
   });
 
-  it("links every profile file, project and contact channel", () => {
+  it("links every profile file, public project, contribution and contact channel", () => {
     const hrefs = links(text);
-    for (const file of Object.values(PROFILE_FILES)) expect(hrefs).toContain(siteHref(SITE, file));
+    for (const file of [...Object.values(PROFILE_FILES), ...Object.values(RESUME_FILES)]) {
+      expect(hrefs).toContain(siteHref(SITE, file));
+    }
     for (const project of projects) {
-      // Private repositories have no public URL and are left out.
       const url = project.githubUrl ?? project.liveUrl;
       if (url) expect(hrefs).toContain(url);
       else expect(text).not.toContain(`[${project.name}]`);
     }
+    for (const item of contributions) expect(hrefs).toContain(item.url);
     for (const link of socialLinks) expect(hrefs).toContain(link.href);
   });
 });
@@ -66,6 +84,7 @@ describe("Markdown profiles", () => {
     }
     for (const item of education) expect(markdown).toContain(item.period[language]);
     for (const project of projects) expect(markdown).toContain(project.name);
+    for (const item of contributions) expect(markdown).toContain(`[${item.repo}](${item.url})`);
   });
 
   it("localizes headings", () => {

@@ -4,8 +4,11 @@
 
 Python, Java, Go, Kubernetes | Microserviços • Mensageria • Cloud | Mestrando na UNESP | @Itaú Unibanco
 
-- Site: https://mateusememe.github.io/whoami/
+- Local: São Paulo, Brasil
+- Site: https://mateusememe.github.io/whoami/pt/
 - Outros idiomas: [English](https://mateusememe.github.io/whoami/index.md) · [Español](https://mateusememe.github.io/whoami/index.es.md)
+- Dados estruturados (JSON Resume): https://mateusememe.github.io/whoami/resume.pt.json
+- Atualizado em: 2026-11-13
 
 ## Sobre Mim
 
@@ -15,7 +18,7 @@ Sou engenheiro de software backend. Construo sistemas distribuídos e microsserv
 
 ### Engenheiro de Software — Itaú Unibanco
 
-Mai 2026 – Presente
+Mai 2026 – Presente · São Paulo, SP
 
 Desenvolvo ferramentas aceleradoras para migração de dados entre ambientes AWS multi-conta e plataformas de dados de clientes (CDP). Escrevo microsserviços serverless em Python e Go com arquitetura hexagonal, design orientado a eventos e domínios de Data Mesh. Construo pipelines ETL com AWS Step Functions, Glue e Lambda. Governança e observabilidade com KMS, CloudTrail, CloudWatch, X-Ray, Datadog e Grafana.
 
@@ -23,7 +26,7 @@ Stack: Python, Go, AWS, Step Functions, Glue, Lambda, KMS, CloudTrail, CloudWatc
 
 ### Engenheiro Backend — LuizaLabs
 
-Jan 2025 – Abr 2026
+Jan 2025 – Abr 2026 · São Paulo, SP
 
 Atuação no motor de busca e em microsserviços de alto volume, usados por milhões de pessoas por dia. Stack com Java (Spring Boot, Quarkus), Node.js (Fastify) e TypeScript, integrando com MongoDB, Redis e Elasticsearch. Implementei circuit breakers e fallbacks e reduzi em 20% o tempo de sincronização de dados de produtos ao otimizar a reindexação no Elasticsearch. APIs GraphQL (Apollo Federation) e REST, mensageria com RabbitMQ e Google Pub/Sub, e deploy em Kubernetes na GCP e na Magalu Cloud via ArgoCD.
 
@@ -31,7 +34,7 @@ Stack: Java, Spring Boot, Quarkus, Node.js, Fastify, TypeScript, MongoDB, Redis,
 
 ### Engenheiro de Software — Vericode
 
-Abr 2023 – Dez 2024
+Abr 2023 – Dez 2024 · São Paulo, SP
 
 Desenvolvimento e sustentação de microsserviços Java com Spring e Quarkus em Kubernetes, incluindo serviços de alto volume com Kafka. Redução de 10% no tempo de inicialização e no consumo de memória. APIs REST, autenticação com Spring Security e JWT, bancos MySQL e MongoDB, e CI/CD com Docker, Jenkins, SonarQube e Bitbucket. Equipe de 12 pessoas.
 
@@ -39,7 +42,7 @@ Stack: Java, Spring, Quarkus, Kafka, Kubernetes, MySQL, MongoDB, Firestore, Spri
 
 ### Estagiário de Engenharia de Software — Vericode
 
-Set 2022 – Abr 2023
+Set 2022 – Abr 2023 · São Paulo, SP
 
 Desenvolvimento de interfaces e aplicações web com Next.js, React e TypeScript. Otimizações de renderização e SEO com ganho de 20% em métricas de performance. Integração com APIs REST e construção de interfaces interativas para configuração de fluxos sem código.
 
@@ -47,7 +50,7 @@ Stack: Next.js, React, TypeScript, API Integration, SEO
 
 ### Engenheiro de Software — ANBIMA
 
-Dez 2022 – Jul 2024
+Dez 2022 – Jul 2024 · São Paulo, SP
 
 Manutenção e evolução do SRE (Sistema de Registro de Ofertas) da CVM. Frontend com AngularJS e jQuery; backend em Java EE (VRaptor, EJB, Quartz, Liquibase). Liderei a migração de Java 8 para Java 11, que reduziu em 15% os bugs em produção, e refatorei consultas SQL Server para reduzir o tempo de resposta.
 
@@ -55,7 +58,7 @@ Stack: Java EE, VRaptor, Quartz, Jacoco, Liquibase, EJB, Angular.js, jQuery, HTM
 
 ### Estagiário de Desenvolvimento de Software — Prevision
 
-Abr 2022 – Set 2022
+Abr 2022 – Set 2022 · Florianópolis, SC
 
 Desenvolvimento de funcionalidades para plataforma SaaS de gestão e planejamento de obras civis, atendendo mais de 200 empresas e 1.000 usuários em 2.600 canteiros. Atuação com React, Node.js e Docker no time de User Insights.
 
@@ -63,7 +66,7 @@ Stack: JavaScript, React, Node.js, Docker
 
 ### Estagiário de Desenvolvimento de Software — Inova Prudente
 
-Fev 2021 – Mar 2022
+Fev 2021 – Mar 2022 · Presidente Prudente, SP
 
 Construção de sistema web para controle de espaços de coworking, reservas de salas e gestão de eventos com check-in. Stack com PHP, MySQL, JavaScript e jQuery, com containerização em Docker e testes com Robot Framework.
 
@@ -71,8 +74,12 @@ Stack: HTML, CSS, JavaScript, PHP, jQuery, MySQL, Docker, Robot Framework
 
 ## Educação
 
-- **UNESP** — Mestrado em Ciência da Computação (Set 2025 – Mar 2028)
+- **Universidade Estadual Paulista (UNESP)** — Mestrado em Ciência da Computação (Set 2025 – Mar 2028, em andamento)
 - **Universidade do Oeste Paulista** — Bacharelado em Ciência da Computação (Fev 2019 – Jun 2023)
+
+**Idiomas:** Português (nativo), Inglês (profissional)
+
+**Certificações:** EF SET English Certificate, 58/100, nível B2 (intermediário superior)
 
 ## Conquistas & Skills
 
@@ -91,7 +98,7 @@ Stack: HTML, CSS, JavaScript, PHP, jQuery, MySQL, Docker, Robot Framework
 - [codecash](https://github.com/mateusememe/codecash) (4 estrelas): API transacional desenvolvida para o minicurso 'API Hero' no DevFest 2025. Utiliza Spring Boot, consultas em GraphQL, banco PostgreSQL e cache em Redis. Stack: Java, Spring Boot, GraphQL, PostgreSQL, Redis.
 - [8-puzzle](https://github.com/mateusememe/8-puzzle) (17 estrelas): Resolução do quebra-cabeça 8-puzzle utilizando busca heurística com os algoritmos A* e Best-First Search baseados na distância de Manhattan. Stack: Python, A* Algorithm, Heuristics, BFS.
 - [fuzzymeans-ai](https://github.com/mateusememe/fuzzymeans-ai): Imputação explicável de custos ausentes em registros de acidentes em passagens de nível (dados da FRA). Fuzzy C-Means e Noise Clustering sobre coordenadas e velocidades: cada valor imputado é uma média ponderada pelas pertinências, que pode ser auditada. Validado mascarando 30% dos valores conhecidos em 5 sementes. Stack: Python, Fuzzy C-Means, XAI, LaTeX.
-- lime.stability.imputation: Pesquisa experimental de mestrado sobre a estabilidade do método LIME com técnicas de imputação de dados em modelos RandomForest e GradientBoosting. Stack: Python, Machine Learning, XAI, LIME, Research.
+- lime.stability.imputation (repositório privado): Pesquisa experimental de mestrado sobre a estabilidade do método LIME com técnicas de imputação de dados em modelos RandomForest e GradientBoosting. Stack: Python, Machine Learning, XAI, LIME, Research.
 - [git-github-in-action](https://github.com/mateusememe/git-github-in-action) (5 estrelas): Material e exemplos práticos do minicurso 'Git e GitHub em Ação' ministrado na 35ª Infoeste, cobrindo controle de versão e fluxos colaborativos. Stack: Git, GitHub, Workflows, C++.
 - [AlgorithmForest](https://github.com/mateusememe/AlgorithmForest) (2 estrelas): Implementação de algoritmos e estruturas de dados de árvores em Java, incluindo Árvores Binárias de Busca (BST) e balanceamento AVL. Stack: Java, Data Structures, BST, AVL.
 - [zhang-suen-thinning](https://github.com/mateusememe/zhang-suen-thinning) (2 estrelas): Implementação em Python do algoritmo morfológico de afinamento e esqueletização de Zhang-Suen para imagens binárias. Stack: Python, Computer Vision, Algorithms, Image Processing.
@@ -101,6 +108,14 @@ Stack: HTML, CSS, JavaScript, PHP, jQuery, MySQL, Docker, Robot Framework
 - [search.it](https://github.com/mateusememe/search.it): Busca por linha de comando em arquivos de filmes, feita para o desafio técnico do time de busca do LuizaLabs. Monta um índice invertido em memória e responde consultas por termo, com limite de resultados e contagem de ocorrências. Compilado para binário nativo com GraalVM. Stack: Java 21, GraalVM, Inverted Index, Maven.
 - [kruskal-algorithm](https://github.com/mateusememe/kruskal-algorithm): Implementação em Python do algoritmo guloso de Kruskal para árvore geradora mínima. Stack: Python, Graphs, Greedy.
 - [whoami](https://github.com/mateusememe/whoami): Este site. React e TypeScript, pré-renderizado no build, com uma camada three.js em que um campo de partículas muda entre seis formações, capas em canvas que executam o algoritmo de cada projeto, e llms.txt, Markdown e JSON Resume para agentes. Stack: TypeScript, React, three.js, GLSL.
+
+## Contribuições open source
+
+Pull requests aceitos em repositórios de outras pessoas.
+
+- [dmux/go-quality-gate](https://github.com/dmux/go-quality-gate/pull/32) (2026-10): Detecção do runtime e das ferramentas que o projeto precisa, com dicas de instalação por sistema operacional. Comando `doctor` estendido, opção `tools_policy: recommend` e a tool MCP `check_environment` para agentes de IA. 25 arquivos, 1.353 linhas adicionadas.
+- [leeozaka/Merkle](https://github.com/leeozaka/Merkle/pulls?q=is%3Apr+author%3Amateusememe+is%3Amerged) (2026-08): Dois adaptadores de linguagem para o Protocol 1.0 do Merkle, um para Java e Spring Boot e outro para Python. Cada um roda fora do processo e faz detecção de linguagem, indexação determinística de AST e mapeamento de impacto em testes.
+- [zanfranceschi/rinha-de-backend-2026](https://github.com/zanfranceschi/rinha-de-backend-2026/pull/7621) (2026-05): Submissão aceita na quarta edição da Rinha de Backend: detecção de fraude com busca vetorial, limitada a 1 vCPU e 350 MB. O código é o projeto rinha-backend-2026-c.
 
 ## Contato
 

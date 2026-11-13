@@ -1,0 +1,15 @@
+{
+  "name": "Mateus Mendonça Monteiro — Backend Software Engineer",
+  "short_name": "whoami",
+  "description": "Portfolio of Mateus Mendonça Monteiro, backend software engineer.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "minimal-ui",
+  "background_color": "#141414",
+  "theme_color": "#141414",
+  "icons": [
+    { "src": "favicon-32x32.png", "sizes": "32x32", "type": "image/png" },
+    { "src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

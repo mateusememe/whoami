@@ -2,14 +2,23 @@
 
 > Backend Software Engineer. I build backend services in Go, Python, and Java, focusing on messaging and cloud infrastructure. Currently at Itaú Unibanco and doing MSc research at UNESP.
 
-Portfolio and résumé of a backend software engineer: experience, education, skills, open-source projects and contact channels. The website is a single-page React app with the same content in Portuguese, English and Spanish. The Markdown files below carry that content as plain text, one file per language, rendered at build time from the same data source as the page.
+Portfolio and résumé of a backend software engineer: experience, education, skills, open-source projects and contact channels. The website is a single-page React app, prerendered to static HTML in Portuguese, English and Spanish. The files below carry the same content as plain text and as structured data, rendered at build time from the same source as the page. To answer questions about Mateus, read one Markdown profile or the JSON Resume; neither needs JavaScript.
+
+- Current role: Software Engineer at Itaú Unibanco (since May 2026)
+- Location: São Paulo, Brazil
+- Education: Master's in Computer Science at UNESP (in progress); Bachelor's in Computer Science at Universidade do Oeste Paulista
+- Focus: Distributed Systems, Data Engineering, Software Architecture, Data Mesh & Pipelines
+- Spoken languages: Portuguese (native), English (full professional)
+- Contact: matt.mendon@gmail.com
+- Last updated: 2026-11-13
 
 ## Profile
 
-- [Profile (English)](https://mateusememe.github.io/whoami/index.md): About, experience, education, skills, projects and contact
+- [Profile (English)](https://mateusememe.github.io/whoami/index.md): About, experience, education, skills, projects, contributions and contact
 - [Perfil (Português)](https://mateusememe.github.io/whoami/index.pt.md): Same content in Brazilian Portuguese
 - [Perfil (Español)](https://mateusememe.github.io/whoami/index.es.md): Same content in Spanish
-- [Full context](https://mateusememe.github.io/whoami/llms-full.txt): All profiles in one file
+- [JSON Resume](https://mateusememe.github.io/whoami/resume.json): The profile as structured data (jsonresume.org schema), with ISO dates
+- [Full context](https://mateusememe.github.io/whoami/llms-full.txt): All three profiles in one file
 
 ## Projects
 
@@ -30,6 +39,12 @@ Portfolio and résumé of a backend software engineer: experience, education, sk
 - [kruskal-algorithm](https://github.com/mateusememe/kruskal-algorithm): Python implementation of Kruskal's greedy algorithm for the minimum spanning tree.
 - [whoami](https://github.com/mateusememe/whoami): This site. React and TypeScript, prerendered at build time, with a three.js layer where a particle field morphs between six formations, canvas covers that run each project's algorithm, and llms.txt, Markdown and JSON Resume for agents.
 
+## Open-source contributions
+
+- [dmux/go-quality-gate](https://github.com/dmux/go-quality-gate/pull/32): Detection of the runtime and tools a project needs, with install hints per operating system. Extended `doctor` command, a `tools_policy: recommend` setting and the `check_environment` MCP tool for AI agents. 25 files, 1,353 lines added.
+- [leeozaka/Merkle](https://github.com/leeozaka/Merkle/pulls?q=is%3Apr+author%3Amateusememe+is%3Amerged): Two language adapters for Merkle's Protocol 1.0, one for Java and Spring Boot and one for Python. Each runs out of process and does language detection, deterministic AST indexing and test impact mapping.
+- [zanfranceschi/rinha-de-backend-2026](https://github.com/zanfranceschi/rinha-de-backend-2026/pull/7621): Submission accepted in the fourth Rinha de Backend: fraud detection with vector search, limited to 1 vCPU and 350 MB. The code is the rinha-backend-2026-c project.
+
 ## Contact
 
 - [LinkedIn](https://linkedin.com/in/mateus-men): mateus-men
@@ -43,6 +58,10 @@ Portfolio and résumé of a backend software engineer: experience, education, sk
 
 ## Optional
 
-- [Website](https://mateusememe.github.io/whoami/): Interactive version of the profile with a WebGL background
+- [Website (English)](https://mateusememe.github.io/whoami/): Interactive version of the profile with a WebGL background. In browsers with WebMCP it registers the tools get_profile, list_projects, get_contact and go_to_section
+- [Website (Português)](https://mateusememe.github.io/whoami/pt/): Same page in Portuguese
+- [Website (Español)](https://mateusememe.github.io/whoami/es/): Same page in Spanish
+- [JSON Resume (Português)](https://mateusememe.github.io/whoami/resume.pt.json): Structured data in Portuguese
+- [JSON Resume (Español)](https://mateusememe.github.io/whoami/resume.es.json): Structured data in Spanish
 - [Source code](https://github.com/mateusememe/whoami): React, TypeScript, Vite, Tailwind CSS and three.js
-- [Sitemap](https://mateusememe.github.io/whoami/sitemap.xml): XML sitemap
+- [Sitemap](https://mateusememe.github.io/whoami/sitemap.xml): XML sitemap with the three language URLs

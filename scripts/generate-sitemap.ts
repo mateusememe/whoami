@@ -2,47 +2,9 @@
 
 import { writeFileSync } from "fs";
 import { resolve } from "path";
+import { renderSitemap } from "../src/seo/sitemap";
 import { DEFAULT_SITE_URL } from "../src/seo/site";
 
-const BASE_URL = process.env.VITE_SITE_URL || DEFAULT_SITE_URL;
-
-interface SitemapEntry {
-  path: string;
-  lastmod?: string;
-  changefreq?: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
-  priority?: string;
-}
-
-const entries: SitemapEntry[] = [
-  {
-    path: "/",
-    lastmod: new Date().toISOString().split("T")[0],
-    changefreq: "monthly",
-    priority: "1.0",
-  },
-];
-
-function generateSitemap(items: SitemapEntry[]) {
-  const urls = items.map((e) =>
-    [
-      `  <url>`,
-      `    <loc>${BASE_URL}${e.path}</loc>`,
-      e.lastmod ? `    <lastmod>${e.lastmod}</lastmod>` : null,
-      e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
-      e.priority ? `    <priority>${e.priority}</priority>` : null,
-      `  </url>`,
-    ]
-      .filter(Boolean)
-      .join("\n"),
-  );
-
-  return [
-    `<?xml version="1.0" encoding="UTF-8"?>`,
-    `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`,
-    ...urls,
-    `</urlset>`,
-  ].join("\n");
-}
-
-writeFileSync(resolve("public/sitemap.xml"), generateSitemap(entries));
-console.log(`✓ sitemap.xml written (${entries.length} entry) for base ${BASE_URL}`);
+const siteUrl = process.env.VITE_SITE_URL || DEFAULT_SITE_URL;
+writeFileSync(resolve("public/sitemap.xml"), renderSitemap(siteUrl));
+console.log(`✓ sitemap.xml written (3 language URLs) for base ${siteUrl}`);

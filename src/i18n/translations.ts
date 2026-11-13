@@ -11,6 +11,23 @@ export const translations: Translations = {
   "nav.projects": { pt: "Projetos", en: "Projects", es: "Proyectos" },
   "nav.contact": { pt: "Contato", en: "Contact", es: "Contacto" },
 
+  // SEO (document title and descriptions, per language)
+  "seo.title": {
+    pt: "Mateus Mendonça — Engenheiro de Software Backend",
+    en: "Mateus Mendonça — Backend Software Engineer",
+    es: "Mateus Mendonça — Ingeniero de Software Backend",
+  },
+  "seo.description": {
+    pt: "Portfólio de Mateus Mendonça Monteiro, engenheiro de software backend no {company} e mestrando em Ciência da Computação na UNESP. Go, Python, Java, Kubernetes, AWS e GCP.",
+    en: "Portfolio of Mateus Mendonça Monteiro, backend software engineer at {company} and MSc researcher in Computer Science at UNESP. Go, Python, Java, Kubernetes, AWS and GCP.",
+    es: "Portafolio de Mateus Mendonça Monteiro, ingeniero de software backend en {company} e investigador de maestría en Ciencias de la Computación en la UNESP. Go, Python, Java, Kubernetes, AWS y GCP.",
+  },
+  "seo.imageAlt": {
+    pt: "Mateus Mendonça Monteiro, Backend Software Engineer, sobre um gráfico de malha de serviços",
+    en: "Mateus Mendonça Monteiro, Backend Software Engineer, over a service mesh graphic",
+    es: "Mateus Mendonça Monteiro, Backend Software Engineer, sobre un gráfico de malla de servicios",
+  },
+
   // Hero
   "hero.title": {
     pt: "Backend Software Engineer",

@@ -1,0 +1,450 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
+  "basics": {
+    "name": "Mateus Mendonça Monteiro",
+    "label": "Backend Software Engineer",
+    "image": "https://mateusememe.github.io/whoami/images/profile-avatar.jpg",
+    "email": "matt.mendon@gmail.com",
+    "url": "https://mateusememe.github.io/whoami/es/",
+    "summary": "Soy ingeniero de software backend. Construyo sistemas distribuidos y microservicios orientados a eventos para plataformas financieras y de retail de alto volumen. En Itaú Unibanco escribo servicios serverless en Python y Go, y herramientas que migran datos entre cuentas AWS y plataformas de datos de clientes, incluidos orígenes en mainframe. En LuizaLabs trabajé en el motor de búsqueda usado por millones de personas al día y reduje en 20% el tiempo de sincronización de datos de productos. También hago investigación de maestría en Ciencias de la Computación en la UNESP, en inteligencia artificial y aprendizaje automático.",
+    "location": {
+      "city": "São Paulo",
+      "region": "SP",
+      "countryCode": "BR"
+    },
+    "profiles": [
+      {
+        "network": "LinkedIn",
+        "username": "mateus-men",
+        "url": "https://linkedin.com/in/mateus-men"
+      },
+      {
+        "network": "GitHub",
+        "username": "mateusememe",
+        "url": "https://github.com/mateusememe"
+      },
+      {
+        "network": "ORCID",
+        "username": "0009-0009-6468-8493",
+        "url": "https://orcid.org/0009-0009-6468-8493"
+      },
+      {
+        "network": "Currículo Lattes",
+        "username": "Lattes CNPq",
+        "url": "http://lattes.cnpq.br/2301165554095558"
+      },
+      {
+        "network": "X (Twitter)",
+        "username": "@mateusememe",
+        "url": "https://x.com/mateusememe"
+      },
+      {
+        "network": "Instagram",
+        "username": "@mateusememe",
+        "url": "https://instagram.com/mateusememe"
+      },
+      {
+        "network": "Discord",
+        "username": "@mateusememe",
+        "url": "https://discord.com/users/mateusememe"
+      }
+    ]
+  },
+  "work": [
+    {
+      "name": "Itaú Unibanco",
+      "position": "Ingeniero de Software",
+      "location": "São Paulo, SP",
+      "startDate": "2026-05",
+      "summary": "Desarrollo herramientas aceleradoras para migración de datos entre entornos AWS multicuenta y plataformas de datos de clientes (CDP). Escribo microservicios serverless en Python y Go con arquitectura hexagonal, diseño orientado a eventos y dominios de Data Mesh. Construyo pipelines ETL con AWS Step Functions, Glue y Lambda. Gobernanza y observabilidad con KMS, CloudTrail, CloudWatch, X-Ray, Datadog y Grafana.",
+      "highlights": [
+        "Python, Go, AWS, Step Functions, Glue, Lambda, KMS, CloudTrail, CloudWatch, X-Ray, Datadog, Grafana"
+      ]
+    },
+    {
+      "name": "LuizaLabs",
+      "position": "Ingeniero Backend",
+      "location": "São Paulo, SP",
+      "startDate": "2025-01",
+      "endDate": "2026-04",
+      "summary": "Trabajo en el motor de búsqueda y en microservicios de alto tráfico, usados por millones de personas al día. Stack con Java (Spring Boot, Quarkus), Node.js (Fastify) y TypeScript, integrando con MongoDB, Redis y Elasticsearch. Implementé circuit breakers y fallbacks y reduje en 20% el tiempo de sincronización de datos de productos al optimizar la reindexación en Elasticsearch. APIs GraphQL (Apollo Federation) y REST, mensajería con RabbitMQ y Pub/Sub, y despliegues en Kubernetes sobre GCP y Magalu Cloud vía ArgoCD.",
+      "highlights": [
+        "Java, Spring Boot, Quarkus, Node.js, Fastify, TypeScript, MongoDB, Redis, Elasticsearch, GraphQL, Apollo Federation, RabbitMQ, Pub/Sub, GCP, MagaluCloud, Kubernetes, ArgoCD, Datadog, Grafana"
+      ]
+    },
+    {
+      "name": "Vericode",
+      "position": "Ingeniero de Software",
+      "location": "São Paulo, SP",
+      "startDate": "2023-04",
+      "endDate": "2024-12",
+      "summary": "Desarrollo y mantenimiento de microservicios Java con Spring y Quarkus en Kubernetes, incluidos servicios de alto volumen con Kafka. Reducción de 10% en el tiempo de inicio y en el uso de memoria. APIs REST, autenticación con Spring Security y JWT, bases MySQL y MongoDB, y CI/CD con Docker, Jenkins, SonarQube y Bitbucket. Equipo de 12 personas.",
+      "highlights": [
+        "Java, Spring, Quarkus, Kafka, Kubernetes, MySQL, MongoDB, Firestore, Spring Security, JWT, Docker, Jenkins, SonarQube, Bitbucket"
+      ]
+    },
+    {
+      "name": "Vericode",
+      "position": "Pasante de Ingeniería de Software",
+      "location": "São Paulo, SP",
+      "startDate": "2022-09",
+      "endDate": "2023-04",
+      "summary": "Desarrollo de aplicaciones web con Next.js, React y TypeScript. Optimización de renderizado y SEO con 20% de mejora en métricas de rendimiento. Integración de APIs REST y creación de interfaces interactivas para constructores de flujo no-code.",
+      "highlights": [
+        "Next.js, React, TypeScript, API Integration, SEO"
+      ]
+    },
+    {
+      "name": "ANBIMA",
+      "position": "Ingeniero de Software",
+      "location": "São Paulo, SP",
+      "startDate": "2022-12",
+      "endDate": "2024-07",
+      "summary": "Mantenimiento y evolución del SRE (Sistema de Registro de Ofertas) de la CVM. Frontend con AngularJS y jQuery; backend en Java EE (VRaptor, EJB, Quartz, Liquibase). Lideré la migración de Java 8 a Java 11, que redujo en 15% los bugs en producción, y refactoricé consultas SQL Server para reducir el tiempo de respuesta.",
+      "highlights": [
+        "Java EE, VRaptor, Quartz, Jacoco, Liquibase, EJB, Angular.js, jQuery, HTML5, CSS3, JavaScript, SQL Server"
+      ]
+    },
+    {
+      "name": "Prevision",
+      "position": "Pasante de Desenvolvimento de Software",
+      "location": "Florianópolis, SC",
+      "startDate": "2022-04",
+      "endDate": "2022-09",
+      "summary": "Desarrollo de funciones para plataforma SaaS de planificación de obras civiles, atendiendo a más de 200 empresas y 1.000 usuarios en 2.600 obras. Trabajo com React, Node.js e Docker no time de User Insights.",
+      "highlights": [
+        "JavaScript, React, Node.js, Docker"
+      ]
+    },
+    {
+      "name": "Inova Prudente",
+      "position": "Pasante de Desenvolvimento de Software",
+      "location": "Presidente Prudente, SP",
+      "startDate": "2021-02",
+      "endDate": "2022-03",
+      "summary": "Creación de sistema web para gestión de espaços de coworking, reserva de salas y eventos con check-in. Stack con PHP, MySQL, JavaScript y jQuery, con Docker y pruebas en Robot Framework.",
+      "highlights": [
+        "HTML, CSS, JavaScript, PHP, jQuery, MySQL, Docker, Robot Framework"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Universidade Estadual Paulista (UNESP)",
+      "studyType": "Maestría",
+      "area": "Ciencias de la Computación",
+      "startDate": "2025-09",
+      "endDate": "2028-03"
+    },
+    {
+      "institution": "Universidade do Oeste Paulista",
+      "studyType": "Licenciatura",
+      "area": "Ciencias de la Computación",
+      "startDate": "2019-02",
+      "endDate": "2023-06"
+    }
+  ],
+  "awards": [
+    {
+      "title": "Becario 100% ProUni",
+      "awarder": "ProUni",
+      "summary": "Becario 100% del Programa Universidad para Todos en la Licenciatura en Ciencias de la Computación en la Universidade do Oeste Paulista."
+    }
+  ],
+  "certificates": [
+    {
+      "name": "EF SET English Certificate (58/100, nivel B2 (intermedio alto))",
+      "issuer": "EF SET"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Lenguajes",
+      "keywords": [
+        "Python",
+        "Go",
+        "Java",
+        "TypeScript"
+      ]
+    },
+    {
+      "name": "Backend y APIs",
+      "keywords": [
+        "Node.js",
+        "Spring Boot",
+        "Quarkus",
+        "GraphQL",
+        "Apollo Federation",
+        "REST"
+      ]
+    },
+    {
+      "name": "Mensajería",
+      "keywords": [
+        "Kafka",
+        "RabbitMQ",
+        "Pub/Sub"
+      ]
+    },
+    {
+      "name": "Cloud",
+      "keywords": [
+        "AWS",
+        "GCP",
+        "Magalu Cloud",
+        "Step Functions",
+        "Glue",
+        "Lambda",
+        "KMS"
+      ]
+    },
+    {
+      "name": "Datos",
+      "keywords": [
+        "MongoDB",
+        "Redis",
+        "Elasticsearch",
+        "MySQL",
+        "PostgreSQL",
+        "SQL Server",
+        "Firestore"
+      ]
+    },
+    {
+      "name": "Plataforma y entrega",
+      "keywords": [
+        "Kubernetes",
+        "Docker",
+        "ArgoCD",
+        "Jenkins",
+        "SonarQube",
+        "Bitbucket",
+        "Git",
+        "CI/CD"
+      ]
+    },
+    {
+      "name": "Observabilidad",
+      "keywords": [
+        "CloudTrail",
+        "CloudWatch",
+        "X-Ray",
+        "Datadog",
+        "Grafana"
+      ]
+    },
+    {
+      "name": "Frontend",
+      "keywords": [
+        "Next.js",
+        "React",
+        "Angular.js"
+      ]
+    }
+  ],
+  "languages": [
+    {
+      "language": "Portugués",
+      "fluency": "Nativo"
+    },
+    {
+      "language": "Inglés",
+      "fluency": "Profesional"
+    }
+  ],
+  "projects": [
+    {
+      "name": "rinha-backend-2026-c",
+      "description": "Detección de fraude por búsqueda vectorial para la Rinha de Backend 2026, en C11. KNN sobre 1.000.000 de vectores de referencia en memoria compartida, con SIMD ARM Neon, cuantización en punto fijo de 16 bits y 4.096 buckets espaciales. Latencia mediana cercana a 250 µs con 1 vCPU y 350 MB.",
+      "keywords": [
+        "C11",
+        "ARM Neon SIMD",
+        "KNN",
+        "POSIX SHM"
+      ],
+      "url": "https://github.com/mateusememe/rinha-backend-2026-c"
+    },
+    {
+      "name": "megabrain-context-protocol",
+      "description": "Material del taller de Model Context Protocol (MCP) en DevFest 2026. Construye DevBrain, un servidor MCP en Python que indica a un agente de código si una rama está lista para un pull request. Las reglas de revisión viven en el código, y el mismo servidor funciona en Claude Code, Gemini CLI, Copilot y Codex.",
+      "keywords": [
+        "Python",
+        "MCP",
+        "AI Agents",
+        "Cloud Run"
+      ],
+      "url": "https://github.com/mateusememe/megabrain-context-protocol"
+    },
+    {
+      "name": "syntroph",
+      "description": "Toolkit y orquestador en Go que conecta herramientas de desarrollo alrededor de un núcleo hexagonal. Un bus de eventos en proceso entrega la salida de un adaptador al siguiente, un saga journal append-only registra cada paso, y la memoria de sesión queda local, con GitHub Issues o Wiki como espejo.",
+      "keywords": [
+        "Go",
+        "Hexagonal Architecture",
+        "Event Bus",
+        "MCP"
+      ],
+      "url": "https://github.com/mateusememe/syntroph"
+    },
+    {
+      "name": "transaction.ledger",
+      "description": "Servicio financiero de registro de órdenes en arquitectura serverless de AWS. Implementa escrituras condicionales para idempotencia, patrón outbox con CDC, circuit breakers y observabilidad en CloudWatch.",
+      "keywords": [
+        "Python",
+        "AWS Lambda",
+        "DynamoDB",
+        "SQS",
+        "Clean Arch"
+      ],
+      "url": "https://github.com/mateusememe/transaction.ledger"
+    },
+    {
+      "name": "codecash",
+      "description": "API transaccional desarrollada para el taller 'API Hero' en DevFest 2025. Utiliza Spring Boot, consultas en GraphQL, base PostgreSQL y caché en Redis.",
+      "keywords": [
+        "Java",
+        "Spring Boot",
+        "GraphQL",
+        "PostgreSQL",
+        "Redis"
+      ],
+      "url": "https://github.com/mateusememe/codecash"
+    },
+    {
+      "name": "8-puzzle",
+      "description": "Resolución del rompecabezas 8-puzzle mediante búsqueda heurística con algoritmos A* y Best-First Search basados en distancia de Manhattan.",
+      "keywords": [
+        "Python",
+        "A* Algorithm",
+        "Heuristics",
+        "BFS"
+      ],
+      "url": "https://github.com/mateusememe/8-puzzle"
+    },
+    {
+      "name": "fuzzymeans-ai",
+      "description": "Imputación explicable de costos ausentes en registros de accidentes en pasos a nivel (datos de la FRA). Fuzzy C-Means y Noise Clustering sobre coordenadas y velocidades: cada valor imputado es una media ponderada por las pertenencias, que se puede auditar. Validado enmascarando 30% de los valores conocidos en 5 semillas.",
+      "keywords": [
+        "Python",
+        "Fuzzy C-Means",
+        "XAI",
+        "LaTeX"
+      ],
+      "url": "https://github.com/mateusememe/fuzzymeans-ai"
+    },
+    {
+      "name": "lime.stability.imputation",
+      "description": "Investigación experimental de maestría sobre la estabilidad del método LIME con técnicas de imputación de datos en modelos RandomForest y GradientBoosting.",
+      "keywords": [
+        "Python",
+        "Machine Learning",
+        "XAI",
+        "LIME",
+        "Research"
+      ]
+    },
+    {
+      "name": "git-github-in-action",
+      "description": "Ejemplos de código y recursos del taller 'Git y GitHub en Acción' en la 35ª Infoeste, cubriendo control de versiones y flujos colaborativos.",
+      "keywords": [
+        "Git",
+        "GitHub",
+        "Workflows",
+        "C++"
+      ],
+      "url": "https://github.com/mateusememe/git-github-in-action"
+    },
+    {
+      "name": "AlgorithmForest",
+      "description": "Implementación de estructuras de datos y algoritmos de árboles en Java, incluyendo Árboles Binarios de Búsqueda (BST) y balanceo AVL.",
+      "keywords": [
+        "Java",
+        "Data Structures",
+        "BST",
+        "AVL"
+      ],
+      "url": "https://github.com/mateusememe/AlgorithmForest"
+    },
+    {
+      "name": "zhang-suen-thinning",
+      "description": "Implementación en Python del algoritmo morfológico de adelgazamiento y esqueletización de Zhang-Suen para imágenes binarias.",
+      "keywords": [
+        "Python",
+        "Computer Vision",
+        "Algorithms",
+        "Image Processing"
+      ],
+      "url": "https://github.com/mateusememe/zhang-suen-thinning"
+    },
+    {
+      "name": "ai-autopsy-devfest-2025",
+      "description": "Código y diapositivas del taller 'AI Autopsy' en DevFest 2025. Entrena un clasificador LightGBM con el dataset del Titanic y luego explica predicciones individuales y el comportamiento global con LIME y SHAP.",
+      "keywords": [
+        "Python",
+        "LightGBM",
+        "LIME",
+        "SHAP"
+      ],
+      "url": "https://github.com/mateusememe/ai-autopsy-devfest-2025"
+    },
+    {
+      "name": "llm-edu-cards",
+      "description": "App en Streamlit que genera tarjetas de estudio con Meta-Llama-3-8B-Instruct: un resumen para cualquier tema y subtemas relacionados para explorar en árbol. Interfaz bilingüe. Hecho para la asignatura de Aprendizaje Profundo de la maestría de la UNESP.",
+      "keywords": [
+        "Python",
+        "Streamlit",
+        "Llama 3",
+        "Hugging Face"
+      ],
+      "url": "https://github.com/mateusememe/llm-edu-cards"
+    },
+    {
+      "name": "iron.ledger",
+      "description": "SDK y CLI en Python que importan programas de entrenamiento a Hevy por su API oficial. Mapea ejercicios por fuzzy matching, valida antes del envío, reintenta con backoff exponencial en HTTP 429 y mantiene las importaciones idempotentes.",
+      "keywords": [
+        "Python",
+        "REST API",
+        "CLI",
+        "Idempotency"
+      ],
+      "url": "https://github.com/mateusememe/iron.ledger"
+    },
+    {
+      "name": "search.it",
+      "description": "Búsqueda por línea de comandos en archivos de películas, hecha para el desafío técnico del equipo de búsqueda de LuizaLabs. Construye un índice invertido en memoria y responde consultas por término, con límite de resultados y conteo de ocurrencias. Compilado a binario nativo con GraalVM.",
+      "keywords": [
+        "Java 21",
+        "GraalVM",
+        "Inverted Index",
+        "Maven"
+      ],
+      "url": "https://github.com/mateusememe/search.it"
+    },
+    {
+      "name": "kruskal-algorithm",
+      "description": "Implementación en Python del algoritmo voraz de Kruskal para el árbol generador mínimo.",
+      "keywords": [
+        "Python",
+        "Graphs",
+        "Greedy"
+      ],
+      "url": "https://github.com/mateusememe/kruskal-algorithm"
+    },
+    {
+      "name": "whoami",
+      "description": "Este sitio. React y TypeScript, prerenderizado en el build, con una capa three.js en la que un campo de partículas cambia entre seis formaciones, portadas en canvas que ejecutan el algoritmo de cada proyecto, y llms.txt, Markdown y JSON Resume para agentes.",
+      "keywords": [
+        "TypeScript",
+        "React",
+        "three.js",
+        "GLSL"
+      ],
+      "url": "https://github.com/mateusememe/whoami"
+    }
+  ],
+  "meta": {
+    "canonical": "https://mateusememe.github.io/whoami/resume.es.json",
+    "version": "v1.0.0",
+    "lastModified": "2026-11-13T00:00:00Z"
+  }
+}

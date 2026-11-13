@@ -1,5 +1,6 @@
-// Runs before dev and build hooks; writes llms.txt, llms-full.txt and the
-// Markdown profiles (index.md, index.pt.md, index.es.md) to public/.
+// Runs before dev and build hooks; writes llms.txt, llms-full.txt, the
+// Markdown profiles (index.md, index.pt.md, index.es.md) and the JSON Resume
+// files (resume.json, resume.pt.json, resume.es.json) to public/.
 
 import { writeFileSync } from "fs";
 import { resolve } from "path";
