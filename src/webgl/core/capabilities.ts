@@ -21,13 +21,15 @@ export interface QualitySettings {
   clusters: number;
   nodesPerCluster: number;
   glyphs: number;
+  /** Particle field size. A square number: the portrait uses a √n × √n grid. */
+  particles: number;
   antialias: boolean;
 }
 
 export const QUALITY_PRESETS: Record<QualityTier, Omit<QualitySettings, "tier">> = {
-  low: { maxPixelRatio: 1, clusters: 5, nodesPerCluster: 9, glyphs: 220, antialias: false },
-  medium: { maxPixelRatio: 1.5, clusters: 6, nodesPerCluster: 13, glyphs: 480, antialias: true },
-  high: { maxPixelRatio: 2, clusters: 7, nodesPerCluster: 18, glyphs: 900, antialias: true },
+  low: { maxPixelRatio: 1, clusters: 5, nodesPerCluster: 9, glyphs: 220, particles: 64 * 64, antialias: false },
+  medium: { maxPixelRatio: 1.5, clusters: 6, nodesPerCluster: 13, glyphs: 480, particles: 92 * 92, antialias: true },
+  high: { maxPixelRatio: 2, clusters: 7, nodesPerCluster: 18, glyphs: 900, particles: 132 * 132, antialias: true },
 };
 
 export function pickQualityTier(profile: DeviceProfile): QualityTier {

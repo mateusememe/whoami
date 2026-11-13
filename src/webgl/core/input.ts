@@ -7,6 +7,10 @@ import { damp, readScrollProgress } from "@/lib/motion";
 export class InputTracker {
   readonly pointer = { x: 0, y: 0 };
   scroll = 0;
+  /** 0..1: rises while a mouse is moving, decays when it rests or leaves. */
+  pointerPresence = 0;
+
+  private lastMove = -Infinity;
 
   private readonly target = { x: 0, y: 0, scroll: 0 };
 
@@ -22,6 +26,8 @@ export class InputTracker {
     this.pointer.x = damp(this.pointer.x, this.target.x, 3, delta);
     this.pointer.y = damp(this.pointer.y, this.target.y, 3, delta);
     this.scroll = damp(this.scroll, this.target.scroll, 5, delta);
+    const active = performance.now() - this.lastMove < 2600;
+    this.pointerPresence = damp(this.pointerPresence, active ? 1 : 0, active ? 5 : 1.5, delta);
   }
 
   dispose(): void {
@@ -34,6 +40,7 @@ export class InputTracker {
     if (event.pointerType === "touch") return;
     this.target.x = (event.clientX / window.innerWidth) * 2 - 1;
     this.target.y = (event.clientY / window.innerHeight) * 2 - 1;
+    this.lastMove = performance.now();
   };
 
   private handleScroll = () => {

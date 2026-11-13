@@ -22,6 +22,8 @@ export interface SceneFrame {
   time: number;
   /** Page scroll progress, 0..1. */
   scroll: number;
+  /** How visible the mesh is, 0..1 (see meshPresence). */
+  presence: number;
 }
 
 type Layer = "nodes" | "edges" | "packets" | "glyphs";
@@ -155,21 +157,29 @@ export class MeshScene {
     this.layout.rotation.z = portrait ? Math.PI / 2 : 0;
   }
 
+  /** Shifts the mesh sideways (world units), e.g. to sit beside the hero copy. */
+  setOffset(x: number): void {
+    this.layout.position.x = x;
+  }
+
   /** Called by the engine every frame with the current camera and drawing buffer. */
   setView(projectionScale: number, fadeNear: number, fadeFar: number): void {
     this.shared.uProjScale.value = projectionScale;
     this.shared.uFade.value.set(fadeNear, fadeFar);
   }
 
-  update({ time, scroll }: SceneFrame): void {
+  update({ time, scroll, presence }: SceneFrame): void {
     this.shared.uTime.value = time;
     this.mesh.rotation.y = time * 0.035 + scroll * Math.PI * 1.1;
     this.mesh.rotation.x = 0.28 + scroll * 0.25;
+    // The mesh recedes as it fades, so it leaves the stage instead of just dimming.
+    this.mesh.scale.setScalar(0.82 + 0.18 * presence);
+    this.mesh.visible = presence > 0.004;
 
-    // Full strength behind the hero, dimmer behind reading content.
-    const intensity = 1 - 0.4 * smoothstep(0, 0.12, scroll);
     for (const layer of Object.keys(this.opacity) as Layer[]) {
-      this.opacity[layer].value = this.baseOpacity[layer] * (layer === "glyphs" ? 1 : intensity);
+      // The binary rain stays, a little quieter, as the constant backdrop.
+      const amount = layer === "glyphs" ? 0.55 + 0.45 * presence : presence;
+      this.opacity[layer].value = this.baseOpacity[layer] * amount;
     }
   }
 
@@ -205,11 +215,6 @@ export class MeshScene {
   }
 }
 
-function smoothstep(edge0: number, edge1: number, x: number): number {
-  const t = Math.min(Math.max((x - edge0) / (edge1 - edge0), 0), 1);
-  return t * t * (3 - 2 * t);
-}
-
 /** Two-cell texture: "0" on the left half, "1" on the right half. */
 function createGlyphAtlas(): CanvasTexture {
   const canvas = document.createElement("canvas");
@@ -222,7 +227,7 @@ function createGlyphAtlas(): CanvasTexture {
     if (!ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "#fff";
-    ctx.font = '500 92px "JetBrains Mono", ui-monospace, monospace';
+    ctx.font = '500 92px "JetBrains Mono Variable", ui-monospace, monospace';
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText("0", 64, 68);
@@ -232,6 +237,6 @@ function createGlyphAtlas(): CanvasTexture {
 
   draw();
   // The web font may load after the scene starts. Redraw once it is ready.
-  document.fonts?.load('500 92px "JetBrains Mono"').then(draw, () => undefined);
+  document.fonts?.load('500 92px "JetBrains Mono Variable"').then(draw, () => undefined);
   return texture;
 }
