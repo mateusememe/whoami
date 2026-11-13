@@ -1,25 +1,74 @@
-import type { ReactNode } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { LanguageProvider } from "@/contexts/LanguageContext";
+import { useEffect, useState, type ReactNode } from "react";
+import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import { LanguageProvider, useLanguage, type Language } from "@/contexts/LanguageContext";
+import { LANGUAGE_PATHS, isHomePath, languageFromPath, stripBase } from "@/i18n/routes";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
+interface AppProvidersProps {
+  children: ReactNode;
+  /** Language named by the URL, when there is one. */
+  routeLanguage?: Language | null;
+}
+
 /** Context providers shared by the browser app and the build-time prerender (entry-server.tsx). */
-export const AppProviders = ({ children }: { children: ReactNode }) => <LanguageProvider>{children}</LanguageProvider>;
+export const AppProviders = ({ children, routeLanguage }: AppProvidersProps) => (
+  <LanguageProvider routeLanguage={routeLanguage ?? undefined}>{children}</LanguageProvider>
+);
 
+const sameUrl = (a: string, b: string) => a.replace(/\/+$/, "") === b.replace(/\/+$/, "");
+
+/**
+ * Keeps the URL and the language in step. Switching language in the header
+ * moves to that language's URL (replacing the history entry, keeping the
+ * hash and the scroll position), so every URL always shows its own language.
+ */
+const LanguageRouteSync = () => {
+  const { language } = useLanguage();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isHomePath(location.pathname)) return;
+    const target = LANGUAGE_PATHS[language];
+    if (!sameUrl(location.pathname, target)) {
+      navigate({ pathname: target, hash: location.hash }, { replace: true });
+    }
+  }, [language, location.pathname, location.hash, navigate]);
+
+  return null;
+};
+
+/**
+ * The home page answers at `/`, `/pt/` and `/es/`; the language comes from
+ * the path. The sync component is part of this tree on purpose: the server
+ * and the browser must render the same component tree, or `useId` values
+ * differ and hydration fails.
+ */
 export const AppRoutes = () => (
-  <Routes>
-    <Route path="/" element={<Index />} />
-    <Route path="*" element={<NotFound />} />
-  </Routes>
+  <>
+    <LanguageRouteSync />
+    <Routes>
+      <Route path="/" element={<Index />} />
+      <Route path="/pt" element={<Index />} />
+      <Route path="/es" element={<Index />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  </>
 );
 
-const App = () => (
-  <AppProviders>
-    <BrowserRouter basename={import.meta.env.BASE_URL}>
-      <AppRoutes />
-    </BrowserRouter>
-  </AppProviders>
-);
+const App = () => {
+  const base = import.meta.env.BASE_URL;
+  // Read once: the URL the page was loaded at decides the first render.
+  const [routeLanguage] = useState(() => languageFromPath(stripBase(window.location.pathname, base)));
+
+  return (
+    <AppProviders routeLanguage={routeLanguage}>
+      <BrowserRouter basename={base}>
+        <AppRoutes />
+      </BrowserRouter>
+    </AppProviders>
+  );
+};
 
 export default App;

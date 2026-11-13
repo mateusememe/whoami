@@ -17,11 +17,12 @@ describe("hydration", () => {
     root = undefined;
     localStorage.clear();
     document.body.innerHTML = "";
+    window.history.replaceState(null, "", "/");
   });
 
-  const hydrate = () => {
+  const hydrate = (html = serverHtml) => {
     const container = document.createElement("div");
-    container.innerHTML = serverHtml;
+    container.innerHTML = html;
     document.body.appendChild(container);
 
     const recoverable = vi.fn();
@@ -52,5 +53,23 @@ describe("hydration", () => {
     expect(container.textContent).toContain("Sobre Mim");
     expect(document.documentElement.classList.contains("dark")).toBe(false);
     expect(localStorage.getItem("portfolio_theme")).toBe("light");
+  });
+
+  it("moves a returning visitor to the URL of the saved language", () => {
+    localStorage.setItem("portfolio_lang", "es");
+    hydrate();
+    expect(window.location.pathname).toBe("/es/");
+  });
+
+  it("hydrates the Portuguese page at /pt/, and the URL wins over a saved language", () => {
+    window.history.replaceState(null, "", "/pt/");
+    localStorage.setItem("portfolio_lang", "en");
+
+    const { container, recoverable, mismatches } = hydrate(render("/pt/"));
+    expect(recoverable).not.toHaveBeenCalled();
+    expect(mismatches).toEqual([]);
+    expect(container.textContent).toContain("Sobre Mim");
+    expect(window.location.pathname).toBe("/pt/");
+    expect(document.documentElement.lang).toBe("pt-BR");
   });
 });

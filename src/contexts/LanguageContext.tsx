@@ -17,6 +17,12 @@ export interface LanguageContextType {
 export interface LanguageProviderProps {
   children: React.ReactNode;
   defaultLanguage?: Language;
+  /**
+   * Language named by the URL (`/pt/`, `/es/`). It is used for the first
+   * render, which must match the prerendered page, and it wins over the
+   * visitor's saved choice.
+   */
+  routeLanguage?: Language;
 }
 
 const STORAGE_KEY = "portfolio_lang";
@@ -43,15 +49,18 @@ export const LanguageContext = createContext<LanguageContextType | undefined>(un
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   children,
   defaultLanguage = "en",
+  routeLanguage,
 }) => {
-  // First render uses the default so it matches the prerendered HTML; the
-  // saved choice is applied right after mount.
-  const [language, setLanguageState] = useState<Language>(defaultLanguage);
+  // First render uses the URL's language or the default, so it matches the
+  // prerendered HTML. Without a language in the URL, the saved choice is
+  // applied right after mount.
+  const [language, setLanguageState] = useState<Language>(routeLanguage ?? defaultLanguage);
 
   useEffect(() => {
+    if (routeLanguage) return;
     const saved = getInitialLanguage(defaultLanguage);
     if (saved !== defaultLanguage) setLanguageState(saved);
-  }, [defaultLanguage]);
+  }, [defaultLanguage, routeLanguage]);
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);

@@ -22,4 +22,10 @@ describe("prerender (entry-server, Node)", () => {
     expect(html).not.toContain("<canvas");
     expect(html).not.toContain("webgl-background");
   });
+
+  it("renders each language at its own path", () => {
+    expect(render("/pt/")).toContain("Sobre Mim");
+    expect(render("/es/")).toContain("Sobre Mí");
+    expect(render("/pt/")).not.toContain("About Me");
+  });
 });

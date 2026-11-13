@@ -1,16 +1,16 @@
 import { createRoot, hydrateRoot } from "react-dom/client";
 import App from "./App.tsx";
+import { isHomePath, stripBase } from "@/i18n/routes";
 import "./index.css";
 
 const container = document.getElementById("root")!;
 
-// dist/index.html ships the home page prerendered (scripts/prerender.ts):
-// hydrate it. Dev, the 404.html shell, and hosts that serve index.html for
-// unknown paths render from scratch instead.
-const base = import.meta.env.BASE_URL;
-const isHome = [base, base.replace(/\/$/, ""), `${base}index.html`].includes(window.location.pathname);
+// The home page is prerendered at `/`, `/pt/` and `/es/` (scripts/prerender.ts):
+// hydrate it there. Dev, the 404.html shell, and hosts that serve index.html
+// for unknown paths render from scratch instead.
+const path = stripBase(window.location.pathname.replace(/index\.html$/, ""), import.meta.env.BASE_URL);
 
-if (container.firstElementChild && isHome) {
+if (container.firstElementChild && isHomePath(path)) {
   hydrateRoot(container, <App />);
 } else {
   container.replaceChildren();
