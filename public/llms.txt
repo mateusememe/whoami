@@ -13,14 +13,22 @@ Portfolio and résumé of a backend software engineer: experience, education, sk
 
 ## Projects
 
-- [8-puzzle](https://github.com/mateusememe/8-puzzle): 8-puzzle solver using heuristic search with A* and Best-First Search algorithms based on Manhattan distance.
-- [git-github-in-action](https://github.com/mateusememe/git-github-in-action): Code examples and resources for the 'Git and GitHub in Action' workshop at 35th Infoeste, covering version control and workflows.
+- [rinha-backend-2026-c](https://github.com/mateusememe/rinha-backend-2026-c): Fraud detection by vector search for Rinha de Backend 2026, in C11. KNN over 1,000,000 reference vectors in shared memory, with ARM Neon SIMD, 16-bit fixed-point quantization and 4,096 spatial buckets. Median latency near 250 µs on 1 vCPU and 350 MB.
+- [megabrain-context-protocol](https://github.com/mateusememe/megabrain-context-protocol): Material for the Model Context Protocol (MCP) workshop at DevFest 2026. Builds DevBrain, an MCP server in Python that tells a coding agent whether a branch is ready for a pull request. Review rules live in code, and the same server runs in Claude Code, Gemini CLI, Copilot and Codex.
+- [syntroph](https://github.com/mateusememe/syntroph): Go toolkit and orchestrator that connects development tools around a hexagonal core. An in-process event bus hands one adapter's output to the next, an append-only saga journal records each step, and session memory stays local, with GitHub Issues or Wiki as a mirror.
+- [transaction.ledger](https://github.com/mateusememe/transaction.ledger): Financial order registration service on AWS serverless. Implements conditional writes for idempotency, outbox pattern with CDC, circuit breakers, and CloudWatch observability.
 - [codecash](https://github.com/mateusememe/codecash): Transactional API built for the 'API Hero' workshop at DevFest 2025. Uses Spring Boot, GraphQL queries, PostgreSQL storage, and Redis caching.
-- [matarazzoProject](https://github.com/mateusememe/matarazzoProject): Web platform for cultural space management and booking, with interactive frontend and backend services in JavaScript and Node.js.
+- [8-puzzle](https://github.com/mateusememe/8-puzzle): 8-puzzle solver using heuristic search with A* and Best-First Search algorithms based on Manhattan distance.
+- [fuzzymeans-ai](https://github.com/mateusememe/fuzzymeans-ai): Explainable imputation of missing costs in highway-rail crossing accident records (FRA data). Fuzzy C-Means and Noise Clustering over coordinates and speeds: each imputed value is a membership-weighted mean that can be audited. Validated by masking 30% of the known values across 5 seeds.
+- [git-github-in-action](https://github.com/mateusememe/git-github-in-action): Code examples and resources for the 'Git and GitHub in Action' workshop at 35th Infoeste, covering version control and workflows.
 - [AlgorithmForest](https://github.com/mateusememe/AlgorithmForest): Implementation of tree data structures and algorithms in Java, including Binary Search Trees (BST) and AVL balancing.
 - [zhang-suen-thinning](https://github.com/mateusememe/zhang-suen-thinning): Python implementation of the Zhang-Suen morphological thinning and skeletonization algorithm for binary images.
-- [transaction.ledger](https://github.com/mateusememe/transaction.ledger): Financial order registration service on AWS serverless. Implements conditional writes for idempotency, outbox pattern with CDC, circuit breakers, and CloudWatch observability.
-- [lime.stability.imputation](https://github.com/mateusememe/lime.stability.imputation): MSc experimental research on LIME stability with data imputation techniques across RandomForest and GradientBoosting models.
+- [ai-autopsy-devfest-2025](https://github.com/mateusememe/ai-autopsy-devfest-2025): Code and slides for the 'AI Autopsy' workshop at DevFest 2025. Trains a LightGBM classifier on the Titanic dataset, then explains single predictions and global behavior with LIME and SHAP.
+- [llm-edu-cards](https://github.com/mateusememe/llm-edu-cards): Streamlit app that generates study cards with Meta-Llama-3-8B-Instruct: a summary for any topic and related subtopics to explore as a tree. Bilingual interface. Built for the Deep Learning course of the UNESP graduate program.
+- [iron.ledger](https://github.com/mateusememe/iron.ledger): Python SDK and CLI that import workout programs into Hevy through its official API. Maps exercises by fuzzy matching, validates before upload, retries with exponential backoff on HTTP 429 and keeps imports idempotent.
+- [search.it](https://github.com/mateusememe/search.it): Command-line search over movie files, written for the LuizaLabs search team technical challenge. Builds an in-memory inverted index and answers term queries with a result limit and match counts. Compiled to a native binary with GraalVM.
+- [kruskal-algorithm](https://github.com/mateusememe/kruskal-algorithm): Python implementation of Kruskal's greedy algorithm for the minimum spanning tree.
+- [whoami](https://github.com/mateusememe/whoami): This site. React and TypeScript, prerendered at build time, with a three.js layer where a particle field morphs between six formations, canvas covers that run each project's algorithm, and llms.txt, Markdown and JSON Resume for agents.
 
 ## Contact
 

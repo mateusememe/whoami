@@ -1,118 +1,223 @@
-import { Moon, Sun } from "lucide-react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
+import { flushSync } from "react-dom";
+import { Menu, Moon, Sun, X } from "lucide-react";
 import { useLanguage, type Language } from "@/contexts/LanguageContext";
-import { useEffect, useState } from "react";
 import { IconButton } from "@/components/ds";
+import { Magnetic } from "@/components/motion/Magnetic";
+import { Scramble } from "@/components/motion/Scramble";
 import ScrollProgress from "@/components/ScrollProgress";
 import { NAV_ITEMS } from "@/data/navigation";
+import { socialLinks } from "@/data/portfolio";
 import { useActiveSection } from "@/hooks/useActiveSection";
+import { useTheme } from "@/hooks/useTheme";
+import { scrollState, setScrollLocked } from "@/motion/scroll";
+import { addTick, TICK } from "@/motion/ticker";
+import { runViewTransition } from "@/motion/viewTransition";
 import { cn } from "@/lib/utils";
 
-const flags: Record<Language, string> = { pt: "🇧🇷", en: "🇺🇸", es: "🇪🇸" };
+const LANGUAGES: Language[] = ["pt", "en", "es"];
 const langNames: Record<Language, string> = { pt: "Português", en: "English", es: "Español" };
-const THEME_STORAGE_KEY = "portfolio_theme";
-
-function getInitialTheme(): boolean {
-  if (typeof window === "undefined") return true;
-  const saved = localStorage.getItem(THEME_STORAGE_KEY);
-  if (saved !== null) {
-    return saved === "dark";
-  }
-  return true; // Default to dark mode for hacker/terminal aesthetic
-}
 
 const Header = () => {
   const { language, setLanguage, t } = useLanguage();
-  // null until mounted: the first render matches the prerendered HTML (dark),
-  // then the saved preference is read. index.html applies the class before
-  // first paint, so there is no theme flash.
-  const [darkPreference, setDarkPreference] = useState<boolean | null>(null);
-  const dark = darkPreference ?? true;
+  const { dark, toggle } = useTheme();
   const activeSection = useActiveSection(NAV_ITEMS);
+  const [menu, setMenu] = useState<"closed" | "open" | "closing">("closed");
 
+  const headerRef = useRef<HTMLElement>(null);
+  const navRef = useRef<HTMLElement>(null);
+
+  // Hide while scrolling down, return on the first scroll up.
   useEffect(() => {
-    setDarkPreference(getInitialTheme());
+    let anchor = 0;
+    let hidden = false;
+    return addTick(() => {
+      const header = headerRef.current;
+      if (!header) return;
+      const y = scrollState.y;
+      if (y < 160) {
+        hidden = false;
+        anchor = y;
+      } else if (!hidden && y - anchor > 90) {
+        hidden = true;
+      } else if (hidden && anchor - y > 24) {
+        hidden = false;
+      }
+      // `anchor` trails the turning point of the scroll direction.
+      if ((hidden && y > anchor) || (!hidden && y < anchor)) anchor = y;
+      const next = String(hidden && menu === "closed");
+      if (header.dataset.hidden !== next) header.dataset.hidden = next;
+    }, TICK.ui);
+  }, [menu]);
+
+  // Sliding highlight behind the active nav link.
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+    const link = activeSection ? nav.querySelector<HTMLElement>(`[data-nav="${activeSection}"]`) : null;
+    nav.style.setProperty("--pill-o", link ? "1" : "0");
+    if (link) {
+      nav.style.setProperty("--pill-x", `${link.offsetLeft}px`);
+      nav.style.setProperty("--pill-w", `${link.offsetWidth}px`);
+    }
+  }, [activeSection, language]);
+
+  const closeMenu = useCallback(() => {
+    setMenu((state) => (state === "open" ? "closing" : state));
+    window.setTimeout(() => setMenu("closed"), 280);
   }, []);
 
   useEffect(() => {
-    if (darkPreference === null) return;
-    document.documentElement.classList.toggle("dark", dark);
-    try {
-      localStorage.setItem(THEME_STORAGE_KEY, dark ? "dark" : "light");
-    } catch {
-      // ignore storage errors
-    }
+    if (menu === "closed") return;
+    setScrollLocked(true);
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeMenu();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      setScrollLocked(false);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [menu, closeMenu]);
 
-    // Dynamically update favicon based on active theme
-    const svgFavicon = document.querySelector<HTMLLinkElement>("link[rel='icon'][type='image/svg+xml']");
-    if (svgFavicon) {
-      const basePath = import.meta.env.BASE_URL || "/";
-      const normalized = basePath.endsWith("/") ? basePath : `${basePath}/`;
-      svgFavicon.href = `${normalized}favicon-${dark ? "dark" : "light"}.svg`;
-    }
-  }, [darkPreference, dark]);
+  const switchLanguage = (next: Language) => {
+    if (next === language) return;
+    runViewTransition(() => flushSync(() => setLanguage(next)));
+  };
+
+  const toggleTheme = (event: MouseEvent<HTMLButtonElement>) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    toggle({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });
+  };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 glass-card">
-      <div className="container mx-auto px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between">
-        <a
-          href="#root"
-          className="font-mono text-sm sm:text-base font-semibold tracking-wider text-foreground/80 hover:text-foreground transition-colors p-1"
-          aria-label={t("a11y.backToTop")}
-        >
-          MM
-        </a>
+    <>
+      <header
+        ref={headerRef}
+        className="fixed inset-x-0 top-0 z-50 transition-transform duration-slow ease-expo data-[hidden=true]:-translate-y-[130%]"
+      >
+        <ScrollProgress />
+        <div className="shell flex items-center justify-between gap-3 pt-3 sm:pt-4">
+          <Magnetic>
+            <a
+              href="#top"
+              aria-label={t("a11y.backToTop")}
+              className="glass-card flex h-11 w-11 items-center justify-center rounded-full font-mono text-sm font-semibold tracking-wider text-foreground"
+            >
+              MM
+            </a>
+          </Magnetic>
 
-        <nav className="hidden md:flex items-center gap-6" aria-label={t("a11y.mainNav")}>
-          {NAV_ITEMS.map((item) => {
-            const isActive = activeSection === item;
-            return (
-              <a
-                key={item}
-                href={`#${item}`}
-                aria-current={isActive ? "true" : undefined}
-                className={cn(
-                  "relative py-1 text-xs font-medium uppercase tracking-wide transition-colors duration-fast",
-                  "after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:bg-signal after:transition-transform after:duration-base after:ease-expo",
-                  isActive ? "text-foreground after:scale-x-100" : "text-muted-foreground hover:text-foreground after:scale-x-0",
-                )}
-              >
-                {t(`nav.${item}`)}
-              </a>
-            );
-          })}
-        </nav>
+          <nav ref={navRef} aria-label={t("a11y.mainNav")} className="nav-pill glass-card hidden lg:flex">
+            <span aria-hidden="true" className="nav-indicator" />
+            {NAV_ITEMS.map((item) => {
+              const isActive = activeSection === item;
+              return (
+                <a
+                  key={item}
+                  href={`#${item}`}
+                  data-nav={item}
+                  aria-current={isActive ? "true" : undefined}
+                  className={cn(
+                    "relative rounded-full px-4 py-2 font-mono text-[11px] uppercase tracking-[0.14em] transition-colors duration-base",
+                    isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  <Scramble text={t(`nav.${item}`)} />
+                </a>
+              );
+            })}
+          </nav>
 
-        <div className="flex items-center gap-2 sm:gap-3">
-          <div className="flex items-center gap-0.5 sm:gap-1" role="group" aria-label={t("a11y.languageSelect")}>
-            {(Object.keys(flags) as Language[]).map((lang) => (
-              <button
-                key={lang}
-                onClick={() => setLanguage(lang)}
-                aria-label={t("a11y.switchLanguage", { lang: langNames[lang] })}
-                aria-pressed={language === lang}
-                className={`min-w-[34px] min-h-[34px] sm:min-w-[30px] sm:min-h-[30px] flex items-center justify-center text-sm px-1.5 py-0.5 rounded-lg transition-all ${
-                  language === lang
-                    ? "bg-accent text-accent-foreground font-semibold"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <span aria-hidden="true">{flags[lang]}</span>
-              </button>
-            ))}
+          <div className="flex items-center gap-2">
+            <div
+              role="group"
+              aria-label={t("a11y.languageSelect")}
+              className="glass-card flex h-11 items-center rounded-full p-1"
+            >
+              {LANGUAGES.map((lang) => (
+                <button
+                  key={lang}
+                  type="button"
+                  onClick={() => switchLanguage(lang)}
+                  aria-label={t("a11y.switchLanguage", { lang: langNames[lang] })}
+                  aria-pressed={language === lang}
+                  className={cn(
+                    "h-9 min-w-9 rounded-full px-2 font-mono text-[11px] uppercase tracking-wider transition-colors duration-base",
+                    language === lang
+                      ? "bg-foreground text-background"
+                      : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  <span aria-hidden="true">{lang}</span>
+                </button>
+              ))}
+            </div>
+
+            <IconButton
+              tone="ghost"
+              onClick={toggleTheme}
+              aria-label={t(dark ? "a11y.enableLightMode" : "a11y.enableDarkMode")}
+              className="glass-card h-11 w-11 rounded-full"
+            >
+              {dark ? <Sun size={16} /> : <Moon size={16} />}
+            </IconButton>
+
+            <IconButton
+              tone="ghost"
+              onClick={() => (menu === "open" ? closeMenu() : setMenu("open"))}
+              aria-label={t(menu === "open" ? "a11y.closeMenu" : "a11y.openMenu")}
+              aria-expanded={menu === "open"}
+              aria-controls="site-menu"
+              className="glass-card h-11 w-11 rounded-full lg:hidden"
+            >
+              {menu === "open" ? <X size={16} /> : <Menu size={16} />}
+            </IconButton>
           </div>
-
-          <IconButton
-            tone="ghost"
-            size="md"
-            onClick={() => setDarkPreference(!dark)}
-            aria-label={t(dark ? "a11y.enableLightMode" : "a11y.enableDarkMode")}
-          >
-            {dark ? <Sun size={16} /> : <Moon size={16} />}
-          </IconButton>
         </div>
-      </div>
-      <ScrollProgress />
-    </header>
+      </header>
+
+      {menu !== "closed" && (
+        <div
+          id="site-menu"
+          role="dialog"
+          aria-modal="true"
+          aria-label={t("a11y.mainNav")}
+          data-closing={menu === "closing"}
+          data-lenis-prevent
+          className="menu-panel fixed inset-0 z-40 flex flex-col overflow-y-auto bg-background/92 backdrop-blur-2xl lg:hidden"
+        >
+          <ul className="shell flex flex-1 flex-col justify-center gap-1 pt-24">
+            {NAV_ITEMS.map((item, index) => (
+              <li key={item} className="menu-item" style={{ "--i": index } as CSSProperties}>
+                <a
+                  href={`#${item}`}
+                  onClick={closeMenu}
+                  className="group flex items-baseline gap-4 border-b border-border/60 py-4 font-display text-4xl font-semibold tracking-tight text-foreground"
+                >
+                  <span className="font-mono text-xs font-medium text-signal">{String(index + 1).padStart(2, "0")}</span>
+                  {t(`nav.${item}`)}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <ul className="shell menu-item flex flex-wrap gap-x-5 gap-y-2 pb-10 pt-8" style={{ "--i": 7 } as CSSProperties}>
+            {socialLinks.slice(0, 4).map((link) => (
+              <li key={link.label}>
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="label link-underline text-muted-foreground hover:text-foreground"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </>
   );
 };
 

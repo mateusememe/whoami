@@ -47,7 +47,12 @@ describe("llms.txt", () => {
   it("links every profile file, project and contact channel", () => {
     const hrefs = links(text);
     for (const file of Object.values(PROFILE_FILES)) expect(hrefs).toContain(siteHref(SITE, file));
-    for (const project of projects) expect(hrefs).toContain(project.githubUrl ?? project.liveUrl);
+    for (const project of projects) {
+      // Private repositories have no public URL and are left out.
+      const url = project.githubUrl ?? project.liveUrl;
+      if (url) expect(hrefs).toContain(url);
+      else expect(text).not.toContain(`[${project.name}]`);
+    }
     for (const link of socialLinks) expect(hrefs).toContain(link.href);
   });
 });

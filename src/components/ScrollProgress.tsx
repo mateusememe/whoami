@@ -1,38 +1,27 @@
 import { useEffect, useRef } from "react";
-import { readScrollProgress } from "@/lib/motion";
+import { scrollState } from "@/motion/scroll";
+import { addTick, TICK } from "@/motion/ticker";
 
 /**
- * Hairline reading-progress bar. Writes the transform directly so scrolling
- * never re-renders React.
+ * Hairline reading-progress bar along the top edge. Writes the transform
+ * directly each frame, so scrolling never re-renders React.
  */
 const ScrollProgress = () => {
   const barRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    let frame = 0;
-
-    const update = () => {
-      frame = 0;
-      if (barRef.current) barRef.current.style.transform = `scaleX(${readScrollProgress()})`;
-    };
-
-    const schedule = () => {
-      if (!frame) frame = requestAnimationFrame(update);
-    };
-
-    update();
-    window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule);
-    return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", schedule);
-      window.removeEventListener("resize", schedule);
-    };
+    let last = -1;
+    return addTick(() => {
+      const bar = barRef.current;
+      if (!bar || Math.abs(scrollState.progress - last) < 0.0005) return;
+      last = scrollState.progress;
+      bar.style.transform = `scaleX(${last.toFixed(4)})`;
+    }, TICK.ui);
   }, []);
 
   return (
-    <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px">
-      <div ref={barRef} className="h-full origin-left bg-signal/80" style={{ transform: "scaleX(0)" }} />
+    <div aria-hidden="true" className="absolute inset-x-0 top-0 h-[2px]">
+      <div ref={barRef} className="h-full origin-left bg-signal" style={{ transform: "scaleX(0)" }} />
     </div>
   );
 };

@@ -1,67 +1,153 @@
-import { ChevronDown } from "lucide-react";
+import { useRef, type CSSProperties } from "react";
+import { ArrowDown } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { socialLinks } from "@/data/portfolio";
+import { LocalClock } from "@/components/LocalClock";
 import ProfileCarousel from "@/components/ProfileCarousel";
 import { renderSocialIcon } from "@/components/SocialIcons";
 import { IconButton } from "@/components/ds";
+import { Magnetic } from "@/components/motion/Magnetic";
+import { useProgress } from "@/motion/useProgress";
 
+const NAME = "Mateus Mendonça Monteiro";
+const NAME_LINES = NAME.split(" ");
+
+/**
+ * Opening scene. The name sets the scale of the page: three lines of display
+ * type that rise letter by letter on first paint (CSS only, so it also runs
+ * from the prerendered HTML). As the page scrolls, each layer recedes at its
+ * own speed.
+ */
 const HeroSection = () => {
   const { t } = useLanguage();
+  const ref = useRef<HTMLElement>(null);
+  useProgress(ref, { mode: "exit" });
+
+  const facts = t("hero.subtitle")
+    .split("|")
+    .map((part) => part.trim())
+    .filter(Boolean);
 
   return (
-    <section className="min-h-[100dvh] flex flex-col items-center justify-center relative z-10 px-4 sm:px-6 pt-16 sm:pt-20 pb-12">
-      {/* Scrim: keeps hero copy legible over the WebGL mesh */}
+    <section ref={ref} id="top" data-scene="0" className="relative z-10 flex min-h-[100svh] flex-col">
+      {/* Scrim: keeps the copy legible over the WebGL mesh */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_42%_40%_at_50%_52%,hsl(var(--background)/0.82),transparent)]"
+        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_70%_55%_at_22%_48%,hsl(var(--background)/0.86),transparent)]"
       />
-      <div className="text-center max-w-3xl mx-auto animate-fade-in my-auto">
-        {/* Profile Avatar & Teaching Carousel */}
-        <ProfileCarousel />
 
-        <p aria-hidden="true" className="font-mono text-xs sm:text-sm text-signal mb-2 sm:mb-3">
-          <span className="text-muted-foreground/70">$</span> whoami
-          <span className="ml-1 inline-block h-[1em] w-[0.55em] translate-y-[0.15em] bg-signal/80 animate-caret-blink" />
-        </p>
+      <div className="shell flex flex-1 flex-col pb-6 pt-24 lg:pt-[clamp(5.5rem,11svh,7rem)]">
+        <div className="hero-fade label flex items-center justify-between gap-4" style={{ "--i": 0 } as CSSProperties}>
+          <span>~/whoami</span>
+          <span className="flex items-center gap-3">
+            <span className="hidden sm:inline">{t("hero.location")}</span>
+            <span aria-hidden="true" className="hidden h-px w-6 bg-border sm:inline-block" />
+            <LocalClock />
+          </span>
+        </div>
 
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold tracking-tight text-foreground mb-2 sm:mb-3">
-          Mateus Mendonça Monteiro
-        </h1>
+        <div className="grid flex-1 items-center gap-x-10 gap-y-8 py-6 lg:grid-cols-12 lg:py-8">
+          <div className="hero-parallax lg:col-span-8" style={{ "--shift": "-140px", "--fade": 1.5 } as CSSProperties}>
+            <p aria-hidden="true" className="hero-fade mb-3 font-mono text-sm text-signal sm:mb-5 sm:text-base">
+              <span className="text-muted-foreground/70">$</span> whoami
+              <span className="ml-1.5 inline-block h-[1.05em] w-[0.55em] translate-y-[0.18em] bg-signal/80 animate-caret-blink" />
+            </p>
 
-        <p className="font-mono text-xs sm:text-sm text-muted-foreground tracking-wider uppercase mb-2">
-          {t("hero.title")}
-        </p>
+            <h1 className="font-display text-display-2xl font-semibold text-foreground">
+              <span className="sr-only">{NAME}</span>
+              <span aria-hidden="true">
+                {NAME_LINES.map((line, lineIndex) => (
+                  <span key={line} className="hero-line" style={{ "--line": lineIndex } as CSSProperties}>
+                    {Array.from(line).map((char, charIndex) => (
+                      <span
+                        key={charIndex}
+                        className="hero-char hover:-translate-y-[0.04em] hover:text-signal"
+                        style={{ "--c": charIndex } as CSSProperties}
+                      >
+                        {char}
+                      </span>
+                    ))}
+                  </span>
+                ))}
+              </span>
+            </h1>
+          </div>
 
-        <p className="font-mono text-[11px] sm:text-xs text-muted-foreground/70 mb-4 sm:mb-5 max-w-2xl mx-auto leading-relaxed px-2">
-          {t("hero.subtitle")}
-        </p>
+          <div
+            className="hero-parallax mx-auto w-full max-w-[17rem] sm:max-w-xs lg:col-span-4 lg:max-w-[min(23rem,40svh)] lg:justify-self-end"
+            style={{ "--shift": "-60px", "--fade": 1.1 } as CSSProperties}
+          >
+            <div className="hero-photo">
+              <ProfileCarousel />
+            </div>
+          </div>
+        </div>
 
-        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed mb-6 sm:mb-8 max-w-xl mx-auto px-2">
-          {t("hero.summary")}
-        </p>
+        <div className="hero-parallax" style={{ "--shift": "-30px", "--fade": 2.2 } as CSSProperties}>
+          {/* Rule with the scroll cue sitting on it */}
+          <div className="relative">
+            <div aria-hidden="true" className="hairline hero-rule" />
+            {/* The positioning wrapper is separate: the entrance animation owns `transform` on the link. */}
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+              <a
+                href="#about"
+                aria-label={t("a11y.scrollToAbout")}
+                className="hero-fade label group flex items-center gap-3 rounded-full bg-background py-1 pl-4 pr-1 text-muted-foreground transition-colors duration-base hover:text-foreground"
+                style={{ "--i": 4 } as CSSProperties}
+              >
+                <span>{t("hero.scroll")}</span>
+                <span className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-border">
+                  <ArrowDown size={13} className="animate-scroll-cue" />
+                </span>
+              </a>
+            </div>
+          </div>
 
-        {/* Channels / Profiles Links */}
-        <ul className="flex items-center justify-center gap-2 sm:gap-2.5 flex-wrap" aria-label={t("a11y.socialLinks")}>
-          {socialLinks.map((social) => (
-            <li key={social.label}>
-              <IconButton asChild tone="outline" size="lg" aria-label={social.label} className="hover:border-signal/30">
-                <a href={social.href} target="_blank" rel="noopener noreferrer">
-                  {renderSocialIcon(social.iconName, 18)}
-                </a>
-              </IconButton>
-            </li>
-          ))}
-        </ul>
+          <div className="grid gap-x-10 gap-y-6 pt-8 md:grid-cols-12">
+            <div className="hero-fade md:col-span-4" style={{ "--i": 1 } as CSSProperties}>
+              <p className="font-serif text-2xl italic leading-tight text-foreground sm:text-3xl">{t("hero.title")}</p>
+              <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-1">
+                {facts.map((fact) => (
+                  <li key={fact} className="whitespace-nowrap font-mono text-[11px] leading-relaxed text-muted-foreground sm:text-xs">
+                    {fact}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <p
+              className="hero-fade text-body-lg text-muted-foreground text-pretty md:col-span-4"
+              style={{ "--i": 2 } as CSSProperties}
+            >
+              {t("hero.summary")}
+            </p>
+
+            <ul
+              className="hero-fade flex flex-wrap content-start gap-1.5 md:col-span-4 md:justify-end"
+              style={{ "--i": 3 } as CSSProperties}
+              aria-label={t("a11y.socialLinks")}
+            >
+              {socialLinks.map((social) => (
+                <li key={social.label}>
+                  <Magnetic strength={0.3}>
+                    <IconButton
+                      asChild
+                      tone="outline"
+                      size="lg"
+                      aria-label={social.label}
+                      className="rounded-full hover:border-signal/40 sm:h-10 sm:w-10"
+                    >
+                      <a href={social.href} target="_blank" rel="noopener noreferrer">
+                        {renderSocialIcon(social.iconName, 17)}
+                      </a>
+                    </IconButton>
+                  </Magnetic>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </div>
-
-      {/* Subtle animated scroll down indicator */}
-      <a
-        href="#about"
-        aria-label={t("a11y.scrollToAbout")}
-        className="mt-auto pt-4 flex flex-col items-center text-muted-foreground/50 hover:text-foreground transition-colors group focus:outline-none"
-      >
-        <ChevronDown size={20} className="animate-bounce" />
-      </a>
     </section>
   );
 };

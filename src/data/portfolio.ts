@@ -13,6 +13,8 @@ export interface LocalizedString {
 
 export interface Experience {
   company: string;
+  /** City and state, language neutral (e.g. "São Paulo, SP"). */
+  location: string;
   role: LocalizedString;
   period: LocalizedString;
   desc: LocalizedString;
@@ -21,8 +23,19 @@ export interface Experience {
 
 export interface EducationItem {
   school: string;
+  /** Official name, for structured data. */
+  fullName?: string;
   degreeKey: string;
   period: LocalizedString;
+  /** Degree still in progress. */
+  current?: boolean;
+}
+
+export interface TechGroup {
+  id: string;
+  /** Translation key for the group label. */
+  labelKey: string;
+  items: string[];
 }
 
 export interface ProjectItem {
@@ -31,9 +44,53 @@ export interface ProjectItem {
   desc: LocalizedString;
   stars?: number;
   tech?: string[];
+  /** Main programming language, for structured data. */
+  language?: string;
+  /** Omit for private repositories: the card then carries no link. */
   githubUrl?: string;
   liveUrl?: string;
+  /** Featured projects get a gallery card with an animated cover; the rest are listed below it. */
+  featured?: boolean;
 }
+
+/** A merged pull request (or set of them) in someone else's repository. */
+export interface ContributionItem {
+  id: string;
+  /** `owner/name` on GitHub. */
+  repo: string;
+  url: string;
+  /** Month of the merge, `YYYY-MM`. */
+  merged: string;
+  stars?: number;
+  desc: LocalizedString;
+  tech: string[];
+}
+
+export interface SpokenLanguage {
+  /** BCP 47 tag. */
+  code: string;
+  name: LocalizedString;
+  level: LocalizedString;
+}
+
+export interface Certification {
+  name: string;
+  issuer: string;
+  detail: LocalizedString;
+}
+
+/** Facts about the person that are not lists. Bump `updatedAt` whenever this file changes. */
+export const profile = {
+  name: "Mateus Mendonça Monteiro",
+  givenName: "Mateus",
+  familyName: "Mendonça Monteiro",
+  city: "São Paulo",
+  region: "SP",
+  countryCode: "BR",
+  githubUser: "mateusememe",
+  /** ISO date of the last content update. Feeds sitemap lastmod, JSON-LD dateModified and llms.txt. */
+  updatedAt: "2026-11-13",
+} as const;
 
 export const socialLinks: SocialLink[] = [
   {
@@ -89,6 +146,7 @@ export const socialLinks: SocialLink[] = [
 export const experiences: Experience[] = [
   {
     company: "Itaú Unibanco",
+    location: "São Paulo, SP",
     role: {
       pt: "Engenheiro de Software",
       en: "Software Engineer",
@@ -100,9 +158,9 @@ export const experiences: Experience[] = [
       es: "May 2026 – Presente",
     },
     desc: {
-      pt: "Desenvolvimento de ferramentas para migração de dados entre contas AWS e plataformas de dados de clientes (CDP). Criação de microsserviços em Python e Go usando arquitetura orientada a eventos e Data Mesh. Construção de pipelines ETL com AWS Step Functions, Glue e Lambda, com monitoramento via CloudWatch, X-Ray, Datadog e Grafana.",
-      en: "Built tools for data migration between AWS accounts and Customer Data Platforms (CDP). Wrote microservices in Python and Go using event-driven architecture and Data Mesh. Built ETL pipelines with AWS Step Functions, Glue, and Lambda, monitored via CloudWatch, X-Ray, Datadog, and Grafana.",
-      es: "Desarrollo de herramientas para migración de datos entre cuentas AWS y plataformas de dados de clientes (CDP). Creación de microservicios en Python e Go usando arquitectura orientada a eventos y Data Mesh. Construcción de pipelines ETL con AWS Step Functions, Glue y Lambda, monitoreados con CloudWatch, X-Ray, Datadog y Grafana.",
+      pt: "Desenvolvo ferramentas aceleradoras para migração de dados entre ambientes AWS multi-conta e plataformas de dados de clientes (CDP). Escrevo microsserviços serverless em Python e Go com arquitetura hexagonal, design orientado a eventos e domínios de Data Mesh. Construo pipelines ETL com AWS Step Functions, Glue e Lambda. Governança e observabilidade com KMS, CloudTrail, CloudWatch, X-Ray, Datadog e Grafana.",
+      en: "Build accelerator tools that migrate data between multi-account AWS environments and Customer Data Platforms (CDP). Write serverless microservices in Python and Go with hexagonal architecture, event-driven design and Data Mesh domains. Build ETL pipelines with AWS Step Functions, Glue, and Lambda. Governance and observability run on KMS, CloudTrail, CloudWatch, X-Ray, Datadog, and Grafana.",
+      es: "Desarrollo herramientas aceleradoras para migración de datos entre entornos AWS multicuenta y plataformas de datos de clientes (CDP). Escribo microservicios serverless en Python y Go con arquitectura hexagonal, diseño orientado a eventos y dominios de Data Mesh. Construyo pipelines ETL con AWS Step Functions, Glue y Lambda. Gobernanza y observabilidad con KMS, CloudTrail, CloudWatch, X-Ray, Datadog y Grafana.",
     },
     tech: [
       "Python",
@@ -121,6 +179,7 @@ export const experiences: Experience[] = [
   },
   {
     company: "LuizaLabs",
+    location: "São Paulo, SP",
     role: {
       pt: "Engenheiro Backend",
       en: "Backend Engineer",
@@ -132,9 +191,9 @@ export const experiences: Experience[] = [
       es: "Ene 2025 – Abr 2026",
     },
     desc: {
-      pt: "Atuação no motor de busca e em microsserviços com alto volume de acessos. Stack com Java (Spring Boot, Quarkus), Node.js (Fastify) e TypeScript, integrando com MongoDB, Redis e Elasticsearch. Desenvolvimento de APIs GraphQL (Apollo Federation) e REST, mensageria com RabbitMQ e Google Pub/Sub, e deploy em Kubernetes e GCP via ArgoCD.",
-      en: "Worked on search engines and high-throughput microservices. Stack: Java (Spring Boot, Quarkus), Node.js (Fastify), and TypeScript, backed by MongoDB, Redis, and Elasticsearch. Built GraphQL (Apollo Federation) and REST APIs, async messaging with RabbitMQ and Pub/Sub, deployed to Kubernetes and GCP via ArgoCD.",
-      es: "Trabajo en el motor de búsqueda y en microservicios de alto tráfico. Stack con Java (Spring Boot, Quarkus), Node.js (Fastify) y TypeScript, integrando con MongoDB, Redis y Elasticsearch. Desarrollo de APIs GraphQL (Apollo Federation) y REST, mensajería con RabbitMQ y Pub/Sub, y despliegues en Kubernetes y GCP vía ArgoCD.",
+      pt: "Atuação no motor de busca e em microsserviços de alto volume, usados por milhões de pessoas por dia. Stack com Java (Spring Boot, Quarkus), Node.js (Fastify) e TypeScript, integrando com MongoDB, Redis e Elasticsearch. Implementei circuit breakers e fallbacks e reduzi em 20% o tempo de sincronização de dados de produtos ao otimizar a reindexação no Elasticsearch. APIs GraphQL (Apollo Federation) e REST, mensageria com RabbitMQ e Google Pub/Sub, e deploy em Kubernetes na GCP e na Magalu Cloud via ArgoCD.",
+      en: "Worked on the search engine and high-throughput microservices used by millions of people a day. Stack: Java (Spring Boot, Quarkus), Node.js (Fastify), and TypeScript, backed by MongoDB, Redis, and Elasticsearch. Implemented circuit breakers and fallbacks, and cut product data synchronization time by 20% by optimizing Elasticsearch re-indexing. Built GraphQL (Apollo Federation) and REST APIs, async messaging with RabbitMQ and Pub/Sub, deployed to Kubernetes on GCP and Magalu Cloud via ArgoCD.",
+      es: "Trabajo en el motor de búsqueda y en microservicios de alto tráfico, usados por millones de personas al día. Stack con Java (Spring Boot, Quarkus), Node.js (Fastify) y TypeScript, integrando con MongoDB, Redis y Elasticsearch. Implementé circuit breakers y fallbacks y reduje en 20% el tiempo de sincronización de datos de productos al optimizar la reindexación en Elasticsearch. APIs GraphQL (Apollo Federation) y REST, mensajería con RabbitMQ y Pub/Sub, y despliegues en Kubernetes sobre GCP y Magalu Cloud vía ArgoCD.",
     },
     tech: [
       "Java",
@@ -160,6 +219,7 @@ export const experiences: Experience[] = [
   },
   {
     company: "Vericode",
+    location: "São Paulo, SP",
     role: {
       pt: "Engenheiro de Software",
       en: "Software Engineer",
@@ -171,14 +231,15 @@ export const experiences: Experience[] = [
       es: "Abr 2023 – Dic 2024",
     },
     desc: {
-      pt: "Desenvolvimento e sustentação de microsserviços Java com Spring e Quarkus rodando em Kubernetes. Otimização de tempo de inicialização e consumo de memória em 10%. Construção de APIs REST, autenticação com Spring Security e JWT, bancos MySQL e MongoDB, e automação de CI/CD com Docker, Jenkins, SonarQube e Bitbucket.",
-      en: "Maintained and deployed Java microservices with Spring and Quarkus on Kubernetes. Lowered startup time and memory use by 10%. Built REST APIs, authentication with Spring Security and JWT, MySQL and MongoDB storage, with CI/CD on Docker, Jenkins, SonarQube, and Bitbucket.",
-      es: "Desarrollo y mantenimiento de microservicios Java con Spring y Quarkus en Kubernetes. Optimización de tiempo de inicio y memoria en 10%. Construcción de APIs REST, autenticación con Spring Security y JWT, bases MySQL y MongoDB, y automatización de CI/CD con Docker, Jenkins, SonarQube y Bitbucket.",
+      pt: "Desenvolvimento e sustentação de microsserviços Java com Spring e Quarkus em Kubernetes, incluindo serviços de alto volume com Kafka. Redução de 10% no tempo de inicialização e no consumo de memória. APIs REST, autenticação com Spring Security e JWT, bancos MySQL e MongoDB, e CI/CD com Docker, Jenkins, SonarQube e Bitbucket. Equipe de 12 pessoas.",
+      en: "Maintained and deployed Java microservices with Spring and Quarkus on Kubernetes, including high-throughput services with Kafka. Lowered startup time and memory use by 10%. Built REST APIs, authentication with Spring Security and JWT, MySQL and MongoDB storage, with CI/CD on Docker, Jenkins, SonarQube, and Bitbucket. Team of 12.",
+      es: "Desarrollo y mantenimiento de microservicios Java con Spring y Quarkus en Kubernetes, incluidos servicios de alto volumen con Kafka. Reducción de 10% en el tiempo de inicio y en el uso de memoria. APIs REST, autenticación con Spring Security y JWT, bases MySQL y MongoDB, y CI/CD con Docker, Jenkins, SonarQube y Bitbucket. Equipo de 12 personas.",
     },
     tech: [
       "Java",
       "Spring",
       "Quarkus",
+      "Kafka",
       "Kubernetes",
       "MySQL",
       "MongoDB",
@@ -193,6 +254,7 @@ export const experiences: Experience[] = [
   },
   {
     company: "Vericode",
+    location: "São Paulo, SP",
     role: {
       pt: "Estagiário de Engenharia de Software",
       en: "Software Engineer Intern",
@@ -212,6 +274,7 @@ export const experiences: Experience[] = [
   },
   {
     company: "ANBIMA",
+    location: "São Paulo, SP",
     role: {
       pt: "Engenheiro de Software",
       en: "Software Engineer",
@@ -223,9 +286,9 @@ export const experiences: Experience[] = [
       es: "Dic 2022 – Jul 2024",
     },
     desc: {
-      pt: "Manutenção e evolução do SRO (Sistema de Registro de Ofertas) integrado à CVM. Frontend com AngularJS e jQuery; backend em Java EE (VRaptor, EJB, Quartz, Liquibase). Migração do sistema de Java 8 para Java 11 e administração de banco SQL Server.",
-      en: "Maintained and updated the Offer Registration System (SRO) for the CVM. Frontend in AngularJS and jQuery; backend in Java EE (VRaptor, EJB, Quartz, Liquibase). Migrated the codebase from Java 8 to Java 11 and managed the SQL Server database.",
-      es: "Mantenimiento y evolución del SRO (Sistema de Registro de Ofertas) para la CVM. Frontend con AngularJS y jQuery; backend en Java EE (VRaptor, EJB, Quartz, Liquibase). Migración del código de Java 8 a Java 11 y administración de base de datos SQL Server.",
+      pt: "Manutenção e evolução do SRE (Sistema de Registro de Ofertas) da CVM. Frontend com AngularJS e jQuery; backend em Java EE (VRaptor, EJB, Quartz, Liquibase). Liderei a migração de Java 8 para Java 11, que reduziu em 15% os bugs em produção, e refatorei consultas SQL Server para reduzir o tempo de resposta.",
+      en: "Maintained and updated the Offer Registration System (SRE) for the CVM. Frontend in AngularJS and jQuery; backend in Java EE (VRaptor, EJB, Quartz, Liquibase). Led the migration from Java 8 to Java 11, which reduced production bugs by 15%, and refactored SQL Server queries to cut response times.",
+      es: "Mantenimiento y evolución del SRE (Sistema de Registro de Ofertas) de la CVM. Frontend con AngularJS y jQuery; backend en Java EE (VRaptor, EJB, Quartz, Liquibase). Lideré la migración de Java 8 a Java 11, que redujo en 15% los bugs en producción, y refactoricé consultas SQL Server para reducir el tiempo de respuesta.",
     },
     tech: [
       "Java EE",
@@ -244,6 +307,7 @@ export const experiences: Experience[] = [
   },
   {
     company: "Prevision",
+    location: "Florianópolis, SC",
     role: {
       pt: "Estagiário de Desenvolvimento de Software",
       en: "Software Development Intern",
@@ -263,6 +327,7 @@ export const experiences: Experience[] = [
   },
   {
     company: "Inova Prudente",
+    location: "Presidente Prudente, SP",
     role: {
       pt: "Estagiário de Desenvolvimento de Software",
       en: "Software Development Intern",
@@ -325,56 +390,46 @@ export const topSkills: LocalizedString[] = [
   },
 ];
 
-export const techStack: string[] = [
-  "Python",
-  "Go",
-  "Java",
-  "TypeScript",
-  "Node.js",
-  "Spring Boot",
-  "Quarkus",
-  "Kubernetes",
-  "Docker",
-  "Kafka",
-  "RabbitMQ",
-  "Pub/Sub",
-  "AWS",
-  "GCP",
-  "Magalu Cloud",
-  "MongoDB",
-  "Redis",
-  "Elasticsearch",
-  "MySQL",
-  "PostgreSQL",
-  "SQL Server",
-  "Firestore",
-  "GraphQL",
-  "Apollo Federation",
-  "REST",
-  "Next.js",
-  "React",
-  "Angular.js",
-  "Step Functions",
-  "Glue",
-  "Lambda",
-  "KMS",
-  "CloudTrail",
-  "CloudWatch",
-  "X-Ray",
-  "Datadog",
-  "Grafana",
-  "ArgoCD",
-  "Jenkins",
-  "SonarQube",
-  "Bitbucket",
-  "Git",
-  "CI/CD",
+/** The stack by area. `techStack` below is the same list, flattened. */
+export const techGroups: TechGroup[] = [
+  { id: "languages", labelKey: "skills.group.languages", items: ["Python", "Go", "Java", "TypeScript"] },
+  {
+    id: "backend",
+    labelKey: "skills.group.backend",
+    items: ["Node.js", "Spring Boot", "Quarkus", "GraphQL", "Apollo Federation", "REST"],
+  },
+  { id: "messaging", labelKey: "skills.group.messaging", items: ["Kafka", "RabbitMQ", "Pub/Sub"] },
+  {
+    id: "cloud",
+    labelKey: "skills.group.cloud",
+    items: ["AWS", "GCP", "Magalu Cloud", "Step Functions", "Glue", "Lambda", "KMS"],
+  },
+  {
+    id: "data",
+    labelKey: "skills.group.data",
+    items: ["MongoDB", "Redis", "Elasticsearch", "MySQL", "PostgreSQL", "SQL Server", "Firestore"],
+  },
+  {
+    id: "platform",
+    labelKey: "skills.group.platform",
+    items: ["Kubernetes", "Docker", "ArgoCD", "Jenkins", "SonarQube", "Bitbucket", "Git", "CI/CD"],
+  },
+  {
+    id: "observability",
+    labelKey: "skills.group.observability",
+    items: ["CloudTrail", "CloudWatch", "X-Ray", "Datadog", "Grafana"],
+  },
+  { id: "frontend", labelKey: "skills.group.frontend", items: ["Next.js", "React", "Angular.js"] },
 ];
+
+export const techStack: string[] = techGroups.flatMap((group) => group.items);
 
 export const education: EducationItem[] = [
   {
     school: "UNESP",
+    fullName: "Universidade Estadual Paulista (UNESP)",
     degreeKey: "edu.masters",
+    current: true,
     period: {
       pt: "Set 2025 – Mar 2028",
       en: "Sep 2025 – Mar 2028",
@@ -392,35 +447,96 @@ export const education: EducationItem[] = [
   },
 ];
 
-export const projects: ProjectItem[] = [
+export const spokenLanguages: SpokenLanguage[] = [
   {
-    id: "8-puzzle",
-    name: "8-puzzle",
-    stars: 17,
-    desc: {
-      pt: "Resolução do quebra-cabeça 8-puzzle utilizando busca heurística com os algoritmos A* e Best-First Search baseados na distância de Manhattan.",
-      en: "8-puzzle solver using heuristic search with A* and Best-First Search algorithms based on Manhattan distance.",
-      es: "Resolución del rompecabezas 8-puzzle mediante búsqueda heurística con algoritmos A* y Best-First Search basados en distancia de Manhattan.",
-    },
-    tech: ["Python", "A* Algorithm", "Heuristics", "BFS"],
-    githubUrl: "https://github.com/mateusememe/8-puzzle",
+    code: "pt-BR",
+    name: { pt: "Português", en: "Portuguese", es: "Portugués" },
+    level: { pt: "Nativo", en: "Native", es: "Nativo" },
   },
   {
-    id: "git-github-in-action",
-    name: "git-github-in-action",
-    stars: 5,
-    desc: {
-      pt: "Material e exemplos práticos do minicurso 'Git e GitHub em Ação' ministrado na 35ª Infoeste, cobrindo controle de versão e fluxos colaborativos.",
-      en: "Code examples and resources for the 'Git and GitHub in Action' workshop at 35th Infoeste, covering version control and workflows.",
-      es: "Ejemplos de código y recursos del taller 'Git y GitHub en Acción' en la 35ª Infoeste, cubriendo control de versiones y flujos colaborativos.",
+    code: "en",
+    name: { pt: "Inglês", en: "English", es: "Inglés" },
+    level: { pt: "Profissional", en: "Full professional", es: "Profesional" },
+  },
+];
+
+export const certifications: Certification[] = [
+  {
+    name: "EF SET English Certificate",
+    issuer: "EF SET",
+    detail: {
+      pt: "58/100, nível B2 (intermediário superior)",
+      en: "58/100, level B2 (upper intermediate)",
+      es: "58/100, nivel B2 (intermedio alto)",
     },
-    tech: ["Git", "GitHub", "Workflows", "C++"],
-    githubUrl: "https://github.com/mateusememe/git-github-in-action",
+  },
+];
+
+/**
+ * Projects, most relevant first. `featured` ones appear in the gallery and
+ * need a cover sketch under the same id (src/components/covers/sketches.ts).
+ */
+export const projects: ProjectItem[] = [
+  {
+    id: "rinha-backend-2026-c",
+    name: "rinha-backend-2026-c",
+    stars: 1,
+    featured: true,
+    language: "C",
+    desc: {
+      pt: "Detecção de fraude por busca vetorial para a Rinha de Backend 2026, em C11. KNN sobre 1.000.000 de vetores de referência em memória compartilhada, com SIMD ARM Neon, quantização em ponto fixo de 16 bits e 4.096 buckets espaciais. Latência mediana perto de 250 µs com 1 vCPU e 350 MB.",
+      en: "Fraud detection by vector search for Rinha de Backend 2026, in C11. KNN over 1,000,000 reference vectors in shared memory, with ARM Neon SIMD, 16-bit fixed-point quantization and 4,096 spatial buckets. Median latency near 250 µs on 1 vCPU and 350 MB.",
+      es: "Detección de fraude por búsqueda vectorial para la Rinha de Backend 2026, en C11. KNN sobre 1.000.000 de vectores de referencia en memoria compartida, con SIMD ARM Neon, cuantización en punto fijo de 16 bits y 4.096 buckets espaciales. Latencia mediana cercana a 250 µs con 1 vCPU y 350 MB.",
+    },
+    tech: ["C11", "ARM Neon SIMD", "KNN", "POSIX SHM"],
+    githubUrl: "https://github.com/mateusememe/rinha-backend-2026-c",
+  },
+  {
+    id: "megabrain-context-protocol",
+    name: "megabrain-context-protocol",
+    stars: 3,
+    featured: true,
+    language: "Python",
+    desc: {
+      pt: "Material do minicurso de Model Context Protocol (MCP) no DevFest 2026. Constrói o DevBrain, um servidor MCP em Python que diz a um agente de código se uma branch está pronta para virar pull request. As regras de revisão ficam no código, e o mesmo servidor roda no Claude Code, Gemini CLI, Copilot e Codex.",
+      en: "Material for the Model Context Protocol (MCP) workshop at DevFest 2026. Builds DevBrain, an MCP server in Python that tells a coding agent whether a branch is ready for a pull request. Review rules live in code, and the same server runs in Claude Code, Gemini CLI, Copilot and Codex.",
+      es: "Material del taller de Model Context Protocol (MCP) en DevFest 2026. Construye DevBrain, un servidor MCP en Python que indica a un agente de código si una rama está lista para un pull request. Las reglas de revisión viven en el código, y el mismo servidor funciona en Claude Code, Gemini CLI, Copilot y Codex.",
+    },
+    tech: ["Python", "MCP", "AI Agents", "Cloud Run"],
+    githubUrl: "https://github.com/mateusememe/megabrain-context-protocol",
+  },
+  {
+    id: "syntroph",
+    name: "syntroph",
+    featured: true,
+    language: "Go",
+    desc: {
+      pt: "Toolkit e orquestrador em Go que conecta ferramentas de desenvolvimento em torno de um núcleo hexagonal. Um barramento de eventos em processo entrega a saída de um adaptador ao próximo, um saga journal append-only registra cada passo, e a memória de sessão fica local, com GitHub Issues ou Wiki como espelho.",
+      en: "Go toolkit and orchestrator that connects development tools around a hexagonal core. An in-process event bus hands one adapter's output to the next, an append-only saga journal records each step, and session memory stays local, with GitHub Issues or Wiki as a mirror.",
+      es: "Toolkit y orquestador en Go que conecta herramientas de desarrollo alrededor de un núcleo hexagonal. Un bus de eventos en proceso entrega la salida de un adaptador al siguiente, un saga journal append-only registra cada paso, y la memoria de sesión queda local, con GitHub Issues o Wiki como espejo.",
+    },
+    tech: ["Go", "Hexagonal Architecture", "Event Bus", "MCP"],
+    githubUrl: "https://github.com/mateusememe/syntroph",
+  },
+  {
+    id: "transaction-ledger",
+    name: "transaction.ledger",
+    featured: true,
+    language: "Python",
+    desc: {
+      pt: "Serviço financeiro de registro de ordens em arquitetura serverless AWS. Implementa escrita condicional para idempotência, padrão outbox com CDC, circuit breakers e observabilidade via CloudWatch.",
+      en: "Financial order registration service on AWS serverless. Implements conditional writes for idempotency, outbox pattern with CDC, circuit breakers, and CloudWatch observability.",
+      es: "Servicio financiero de registro de órdenes en arquitectura serverless de AWS. Implementa escrituras condicionales para idempotencia, patrón outbox con CDC, circuit breakers y observabilidad en CloudWatch.",
+    },
+    tech: ["Python", "AWS Lambda", "DynamoDB", "SQS", "Clean Arch"],
+    githubUrl: "https://github.com/mateusememe/transaction.ledger",
   },
   {
     id: "codecash",
     name: "codecash",
     stars: 4,
+    featured: true,
+    language: "Java",
     desc: {
       pt: "API transacional desenvolvida para o minicurso 'API Hero' no DevFest 2025. Utiliza Spring Boot, consultas em GraphQL, banco PostgreSQL e cache em Redis.",
       en: "Transactional API built for the 'API Hero' workshop at DevFest 2025. Uses Spring Boot, GraphQL queries, PostgreSQL storage, and Redis caching.",
@@ -430,21 +546,65 @@ export const projects: ProjectItem[] = [
     githubUrl: "https://github.com/mateusememe/codecash",
   },
   {
-    id: "matarazzoProject",
-    name: "matarazzoProject",
-    stars: 4,
+    id: "8-puzzle",
+    name: "8-puzzle",
+    stars: 17,
+    featured: true,
+    language: "Python",
     desc: {
-      pt: "Plataforma web para gestão e agendamento de espaços culturais com interface interativa e serviços backend em JavaScript e Node.js.",
-      en: "Web platform for cultural space management and booking, with interactive frontend and backend services in JavaScript and Node.js.",
-      es: "Plataforma web para gestión y reserva de espacios culturales, con frontend interactivo y servicios backend en JavaScript y Node.js.",
+      pt: "Resolução do quebra-cabeça 8-puzzle utilizando busca heurística com os algoritmos A* e Best-First Search baseados na distância de Manhattan.",
+      en: "8-puzzle solver using heuristic search with A* and Best-First Search algorithms based on Manhattan distance.",
+      es: "Resolución del rompecabezas 8-puzzle mediante búsqueda heurística con algoritmos A* y Best-First Search basados en distancia de Manhattan.",
     },
-    tech: ["JavaScript", "Node.js", "Express", "Full Stack"],
-    githubUrl: "https://github.com/mateusememe/matarazzoProject",
+    tech: ["Python", "A* Algorithm", "Heuristics", "BFS"],
+    githubUrl: "https://github.com/mateusememe/8-puzzle",
+  },
+  {
+    id: "fuzzymeans-ai",
+    name: "fuzzymeans-ai",
+    featured: true,
+    language: "Python",
+    desc: {
+      pt: "Imputação explicável de custos ausentes em registros de acidentes em passagens de nível (dados da FRA). Fuzzy C-Means e Noise Clustering sobre coordenadas e velocidades: cada valor imputado é uma média ponderada pelas pertinências, que pode ser auditada. Validado mascarando 30% dos valores conhecidos em 5 sementes.",
+      en: "Explainable imputation of missing costs in highway-rail crossing accident records (FRA data). Fuzzy C-Means and Noise Clustering over coordinates and speeds: each imputed value is a membership-weighted mean that can be audited. Validated by masking 30% of the known values across 5 seeds.",
+      es: "Imputación explicable de costos ausentes en registros de accidentes en pasos a nivel (datos de la FRA). Fuzzy C-Means y Noise Clustering sobre coordenadas y velocidades: cada valor imputado es una media ponderada por las pertenencias, que se puede auditar. Validado enmascarando 30% de los valores conocidos en 5 semillas.",
+    },
+    tech: ["Python", "Fuzzy C-Means", "XAI", "LaTeX"],
+    githubUrl: "https://github.com/mateusememe/fuzzymeans-ai",
+  },
+  {
+    id: "lime-stability",
+    name: "lime.stability.imputation",
+    featured: true,
+    language: "Python",
+    desc: {
+      pt: "Pesquisa experimental de mestrado sobre a estabilidade do método LIME com técnicas de imputação de dados em modelos RandomForest e GradientBoosting.",
+      en: "MSc experimental research on LIME stability with data imputation techniques across RandomForest and GradientBoosting models.",
+      es: "Investigación experimental de maestría sobre la estabilidad del método LIME con técnicas de imputación de datos en modelos RandomForest y GradientBoosting.",
+    },
+    tech: ["Python", "Machine Learning", "XAI", "LIME", "Research"],
+    // Private repository: no public link.
+  },
+  {
+    id: "git-github-in-action",
+    name: "git-github-in-action",
+    stars: 5,
+    featured: true,
+    language: "C++",
+    desc: {
+      pt: "Material e exemplos práticos do minicurso 'Git e GitHub em Ação' ministrado na 35ª Infoeste, cobrindo controle de versão e fluxos colaborativos.",
+      en: "Code examples and resources for the 'Git and GitHub in Action' workshop at 35th Infoeste, covering version control and workflows.",
+      es: "Ejemplos de código y recursos del taller 'Git y GitHub en Acción' en la 35ª Infoeste, cubriendo control de versiones y flujos colaborativos.",
+    },
+    tech: ["Git", "GitHub", "Workflows", "C++"],
+    githubUrl: "https://github.com/mateusememe/git-github-in-action",
   },
   {
     id: "algorithm-forest",
     name: "AlgorithmForest",
     stars: 2,
+    featured: true,
+    language: "Java",
     desc: {
       pt: "Implementação de algoritmos e estruturas de dados de árvores em Java, incluindo Árvores Binárias de Busca (BST) e balanceamento AVL.",
       en: "Implementation of tree data structures and algorithms in Java, including Binary Search Trees (BST) and AVL balancing.",
@@ -457,34 +617,147 @@ export const projects: ProjectItem[] = [
     id: "zhang-suen-thinning",
     name: "zhang-suen-thinning",
     stars: 2,
+    featured: true,
+    language: "Python",
     desc: {
-      pt: "Implementação em Python do algoritmo morfológico de esqueletização e afinamento de imagens binárias de Zhang-Suen.",
+      pt: "Implementação em Python do algoritmo morfológico de afinamento e esqueletização de Zhang-Suen para imagens binárias.",
       en: "Python implementation of the Zhang-Suen morphological thinning and skeletonization algorithm for binary images.",
-      es: "Implementación en Python del algoritmo morfológico de esqueletización y afinamiento de imágenes binarias de Zhang-Suen.",
+      es: "Implementación en Python del algoritmo morfológico de adelgazamiento y esqueletización de Zhang-Suen para imágenes binarias.",
     },
     tech: ["Python", "Computer Vision", "Algorithms", "Image Processing"],
     githubUrl: "https://github.com/mateusememe/zhang-suen-thinning",
   },
   {
-    id: "transaction-ledger",
-    name: "transaction.ledger",
+    id: "ai-autopsy-devfest-2025",
+    name: "ai-autopsy-devfest-2025",
+    stars: 1,
+    language: "Python",
     desc: {
-      pt: "Serviço financeiro de registro de ordens em arquitetura serverless AWS. Implementa escrita condicional para idempotência, padrão outbox com CDC, circuit breakers e observabilidade via CloudWatch.",
-      en: "Financial order registration service on AWS serverless. Implements conditional writes for idempotency, outbox pattern with CDC, circuit breakers, and CloudWatch observability.",
-      es: "Servicio financiero de registro de órdenes en arquitectura serverless de AWS. Implementa escrituras condicionales para idempotencia, patrón outbox con CDC, circuit breakers y observabilidad en CloudWatch.",
+      pt: "Código e slides do workshop 'AI Autopsy' no DevFest 2025. Treina um classificador LightGBM no dataset do Titanic e depois explica previsões individuais e o comportamento global com LIME e SHAP.",
+      en: "Code and slides for the 'AI Autopsy' workshop at DevFest 2025. Trains a LightGBM classifier on the Titanic dataset, then explains single predictions and global behavior with LIME and SHAP.",
+      es: "Código y diapositivas del taller 'AI Autopsy' en DevFest 2025. Entrena un clasificador LightGBM con el dataset del Titanic y luego explica predicciones individuales y el comportamiento global con LIME y SHAP.",
     },
-    tech: ["Python", "AWS Lambda", "DynamoDB", "SQS", "Clean Arch"],
-    githubUrl: "https://github.com/mateusememe/transaction.ledger",
+    tech: ["Python", "LightGBM", "LIME", "SHAP"],
+    githubUrl: "https://github.com/mateusememe/ai-autopsy-devfest-2025",
   },
   {
-    id: "lime-stability",
-    name: "lime.stability.imputation",
+    id: "llm-edu-cards",
+    name: "llm-edu-cards",
+    language: "Python",
     desc: {
-      pt: "Pesquisa experimental de mestrado sobre a estabilidade do método LIME com técnicas de imputação de dados em modelos RandomForest e GradientBoosting.",
-      en: "MSc experimental research on LIME stability with data imputation techniques across RandomForest and GradientBoosting models.",
-      es: "Investigación experimental de maestría sobre la estabilidad del método LIME con técnicas de imputación de dados en modelos RandomForest e GradientBoosting.",
+      pt: "App em Streamlit que gera cards de estudo com o Meta-Llama-3-8B-Instruct: um resumo para qualquer tema e subtemas relacionados para explorar em árvore. Interface bilíngue. Feito para a disciplina de Aprendizado Profundo do mestrado da UNESP.",
+      en: "Streamlit app that generates study cards with Meta-Llama-3-8B-Instruct: a summary for any topic and related subtopics to explore as a tree. Bilingual interface. Built for the Deep Learning course of the UNESP graduate program.",
+      es: "App en Streamlit que genera tarjetas de estudio con Meta-Llama-3-8B-Instruct: un resumen para cualquier tema y subtemas relacionados para explorar en árbol. Interfaz bilingüe. Hecho para la asignatura de Aprendizaje Profundo de la maestría de la UNESP.",
     },
-    tech: ["Python", "Machine Learning", "XAI", "LIME", "Research"],
-    githubUrl: "https://github.com/mateusememe/lime.stability.imputation",
+    tech: ["Python", "Streamlit", "Llama 3", "Hugging Face"],
+    githubUrl: "https://github.com/mateusememe/llm-edu-cards",
+  },
+  {
+    id: "iron-ledger",
+    name: "iron.ledger",
+    language: "Python",
+    desc: {
+      pt: "SDK e CLI em Python que importam programas de treino para o Hevy pela API oficial. Mapeia exercícios por fuzzy matching, valida antes do envio, repete com backoff exponencial em HTTP 429 e mantém as importações idempotentes.",
+      en: "Python SDK and CLI that import workout programs into Hevy through its official API. Maps exercises by fuzzy matching, validates before upload, retries with exponential backoff on HTTP 429 and keeps imports idempotent.",
+      es: "SDK y CLI en Python que importan programas de entrenamiento a Hevy por su API oficial. Mapea ejercicios por fuzzy matching, valida antes del envío, reintenta con backoff exponencial en HTTP 429 y mantiene las importaciones idempotentes.",
+    },
+    tech: ["Python", "REST API", "CLI", "Idempotency"],
+    githubUrl: "https://github.com/mateusememe/iron.ledger",
+    liveUrl: "https://mateusememe.github.io/iron.ledger/",
+  },
+  {
+    id: "search-it",
+    name: "search.it",
+    language: "Java",
+    desc: {
+      pt: "Busca por linha de comando em arquivos de filmes, feita para o desafio técnico do time de busca do LuizaLabs. Monta um índice invertido em memória e responde consultas por termo, com limite de resultados e contagem de ocorrências. Compilado para binário nativo com GraalVM.",
+      en: "Command-line search over movie files, written for the LuizaLabs search team technical challenge. Builds an in-memory inverted index and answers term queries with a result limit and match counts. Compiled to a native binary with GraalVM.",
+      es: "Búsqueda por línea de comandos en archivos de películas, hecha para el desafío técnico del equipo de búsqueda de LuizaLabs. Construye un índice invertido en memoria y responde consultas por término, con límite de resultados y conteo de ocurrencias. Compilado a binario nativo con GraalVM.",
+    },
+    tech: ["Java 21", "GraalVM", "Inverted Index", "Maven"],
+    githubUrl: "https://github.com/mateusememe/search.it",
+  },
+  {
+    id: "kruskal-algorithm",
+    name: "kruskal-algorithm",
+    language: "Python",
+    desc: {
+      pt: "Implementação em Python do algoritmo guloso de Kruskal para árvore geradora mínima.",
+      en: "Python implementation of Kruskal's greedy algorithm for the minimum spanning tree.",
+      es: "Implementación en Python del algoritmo voraz de Kruskal para el árbol generador mínimo.",
+    },
+    tech: ["Python", "Graphs", "Greedy"],
+    githubUrl: "https://github.com/mateusememe/kruskal-algorithm",
+  },
+  {
+    id: "whoami",
+    name: "whoami",
+    language: "TypeScript",
+    desc: {
+      pt: "Este site. React e TypeScript, pré-renderizado no build, com uma camada three.js em que um campo de partículas muda entre seis formações, capas em canvas que executam o algoritmo de cada projeto, e llms.txt, Markdown e JSON Resume para agentes.",
+      en: "This site. React and TypeScript, prerendered at build time, with a three.js layer where a particle field morphs between six formations, canvas covers that run each project's algorithm, and llms.txt, Markdown and JSON Resume for agents.",
+      es: "Este sitio. React y TypeScript, prerenderizado en el build, con una capa three.js en la que un campo de partículas cambia entre seis formaciones, portadas en canvas que ejecutan el algoritmo de cada proyecto, y llms.txt, Markdown y JSON Resume para agentes.",
+    },
+    tech: ["TypeScript", "React", "three.js", "GLSL"],
+    githubUrl: "https://github.com/mateusememe/whoami",
+    liveUrl: "https://mateusememe.github.io/whoami/",
   },
 ];
+
+/** Merged pull requests in public repositories owned by other people, newest first. */
+export const contributions: ContributionItem[] = [
+  {
+    id: "go-quality-gate",
+    repo: "dmux/go-quality-gate",
+    url: "https://github.com/dmux/go-quality-gate/pull/32",
+    merged: "2026-10",
+    stars: 5,
+    desc: {
+      pt: "Detecção do runtime e das ferramentas que o projeto precisa, com dicas de instalação por sistema operacional. Comando `doctor` estendido, opção `tools_policy: recommend` e a tool MCP `check_environment` para agentes de IA. 25 arquivos, 1.353 linhas adicionadas.",
+      en: "Detection of the runtime and tools a project needs, with install hints per operating system. Extended `doctor` command, a `tools_policy: recommend` setting and the `check_environment` MCP tool for AI agents. 25 files, 1,353 lines added.",
+      es: "Detección del runtime y de las herramientas que el proyecto necesita, con sugerencias de instalación por sistema operativo. Comando `doctor` extendido, opción `tools_policy: recommend` y la tool MCP `check_environment` para agentes de IA. 25 archivos, 1.353 líneas añadidas.",
+    },
+    tech: ["Go", "CLI", "MCP"],
+  },
+  {
+    id: "merkle",
+    repo: "leeozaka/Merkle",
+    url: "https://github.com/leeozaka/Merkle/pulls?q=is%3Apr+author%3Amateusememe+is%3Amerged",
+    merged: "2026-08",
+    stars: 1,
+    desc: {
+      pt: "Dois adaptadores de linguagem para o Protocol 1.0 do Merkle, um para Java e Spring Boot e outro para Python. Cada um roda fora do processo e faz detecção de linguagem, indexação determinística de AST e mapeamento de impacto em testes.",
+      en: "Two language adapters for Merkle's Protocol 1.0, one for Java and Spring Boot and one for Python. Each runs out of process and does language detection, deterministic AST indexing and test impact mapping.",
+      es: "Dos adaptadores de lenguaje para el Protocol 1.0 de Merkle, uno para Java y Spring Boot y otro para Python. Cada uno corre fuera del proceso y hace detección de lenguaje, indexación determinista de AST y mapeo de impacto en pruebas.",
+    },
+    tech: ["Java", "Python", "AST"],
+  },
+  {
+    id: "rinha-de-backend-2026",
+    repo: "zanfranceschi/rinha-de-backend-2026",
+    url: "https://github.com/zanfranceschi/rinha-de-backend-2026/pull/7621",
+    merged: "2026-05",
+    stars: 785,
+    desc: {
+      pt: "Submissão aceita na quarta edição da Rinha de Backend: detecção de fraude com busca vetorial, limitada a 1 vCPU e 350 MB. O código é o projeto rinha-backend-2026-c.",
+      en: "Submission accepted in the fourth Rinha de Backend: fraud detection with vector search, limited to 1 vCPU and 350 MB. The code is the rinha-backend-2026-c project.",
+      es: "Envío aceptado en la cuarta edición de la Rinha de Backend: detección de fraude con búsqueda vectorial, limitada a 1 vCPU y 350 MB. El código es el proyecto rinha-backend-2026-c.",
+    },
+    tech: ["C", "Docker", "Vector Search"],
+  },
+];
+
+/** Facts derived from the lists above, so headline numbers never go stale. */
+export const portfolioStats = (() => {
+  const years = experiences.flatMap((exp) => (exp.period.en.match(/\d{4}/g) ?? []).map(Number));
+  return {
+    roles: experiences.length,
+    companies: new Set(experiences.map((exp) => exp.company)).size,
+    firstYear: Math.min(...years),
+    lastYear: Math.max(...years),
+    repos: projects.length,
+    featured: projects.filter((project) => project.featured).length,
+    stars: projects.reduce((total, project) => total + (project.stars ?? 0), 0),
+    contributions: contributions.length,
+  };
+})();

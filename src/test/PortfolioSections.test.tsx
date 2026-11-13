@@ -10,6 +10,7 @@ import SkillsSection from "@/components/sections/SkillsSection";
 import ProjectsSection from "@/components/sections/ProjectsSection";
 import ContactFooter from "@/components/sections/ContactFooter";
 import ProfileCarousel from "@/components/ProfileCarousel";
+import { contributions, projects } from "@/data/portfolio";
 
 describe("Portfolio Sections", () => {
   it("renders HeroSection with name, title, and profile carousel", () => {
@@ -94,17 +95,25 @@ describe("Portfolio Sections", () => {
     );
 
     expect(screen.getByText("Projetos")).toBeInTheDocument();
-    expect(screen.getByText("8-puzzle")).toBeInTheDocument();
-    expect(screen.getByText("git-github-in-action")).toBeInTheDocument();
-    expect(screen.getByText("codecash")).toBeInTheDocument();
-    expect(screen.getByText("matarazzoProject")).toBeInTheDocument();
-    expect(screen.getByText("AlgorithmForest")).toBeInTheDocument();
-    expect(screen.getByText("zhang-suen-thinning")).toBeInTheDocument();
-    expect(screen.getByText("transaction.ledger")).toBeInTheDocument();
-    expect(screen.getByText("lime.stability.imputation")).toBeInTheDocument();
+    for (const project of projects) expect(screen.getByText(project.name)).toBeInTheDocument();
+    expect(screen.queryByText("matarazzoProject")).not.toBeInTheDocument();
     expect(screen.getByRole("region", { name: /carrossel de projetos/i })).toBeInTheDocument();
     expect(screen.getByLabelText("Próximo projeto")).toBeInTheDocument();
     expect(screen.getByText("Ver no GitHub")).toBeInTheDocument();
+  });
+
+  it("lists merged contributions and renders backtick spans as code", () => {
+    const { container } = render(
+      <LanguageProvider defaultLanguage="en">
+        <ProjectsSection />
+      </LanguageProvider>
+    );
+
+    for (const item of contributions) {
+      expect(screen.getByText(item.repo).closest("a")).toHaveAttribute("href", item.url);
+    }
+    expect(screen.getByText("check_environment").tagName).toBe("CODE");
+    expect(container.textContent).not.toContain("`");
   });
 
   it("renders ProjectsSection accessibility labels in English", () => {
@@ -117,7 +126,8 @@ describe("Portfolio Sections", () => {
     expect(screen.getByRole("region", { name: /project carousel/i })).toBeInTheDocument();
     expect(screen.getByLabelText("Next project")).toBeInTheDocument();
     expect(screen.getByLabelText("View codecash repository on GitHub")).toBeInTheDocument();
-    expect(screen.getByRole("tab", { name: "Go to project 3: codecash" })).toBeInTheDocument();
+    const position = projects.filter((project) => project.featured).findIndex((project) => project.id === "codecash") + 1;
+    expect(screen.getByRole("tab", { name: `Go to project ${position}: codecash` })).toBeInTheDocument();
     expect(screen.queryByLabelText("Próximo projeto")).not.toBeInTheDocument();
   });
 

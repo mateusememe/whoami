@@ -4,6 +4,10 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import SceneBackground from "@/components/scene/SceneBackground";
 import Header from "@/components/Header";
 import { Surface } from "@/components/ds";
+import { Cursor } from "@/components/motion/Cursor";
+import { Grain } from "@/components/motion/Grain";
+import { Magnetic } from "@/components/motion/Magnetic";
+import { SmoothScroll } from "@/components/motion/SmoothScroll";
 
 const NotFound = () => {
   const location = useLocation();
@@ -29,27 +33,28 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen bg-background relative overflow-x-hidden flex flex-col justify-between">
+    <div className="relative flex min-h-screen flex-col justify-between overflow-x-clip bg-background">
+      <SmoothScroll />
       <SceneBackground />
       <Header />
-      <main className="relative z-10 flex-1 flex items-center justify-center px-6 py-24">
-        <Surface className="p-8 sm:p-8 max-w-md w-full text-center border-border/50 shadow-xl">
-          <span className="font-mono text-xs text-signal block mb-3">$ curl -I {location.pathname}</span>
-          <span className="font-mono text-5xl font-bold text-foreground block mb-2">404</span>
-          <h1 className="font-display text-xl font-semibold text-foreground mb-2">
-            {t("notFound.title")}
-          </h1>
-          <p className="text-sm text-muted-foreground mb-6">
-            {t("notFound.message")}
-          </p>
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center font-mono text-xs uppercase px-5 py-2.5 rounded-xl bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
-          >
-            {t("notFound.backHome")}
-          </Link>
+      <main className="relative z-10 flex flex-1 items-center justify-center px-6 py-28">
+        <Surface className="w-full max-w-lg rounded-[2rem] border-border/50 p-10 text-center sm:p-12">
+          <span className="mb-4 block font-mono text-xs text-signal">$ curl -I {location.pathname}</span>
+          <span className="block font-display text-display-2xl font-semibold leading-none text-foreground">404</span>
+          <h1 className="mt-4 font-serif text-3xl italic text-foreground">{t("notFound.title")}</h1>
+          <p className="mb-8 mt-3 text-body-lg text-muted-foreground">{t("notFound.message")}</p>
+          <Magnetic>
+            <Link
+              to="/"
+              className="inline-flex items-center justify-center rounded-full bg-foreground px-6 py-3 font-mono text-xs uppercase tracking-[0.14em] text-background transition-opacity duration-base hover:opacity-85"
+            >
+              {t("notFound.backHome")}
+            </Link>
+          </Magnetic>
         </Surface>
       </main>
+      <Grain />
+      <Cursor />
     </div>
   );
 };

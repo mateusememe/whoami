@@ -1,46 +1,107 @@
+import { useRef } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Section, Surface, TagList } from "@/components/ds";
-import { experiences } from "@/data/portfolio";
+import { Reveal, SectionHeading, TagList } from "@/components/ds";
+import { experiences, portfolioStats } from "@/data/portfolio";
 import { sectionIndex } from "@/data/navigation";
+import { useFocusItems } from "@/motion/useFocusItems";
+import { useProgress } from "@/motion/useProgress";
 import { cn } from "@/lib/utils";
 
+const YEARS = Array.from(
+  { length: portfolioStats.lastYear - portfolioStats.firstYear + 1 },
+  (_, offset) => portfolioStats.lastYear - offset,
+);
+
 /**
- * Timeline. The rail and node markers echo the WebGL service mesh: the
- * current role is a live (signal) node, past roles are muted.
+ * Trajectory. The heading and a year scale stay pinned on the left while the
+ * roles scroll past on the right; the role nearest the middle of the screen
+ * is in focus and the rest dim. A signal marker travels down the scale with
+ * the scroll.
  */
 const ExperienceSection = () => {
   const { language, t } = useLanguage();
+  const sectionRef = useRef<HTMLElement>(null);
+  const listRef = useRef<HTMLOListElement>(null);
+  useProgress(sectionRef);
+  useFocusItems(listRef);
 
   return (
-    <Section id="experience" index={sectionIndex("experience")} title={t("exp.title")}>
-      <ol className="relative space-y-3.5 sm:space-y-4 before:absolute before:left-[5px] before:top-3 before:bottom-3 before:w-px before:bg-gradient-to-b before:from-signal/60 before:via-border before:to-transparent">
-        {experiences.map((exp, i) => {
-          const isCurrent = exp.period.en.endsWith("Present");
-          return (
-            <li key={`${exp.company}-${i}`} className="relative pl-6 sm:pl-8">
+    <section
+      ref={sectionRef}
+      id="experience"
+      aria-labelledby="experience-title"
+      data-scene="2"
+      className="relative z-10 py-section"
+    >
+      <div className="shell grid gap-x-14 lg:grid-cols-12">
+        <div className="lg:col-span-5">
+          <div className="lg:sticky lg:top-28">
+            <SectionHeading
+              id="experience-title"
+              index={sectionIndex("experience")}
+              title={t("exp.title")}
+              size="lg"
+              description={t("exp.lead", {
+                roles: portfolioStats.roles,
+                companies: portfolioStats.companies,
+                from: portfolioStats.firstYear,
+              })}
+            />
+
+            {/* Year scale with a marker driven by the section's scroll progress */}
+            <div aria-hidden="true" className="relative hidden h-[34vh] max-h-80 lg:block">
+              <div className="absolute inset-y-0 left-[5px] w-px bg-gradient-to-b from-signal/60 via-border to-border/30" />
               <span
-                aria-hidden="true"
-                className={cn(
-                  "absolute left-0 top-7 sm:top-8 h-[11px] w-[11px] rounded-full ring-4 ring-background",
-                  isCurrent ? "bg-signal animate-signal-pulse" : "bg-muted-foreground/40",
-                )}
+                className="absolute left-0 h-[11px] w-[11px] -translate-y-1/2 rounded-full bg-signal animate-signal-pulse"
+                style={{ top: "calc(clamp(0, (var(--progress, 0) - 0.2) / 0.6, 1) * 100%)" }}
               />
-              <Surface as="article" padding="lg" interactive className="hover:bg-accent/30">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2 gap-1">
-                  <h3 className="font-display font-semibold text-foreground text-base sm:text-lg">{exp.company}</h3>
-                  <span className={cn("font-mono text-xs", isCurrent ? "text-signal" : "text-muted-foreground")}>
-                    {exp.period[language]}
-                  </span>
-                </div>
-                <p className="text-xs sm:text-sm text-muted-foreground/90 font-medium mb-2">{exp.role[language]}</p>
-                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed mb-4">{exp.desc[language]}</p>
-                <TagList items={exp.tech} label={t("a11y.expTech")} />
-              </Surface>
-            </li>
-          );
-        })}
-      </ol>
-    </Section>
+              <ul className="flex h-full flex-col justify-between pl-8">
+                {YEARS.map((year) => (
+                  <li key={year} className="font-mono text-xs leading-none text-muted-foreground">
+                    {year}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <ol ref={listRef} className="lg:col-span-7">
+          {experiences.map((exp, i) => {
+            const isCurrent = exp.period.en.endsWith("Present");
+            return (
+              <li
+                key={`${exp.company}-${i}`}
+                className="focus-item border-t border-border/60 py-10 transition-opacity duration-base ease-out sm:py-14"
+              >
+                <article>
+                  <div className="mb-4 flex flex-wrap items-center gap-x-5 gap-y-2">
+                    <p className={cn("font-mono text-xs", isCurrent ? "text-signal" : "text-muted-foreground")}>
+                      {exp.period[language]}
+                    </p>
+                    <p className="font-mono text-xs text-muted-foreground/80">{exp.location}</p>
+                    {isCurrent && (
+                      <p className="label inline-flex items-center gap-2 text-signal">
+                        <span aria-hidden="true" className="h-2 w-2 rounded-full bg-signal animate-signal-pulse" />
+                        {t("exp.current")}
+                      </p>
+                    )}
+                  </div>
+
+                  <Reveal variant="mask">
+                    <h3 className="font-display text-display-md font-semibold text-foreground">{exp.company}</h3>
+                  </Reveal>
+                  <p className="mt-1.5 font-serif text-xl italic text-foreground/75 sm:text-2xl">{exp.role[language]}</p>
+
+                  <p className="mt-5 max-w-[62ch] text-body-lg text-muted-foreground text-pretty">{exp.desc[language]}</p>
+                  <TagList items={exp.tech} label={t("a11y.expTech")} tone="outline" className="mt-6" />
+                </article>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+    </section>
   );
 };
 

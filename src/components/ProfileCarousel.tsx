@@ -2,7 +2,9 @@ import React, { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight, User, Presentation } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PaginationDots } from "@/components/ds";
+import { Tilt } from "@/components/motion/Tilt";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { cn } from "@/lib/utils";
 
 interface PhotoSlide {
   id: string;
@@ -11,7 +13,12 @@ interface PhotoSlide {
   icon: React.ReactNode;
 }
 
-export const ProfileCarousel: React.FC = () => {
+/**
+ * Hero photo card. Two photos cross-wipe every few seconds; the card tilts
+ * in 3D toward the pointer and carries a moving glare, like a print held
+ * under a light.
+ */
+export const ProfileCarousel: React.FC<{ className?: string }> = ({ className }) => {
   const { t } = useLanguage();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -60,9 +67,12 @@ export const ProfileCarousel: React.FC = () => {
     if (e.key === "ArrowLeft") prevSlide();
   };
 
+  const arrow =
+    "absolute top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-md transition-opacity duration-base hover:bg-black/70 focus-visible:opacity-100 opacity-80 sm:opacity-0 sm:group-hover:opacity-100";
+
   return (
     <div
-      className="relative mx-auto mb-6 sm:mb-8 w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 group select-none"
+      className={cn("group relative select-none", className)}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onFocus={() => setIsPaused(true)}
@@ -74,74 +84,69 @@ export const ProfileCarousel: React.FC = () => {
       role="region"
       aria-label={t("a11y.photoCarousel")}
     >
-      {/* Outer ambient glow and glass border */}
-      <div className="absolute -inset-1 rounded-[2rem] bg-gradient-to-tr from-signal/35 via-accent/30 to-primary/20 opacity-70 group-hover:opacity-100 blur-md transition-all duration-700 -z-10" />
+      {/* Light behind the card */}
+      <div
+        aria-hidden="true"
+        className="absolute -inset-6 -z-10 rounded-[3rem] bg-[radial-gradient(closest-side,hsl(var(--signal)/0.28),transparent)] opacity-70 blur-2xl transition-opacity duration-slow group-hover:opacity-100"
+      />
 
-      <div className="relative w-full h-full rounded-[1.85rem] overflow-hidden glass-card backdrop-blur-2xl border border-border/50 shadow-2xl p-1">
-        {/* Slides container */}
-        <div className="relative w-full h-full rounded-[1.6rem] overflow-hidden bg-muted/40">
-          {slides.map((slide, index) => {
-            const isActive = index === currentIndex;
-            return (
-              <div
-                key={slide.id}
-                className={`absolute inset-0 transition-all duration-1000 ease-out ${
-                  isActive
-                    ? "opacity-100 scale-100 z-10"
-                    : "opacity-0 scale-105 -z-10 pointer-events-none"
-                }`}
-                aria-hidden={!isActive}
-              >
-                <img
-                  src={slide.src}
-                  alt={`Mateus Mendonça Monteiro - ${t(slide.labelKey)}`}
-                  className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
-                  loading={index === 0 ? "eager" : "lazy"}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />
-              </div>
-            );
-          })}
+      <Tilt className="relative aspect-[4/5] w-full">
+        <div className="glass-card absolute inset-0 overflow-hidden rounded-[2rem] p-1.5">
+          <div className="relative h-full w-full overflow-hidden rounded-[1.6rem] bg-muted/40">
+            {slides.map((slide, index) => {
+              const isActive = index === currentIndex;
+              return (
+                <div
+                  key={slide.id}
+                  className={cn(
+                    "absolute inset-0 transition-[clip-path,transform,opacity] duration-slower ease-expo",
+                    isActive
+                      ? "z-10 opacity-100 [clip-path:inset(0_0_0_0)]"
+                      : "pointer-events-none z-0 scale-105 opacity-0 [clip-path:inset(0_0_100%_0)]",
+                  )}
+                  aria-hidden={!isActive}
+                >
+                  <img
+                    src={slide.src}
+                    alt={`Mateus Mendonça Monteiro - ${t(slide.labelKey)}`}
+                    width={620}
+                    height={775}
+                    className="h-full w-full object-cover object-center transition-transform duration-slower ease-expo group-hover:scale-[1.04]"
+                    loading={index === 0 ? "eager" : "lazy"}
+                    decoding="async"
+                    // Lowercase on purpose: React 18 passes it through as the HTML attribute.
+                    {...(index === 0 ? { fetchpriority: "high" } : {})}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent" />
+                </div>
+              );
+            })}
 
-          {/* Navigation overlay arrows (visible on touch mobile and hover desktop) */}
-          <button
-            type="button"
-            onClick={prevSlide}
-            aria-label={t("a11y.prevPhoto")}
-            className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-black/40 hover:bg-black/70 backdrop-blur-md text-white flex items-center justify-center opacity-70 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary"
-          >
-            <ChevronLeft size={18} />
-          </button>
-          <button
-            type="button"
-            onClick={nextSlide}
-            aria-label={t("a11y.nextPhoto")}
-            className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-black/40 hover:bg-black/70 backdrop-blur-md text-white flex items-center justify-center opacity-70 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary"
-          >
-            <ChevronRight size={18} />
-          </button>
+            <button type="button" onClick={prevSlide} aria-label={t("a11y.prevPhoto")} className={cn(arrow, "left-2.5")}>
+              <ChevronLeft size={18} />
+            </button>
+            <button type="button" onClick={nextSlide} aria-label={t("a11y.nextPhoto")} className={cn(arrow, "right-2.5")}>
+              <ChevronRight size={18} />
+            </button>
 
-          {/* Bottom badge and indicator dots */}
-          <div className="absolute bottom-2.5 inset-x-0 z-20 flex flex-col items-center gap-1.5 px-3">
-            {/* Label badge hidden on mobile, visible on sm: (>=640px) */}
-            <span className="hidden sm:inline-flex items-center px-2.5 py-0.5 rounded-full bg-black/50 backdrop-blur-md text-[11px] font-mono font-medium text-white/90 border border-white/10 shadow-sm transition-all">
-              {slides[currentIndex].icon}
-              {t(slides[currentIndex].labelKey)}
-            </span>
-
-            {/* Dots with comfortable touch target */}
-            <PaginationDots
-              count={slides.length}
-              active={currentIndex}
-              onSelect={setCurrentIndex}
-              label={t("a11y.photoTabs")}
-              getItemLabel={(idx) => t("a11y.goToPhoto", { n: idx + 1, label: t(slides[idx].labelKey) })}
-              tone="inverse"
-              className="py-0.5"
-            />
+            <div className="absolute inset-x-0 bottom-3.5 z-20 flex items-center justify-between gap-3 px-4">
+              <span className="inline-flex items-center rounded-full border border-white/10 bg-black/50 px-2.5 py-1 font-mono text-[11px] font-medium text-white/90 backdrop-blur-md">
+                {slides[currentIndex].icon}
+                {t(slides[currentIndex].labelKey)}
+              </span>
+              <PaginationDots
+                count={slides.length}
+                active={currentIndex}
+                onSelect={setCurrentIndex}
+                label={t("a11y.photoTabs")}
+                getItemLabel={(idx) => t("a11y.goToPhoto", { n: idx + 1, label: t(slides[idx].labelKey) })}
+                tone="inverse"
+              />
+            </div>
           </div>
+          <div aria-hidden="true" className="tilt-glare" />
         </div>
-      </div>
+      </Tilt>
     </div>
   );
 };
