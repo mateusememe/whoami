@@ -10,6 +10,7 @@ import ContactFooter from "@/components/sections/ContactFooter";
 import { Cursor } from "@/components/motion/Cursor";
 import { Grain } from "@/components/motion/Grain";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
+import { useAgentTools } from "@/agents/useAgentTools";
 import { useSceneDirector } from "@/motion/useSceneDirector";
 
 /**
@@ -19,6 +20,7 @@ import { useSceneDirector } from "@/motion/useSceneDirector";
  */
 const Index = () => {
   useSceneDirector();
+  useAgentTools();
 
   return (
     // overflow-x: clip (not hidden) so `position: sticky` scenes keep working.
