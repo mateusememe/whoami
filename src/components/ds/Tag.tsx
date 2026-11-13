@@ -8,6 +8,7 @@ const tagVariants = cva("inline-flex items-center whitespace-nowrap font-medium"
       solid: "bg-accent text-accent-foreground",
       subtle: "bg-accent/40 text-muted-foreground border border-border/30",
       signal: "bg-signal/10 text-signal border border-signal/25",
+      outline: "border border-border/80 text-muted-foreground",
     },
     size: {
       /** Mono, for technologies. */

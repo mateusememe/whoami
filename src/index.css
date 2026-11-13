@@ -1,8 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+/* Self-hosted fonts (no third-party request, hashed by Vite). */
+@import "@fontsource-variable/space-grotesk/wght.css";
+@import "@fontsource-variable/jetbrains-mono/wght.css";
+@import "@fontsource/instrument-serif/latin-400-italic.css";
+@import "@fontsource/instrument-serif/latin-ext-400-italic.css";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Metrics-matched fallback so the hero does not jump when the web font swaps in. */
+@font-face {
+  font-family: "Space Grotesk Fallback";
+  src: local("Arial"), local("Helvetica Neue"), local("Helvetica");
+  size-adjust: 96.5%;
+  ascent-override: 102%;
+  descent-override: 30%;
+  line-gap-override: 0%;
+}
 
 @layer base {
   :root {
@@ -44,13 +58,24 @@
     --binary-color: 0 0% 75%;
     --glass-bg: 0 0% 96% / 0.6;
     --glass-border: 0 0% 80% / 0.3;
+    --glass-highlight: 0 0% 100% / 0.7;
     --surface-blur: 16px;
+    --grain-opacity: 0.055;
+
+    /* Layout */
+    --shell-max: 1480px;
+    --gutter: clamp(1.25rem, 4.2vw, 4rem);
+    --section-y: clamp(5.5rem, 14vh, 11rem);
+    --header-h: 4.25rem;
 
     /* Motion */
     --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-quint: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
     --duration-fast: 150ms;
     --duration-base: 300ms;
     --duration-slow: 700ms;
+    --duration-slower: 1100ms;
   }
 
   .dark {
@@ -88,6 +113,8 @@
     --binary-color: 0 0% 25%;
     --glass-bg: 0 0% 12% / 0.6;
     --glass-border: 0 0% 25% / 0.3;
+    --glass-highlight: 0 0% 100% / 0.09;
+    --grain-opacity: 0.075;
   }
 }
 
@@ -95,20 +122,33 @@
   * {
     @apply border-border;
   }
-  body {
-    @apply bg-background text-foreground font-body;
-    font-feature-settings: "rlig" 1, "calt" 1;
-  }
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 4.5rem;
+    scroll-padding-top: var(--header-h);
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  /* Lenis drives scrolling itself; native smooth scrolling would fight it. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  html.lenis {
+    scroll-behavior: auto;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
   ::selection {
     background: hsl(var(--signal) / 0.3);
   }
   :focus-visible {
     outline: 2px solid hsl(var(--signal));
-    outline-offset: 2px;
+    outline-offset: 3px;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -119,18 +159,42 @@
     *::before,
     *::after {
       animation-duration: 0.01ms !important;
+      animation-delay: 0ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
+      transition-delay: 0ms !important;
     }
   }
 }
 
 @layer components {
+  /* ---------- Layout ---------- */
+  .shell {
+    width: 100%;
+    max-width: var(--shell-max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+  .label {
+    @apply font-mono text-label uppercase text-muted-foreground;
+  }
+  .hairline {
+    height: 1px;
+    width: 100%;
+    background: linear-gradient(90deg, hsl(var(--foreground) / 0.28), hsl(var(--foreground) / 0.08));
+    transform-origin: left center;
+  }
+
+  /* ---------- Surfaces ---------- */
   .glass-card {
     background: hsl(var(--glass-bg));
-    backdrop-filter: blur(var(--surface-blur));
-    -webkit-backdrop-filter: blur(var(--surface-blur));
+    backdrop-filter: blur(var(--surface-blur)) saturate(1.2);
+    -webkit-backdrop-filter: blur(var(--surface-blur)) saturate(1.2);
     border: 1px solid hsl(var(--glass-border));
+    /* Specular top edge: reads as real glass catching light. */
+    box-shadow:
+      inset 0 1px 0 0 hsl(var(--glass-highlight)),
+      0 18px 50px -24px hsl(0 0% 0% / 0.45);
   }
 
   /* Pointer-following highlight. Surface sets --spot-x / --spot-y. */
@@ -153,20 +217,473 @@
     opacity: 0;
     transition: opacity var(--duration-base) var(--ease-expo);
   }
-  .spotlight:hover::before {
+  @media (hover: hover) {
+    .spotlight:hover::before {
+      opacity: 1;
+    }
+  }
+
+  /* Film grain: one oversized noise tile, shifted in steps on the compositor. */
+  .grain {
+    position: fixed;
+    inset: -50%;
+    z-index: 60;
+    pointer-events: none;
+    opacity: var(--grain-opacity);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 1.1 -0.15'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 220px 220px;
+    mix-blend-mode: overlay;
+    animation: grain-shift 0.9s steps(6) infinite;
+    will-change: transform;
+  }
+  @keyframes grain-shift {
+    0% { transform: translate3d(0, 0, 0); }
+    20% { transform: translate3d(-3%, 2%, 0); }
+    40% { transform: translate3d(2%, -4%, 0); }
+    60% { transform: translate3d(-4%, -1%, 0); }
+    80% { transform: translate3d(3%, 3%, 0); }
+    100% { transform: translate3d(0, 0, 0); }
+  }
+
+  /* ---------- Reveal ----------
+     Visible by default, so prerendered HTML reads without JS. Reveal sets
+     data-visible="false" on below-the-fold content until it scrolls in. */
+  .reveal {
+    transition:
+      opacity var(--duration-slow) var(--ease-expo) var(--reveal-delay, 0ms),
+      transform var(--duration-slower) var(--ease-expo) var(--reveal-delay, 0ms),
+      clip-path var(--duration-slower) var(--ease-expo) var(--reveal-delay, 0ms);
+  }
+  .reveal-up[data-visible="false"] {
+    opacity: 0;
+    transform: translate3d(0, 2.25rem, 0);
+  }
+  .reveal-fade[data-visible="false"] {
+    opacity: 0;
+  }
+  .reveal-scale[data-visible="false"] {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  .reveal-line[data-visible="false"] {
+    transform: scaleX(0);
+  }
+  .reveal-clip {
+    clip-path: inset(0 0 0 0 round var(--clip-radius, 0px));
+  }
+  .reveal-clip[data-visible="false"] {
+    clip-path: inset(0 0 100% 0 round var(--clip-radius, 0px));
+  }
+  /* Mask: the wrapper clips, the first child rises into it. */
+  .reveal-mask {
+    overflow: clip;
+    overflow-clip-margin: 0.08em;
+  }
+  .reveal-mask > * {
+    transition: transform var(--duration-slower) var(--ease-expo) var(--reveal-delay, 0ms);
+  }
+  .reveal-mask[data-visible="false"] > * {
+    transform: translate3d(0, 108%, 0);
+  }
+  /* Stagger: children enter one after another. */
+  .reveal-stagger > * {
+    transition:
+      opacity var(--duration-slow) var(--ease-expo),
+      transform var(--duration-slower) var(--ease-expo);
+    transition-delay: calc(var(--reveal-delay, 0ms) + var(--i, 0) * 70ms);
+  }
+  .reveal-stagger[data-visible="false"] > * {
+    opacity: 0;
+    transform: translate3d(0, 1.5rem, 0);
+  }
+  .reveal-stagger > :nth-child(2) { --i: 1; }
+  .reveal-stagger > :nth-child(3) { --i: 2; }
+  .reveal-stagger > :nth-child(4) { --i: 3; }
+  .reveal-stagger > :nth-child(5) { --i: 4; }
+  .reveal-stagger > :nth-child(6) { --i: 5; }
+  .reveal-stagger > :nth-child(7) { --i: 6; }
+  .reveal-stagger > :nth-child(8) { --i: 7; }
+  .reveal-stagger > :nth-child(9) { --i: 8; }
+  .reveal-stagger > :nth-child(10) { --i: 9; }
+  .reveal-stagger > :nth-child(n + 11) { --i: 10; }
+
+  /* ---------- Scroll-scrubbed text ----------
+     An ancestor sets --scrub (0..1). Words light up in order. Without JS the
+     fallback is 1, so the text is fully lit. */
+  .scrub-word {
+    opacity: clamp(0.14, calc((var(--scrub, 1) * (var(--n) + 5) - var(--i)) / 5), 1);
+  }
+
+  /* The About scene pins for a while; its words light up across the middle of that scroll. */
+  .scrub-scene {
+    --scrub: clamp(0, calc((var(--progress, 1) - 0.1) / 0.62), 1);
+  }
+
+  /* Items dim unless they sit near the middle of the viewport. --focus is set by JS. */
+  .focus-item {
+    opacity: calc(0.34 + 0.66 * var(--focus, 1));
+  }
+
+  /* ---------- Tilt (3D card) ---------- */
+  .tilt {
+    transform: perspective(1100px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+    transform-style: preserve-3d;
+  }
+  .tilt-glare {
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+    border-radius: inherit;
+    pointer-events: none;
+    background: radial-gradient(
+      60% 60% at var(--glare-x, 50%) var(--glare-y, 0%),
+      hsl(0 0% 100% / 0.22),
+      transparent 70%
+    );
+    opacity: var(--glare-o, 0);
+    mix-blend-mode: soft-light;
+  }
+
+  /* ---------- Cursor follower ---------- */
+  .cursor {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 70;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--duration-base) var(--ease-expo);
+    will-change: transform;
+  }
+  .cursor[data-visible="true"] {
+    opacity: 1;
+  }
+  .cursor-ring {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2.25rem;
+    height: 2.25rem;
+    margin: -1.125rem 0 0 -1.125rem;
+    border-radius: 9999px;
+    border: 1px solid hsl(var(--foreground) / 0.45);
+    display: grid;
+    place-items: center;
+    transition:
+      width var(--duration-base) var(--ease-expo),
+      height var(--duration-base) var(--ease-expo),
+      margin var(--duration-base) var(--ease-expo),
+      background-color var(--duration-base) var(--ease-expo),
+      border-color var(--duration-base) var(--ease-expo);
+  }
+  .cursor[data-state="link"] .cursor-ring {
+    width: 3.5rem;
+    height: 3.5rem;
+    margin: -1.75rem 0 0 -1.75rem;
+    border-color: hsl(var(--signal) / 0.8);
+    background: hsl(var(--signal) / 0.08);
+  }
+  .cursor[data-state="label"] .cursor-ring {
+    width: 5.25rem;
+    height: 5.25rem;
+    margin: -2.625rem 0 0 -2.625rem;
+    border-color: transparent;
+    background: hsl(var(--signal));
+  }
+  .cursor-label {
+    @apply font-mono text-[10px] uppercase tracking-[0.14em];
+    color: hsl(var(--signal-foreground));
+    opacity: 0;
+    transition: opacity var(--duration-fast) linear;
+    white-space: nowrap;
+  }
+  .cursor[data-state="label"] .cursor-label {
     opacity: 1;
   }
 
-  /* Scroll reveal. Visible by default, so prerendered HTML reads without JS.
-     Reveal sets data-visible="false" on below-the-fold content until it
-     scrolls into view. */
-  .reveal {
+  /* ---------- Marquee ---------- */
+  .marquee {
+    overflow: clip;
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+  }
+  .marquee-track[data-loop="true"] {
+    animation: marquee var(--marquee-duration, 40s) linear infinite;
+    animation-direction: var(--marquee-direction, normal);
+  }
+  .marquee-group {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    min-width: 100vw;
+    justify-content: space-around;
+  }
+  /* Outlined display type that fills on hover. */
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: 1px hsl(var(--foreground) / 0.55);
+    transition: color var(--duration-slow) var(--ease-expo), -webkit-text-stroke-color var(--duration-slow) var(--ease-expo);
+  }
+  .text-outline:hover {
+    color: hsl(var(--foreground));
+    -webkit-text-stroke-color: hsl(var(--foreground));
+  }
+
+  /* ---------- Header ---------- */
+  .nav-pill {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border-radius: 9999px;
+    padding: 0.3rem;
+  }
+  .nav-indicator {
+    position: absolute;
+    top: 0.3rem;
+    bottom: 0.3rem;
+    left: 0;
+    width: var(--pill-w, 0px);
+    transform: translate3d(var(--pill-x, 0px), 0, 0);
+    border-radius: 9999px;
+    background: hsl(var(--foreground) / 0.08);
+    box-shadow: inset 0 0 0 1px hsl(var(--signal) / 0.35);
+    opacity: var(--pill-o, 0);
     transition:
-      opacity var(--duration-slow) var(--ease-expo),
+      transform var(--duration-slow) var(--ease-expo),
+      width var(--duration-slow) var(--ease-expo),
+      opacity var(--duration-base) linear;
+    pointer-events: none;
+  }
+
+  /* ---------- Hero entrance (pure CSS, runs on first paint) ---------- */
+  .hero-char {
+    display: inline-block;
+    animation: hero-rise 1.05s var(--ease-expo) both;
+    animation-delay: calc(120ms + var(--line, 0) * 110ms + var(--c, 0) * 26ms);
+    transition:
+      color var(--duration-base) var(--ease-expo),
       transform var(--duration-slow) var(--ease-expo);
   }
-  .reveal[data-visible="false"] {
+  .hero-line {
+    display: block;
+    overflow: clip;
+    overflow-clip-margin: 0.14em;
+    padding-bottom: 0.1em;
+    margin-bottom: -0.1em;
+  }
+  @keyframes hero-rise {
+    from { transform: translate3d(0, 112%, 0) rotate(4deg); }
+    to { transform: translate3d(0, 0, 0) rotate(0deg); }
+  }
+  .hero-fade {
+    animation: hero-fade 1.1s var(--ease-expo) both;
+    animation-delay: calc(520ms + var(--i, 0) * 90ms);
+  }
+  @keyframes hero-fade {
+    from { opacity: 0; transform: translate3d(0, 1.25rem, 0); }
+    to { opacity: 1; transform: translate3d(0, 0, 0); }
+  }
+  .hero-rule {
+    animation: hero-rule 1.4s var(--ease-expo) 620ms both;
+  }
+  @keyframes hero-rule {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+  .hero-photo {
+    animation: hero-photo 1.5s var(--ease-expo) 260ms both;
+  }
+  @keyframes hero-photo {
+    from { opacity: 0; clip-path: inset(18% 12% 18% 12% round 2rem); transform: scale(1.12); }
+    to { opacity: 1; clip-path: inset(0 0 0 0 round 2rem); transform: scale(1); }
+  }
+  /* Scroll-out: the hero recedes as the page scrolls. --progress is set by JS. */
+  .hero-parallax {
+    transform: translate3d(0, calc(var(--progress, 0) * var(--shift, -80px)), 0);
+    opacity: calc(1 - var(--progress, 0) * var(--fade, 1.25));
+  }
+
+  /* ---------- Section head ----------
+     Flex keeps the index beside the first line: it never wraps on its own. */
+  .section-title {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.16em;
+  }
+  .section-index {
+    @apply font-mono font-medium text-signal;
+    flex-shrink: 0;
+    font-size: clamp(0.7rem, 0.15em, 1rem);
+    line-height: 1;
+    letter-spacing: 0.08em;
+    margin-top: 0.9em;
+  }
+
+  /* ---------- Rows (education, contact) ---------- */
+  .row-link {
+    position: relative;
+    isolation: isolate;
+    transition: padding var(--duration-slow) var(--ease-expo), color var(--duration-base) var(--ease-expo);
+  }
+  .row-link::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(90deg, hsl(var(--signal) / 0.1), transparent 70%);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform var(--duration-slow) var(--ease-expo);
+  }
+  @media (hover: hover) {
+    .row-link:hover::before {
+      transform: scaleY(1);
+    }
+    .row-link:hover {
+      padding-inline: 1.25rem;
+    }
+    .row-link:hover .row-arrow {
+      transform: translate3d(0, 0, 0) rotate(0deg);
+      opacity: 1;
+    }
+  }
+  .row-arrow {
+    transform: translate3d(-0.75rem, 0.75rem, 0) rotate(0deg);
+    opacity: 0.35;
+    transition: transform var(--duration-slow) var(--ease-expo), opacity var(--duration-base) linear;
+  }
+  /* Touch screens have no hover to slide the arrow into place. */
+  @media (hover: none) {
+    .row-arrow {
+      transform: none;
+      opacity: 0.6;
+    }
+  }
+
+  /* Underline that draws from the left. */
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0% 1px;
+    transition: background-size var(--duration-slow) var(--ease-expo);
+  }
+  .link-underline:hover,
+  .link-underline:focus-visible {
+    background-size: 100% 1px;
+  }
+
+  /* ---------- Portrait fallback (no WebGL / reduced motion): CSS halftone ---------- */
+  .halftone {
+    -webkit-mask-image: radial-gradient(circle at center, #000 0 38%, transparent 42%);
+    mask-image: radial-gradient(circle at center, #000 0 38%, transparent 42%);
+    -webkit-mask-size: 7px 7px;
+    mask-size: 7px 7px;
+    filter: grayscale(1) contrast(1.15);
+  }
+  html[data-scene="webgl"] .portrait-fallback {
     opacity: 0;
-    transform: translateY(14px);
+  }
+
+  /* ---------- Project covers ---------- */
+  .cover {
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(120% 90% at 20% 0%, hsl(var(--signal) / 0.09), transparent 55%),
+      linear-gradient(180deg, hsl(var(--card)), hsl(var(--background)));
+  }
+  .cover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: radial-gradient(hsl(var(--foreground) / 0.11) 1px, transparent 1px);
+    background-size: 18px 18px;
+    -webkit-mask-image: linear-gradient(180deg, #000, transparent 85%);
+    mask-image: linear-gradient(180deg, #000, transparent 85%);
+  }
+  .cover canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  /* ---------- Mobile menu ---------- */
+  .menu-panel {
+    animation: menu-in var(--duration-slow) var(--ease-expo) both;
+  }
+  .menu-panel[data-closing="true"] {
+    animation: menu-out var(--duration-base) var(--ease-in-out) both;
+  }
+  @keyframes menu-in {
+    from { opacity: 0; clip-path: inset(0 0 100% 0); }
+    to { opacity: 1; clip-path: inset(0 0 0 0); }
+  }
+  @keyframes menu-out {
+    to { opacity: 0; clip-path: inset(0 0 100% 0); }
+  }
+  .menu-item {
+    animation: hero-fade 0.9s var(--ease-expo) both;
+    animation-delay: calc(140ms + var(--i, 0) * 60ms);
+  }
+}
+
+@layer utilities {
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}
+
+/* ---------- View transitions (theme and language) ---------- */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 320ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* Theme toggle: the new theme grows as a circle from the button (clip-path set in JS). */
+html[data-vt="reveal"]::view-transition-old(root),
+html[data-vt="reveal"]::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+html[data-vt="reveal"]::view-transition-old(root) {
+  z-index: 1;
+}
+html[data-vt="reveal"]::view-transition-new(root) {
+  z-index: 2;
+}
+
+/* Scroll-linked decoration is off when the user asks for less motion. */
+@media (prefers-reduced-motion: reduce) {
+  .scrub-word,
+  .focus-item {
+    opacity: 1;
+  }
+  .hero-parallax {
+    transform: none;
+    opacity: 1;
+  }
+  .grain {
+    animation: none;
+  }
+  .hero-char,
+  .hero-fade,
+  .hero-rule,
+  .hero-photo {
+    animation: none;
   }
 }
