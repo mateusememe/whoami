@@ -1,13 +1,14 @@
 # Design System
 
-Visual language for `whoami`. Tokens live in [`src/index.css`](../src/index.css) and [`tailwind.config.ts`](../tailwind.config.ts). Primitives live in [`src/components/ds/`](../src/components/ds/). The WebGL scene reads the same tokens, so the DOM and the canvas always agree. Runtime and engine details are in [ARCHITECTURE.md](ARCHITECTURE.md).
+Visual language for `whoami`. Tokens live in [`src/index.css`](../src/index.css) and [`tailwind.config.ts`](../tailwind.config.ts). Primitives live in [`src/components/ds/`](../src/components/ds/), motion components in [`src/components/motion/`](../src/components/motion/). The WebGL scene reads the same tokens, so the DOM and the canvas always agree. Runtime and engine details are in [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## 1. Principles
 
-1. **Grayscale base, one signal hue.** Everything is neutral gray except `signal`, which marks live state: the current role, the active nav item, packets moving through the mesh, focus. If everything is teal, nothing is.
-2. **Mono for data, sans for prose.** Dates, tech names, repo names and indexes use JetBrains Mono. Sentences use Space Grotesk.
-3. **Glass over depth.** Content sits on blurred glass surfaces above a 3D scene. The scene gives depth; the surfaces keep text readable.
-4. **Motion has a job.** Motion shows state (reveal on enter, active nav, reading progress, current role pulse) or gives the background life. With `prefers-reduced-motion`, all of it stops.
+1. **A presentation, in scenes.** The page answers `whoami` one scene at a time: name, statement, trajectory, degrees, stack, work, contact. Each scene has its own layout and its own formation in the 3D layer. Cards stacked in a column read as a résumé; scenes read as a person.
+2. **Grayscale base, one signal hue.** Everything is neutral gray except `signal`, which marks live state: the current role, the active nav item, packets moving through the mesh, focus. If everything is teal, nothing is.
+3. **Type carries the page.** Display sizes scale with the viewport. Space Grotesk sets names and titles, JetBrains Mono sets data, and Instrument Serif italic marks roles, degrees and numerals.
+4. **Real materials.** Glass surfaces blur what is behind them and catch a highlight on their top edge. The particle field has a focal plane, so points off it turn into soft bokeh. Film grain sits over everything.
+5. **Motion has a job.** Motion either shows state (reveal on enter, active nav, reading progress) or ties the scroll to the scene (words lighting up, formations morphing). With `prefers-reduced-motion`, all of it stops and the content stays.
 
 ## 2. Tokens
 
@@ -38,41 +39,50 @@ All pass AA for body text. `--muted-foreground` in light mode moved from 45% to 
 
 **Signal rules**
 
-- Use it for: section indexes (`01`), the active nav underline, the current-role timeline node and date, the header progress bar, active pagination dots, focus outlines, text selection, WebGL gateways, backbone links and packets.
+- Use it for: section indexes (`01`), the active nav pill, the current-role marker and date, the reading progress bar, active pagination dots, focus outlines, text selection, the cursor ring, the moving part of each project cover, WebGL gateways, backbone links and packets.
 - Tints: `/10` fill with `/25` border for a badge, `/30` for a hover border, `/80` for a bar.
 - Never use it for paragraphs or for more than one element per card.
 
 ### 2.2 Typography
 
-| Role | Family | Size (mobile → sm) | Weight | Classes |
-| :--- | :--- | :--- | :--- | :--- |
-| Display (h1) | Space Grotesk | 30 → 36 → 48 px | 700 | `text-3xl sm:text-4xl md:text-5xl font-display font-bold tracking-tight` |
-| Section title (h2) | Space Grotesk | 20 → 24 px | 700 | via `SectionHeading` |
-| Card title (h3) | Space Grotesk | 16 → 18 px | 600 | `font-display font-semibold text-base sm:text-lg` |
-| Body | Space Grotesk | 12 → 14 px | 400 | `text-xs sm:text-sm leading-relaxed text-muted-foreground` |
-| Overline | JetBrains Mono | 12 px | 400 | `font-mono text-xs uppercase tracking-wider` |
-| Data (dates, tags, repos) | JetBrains Mono | 10 → 12 px | 500 | `font-mono text-[10px] sm:text-[11px]` |
-| Index | JetBrains Mono | 12 px | 500 | `font-mono text-xs tabular-nums text-signal` |
+Fonts are self-hosted through Fontsource (no third-party request). The latin subset of the display font is preloaded from the built HTML.
+
+| Token | Size | Use |
+| :--- | :--- | :--- |
+| `text-display-2xl` | `clamp(3.1rem, min(12vw, 16.5svh), 13rem)` | Hero name, closing band, 404 |
+| `text-display-xl` | `clamp(2.6rem, 8vw, 8rem)` | Section titles, stat numbers, skill bands |
+| `text-display-lg` | `clamp(1.9rem, 5.2vw, 4.75rem)` | Titles that share a row (Experience, Projects) |
+| `text-display-md` | `clamp(1.6rem, 3.4vw, 3.1rem)` | Company and school names |
+| `text-display-sm` | `clamp(1.2rem, 2vw, 1.75rem)` | Stack items, contact rows |
+| `text-body-lg` | `clamp(1.0625rem, 1.2vw, 1.25rem)` | Paragraphs |
+| `.label` | 11 px mono, uppercase, 0.18em tracking | Kickers, metadata, captions |
+
+| Family | Class | Carries |
+| :--- | :--- | :--- |
+| Space Grotesk Variable | `font-display` / `font-body` | Names, titles, sentences |
+| JetBrains Mono Variable | `font-mono` | Dates, tech names, repo names, indexes, labels |
+| Instrument Serif Italic | `font-serif italic` | Role and degree lines, project numerals, the seal figure |
+
+The hero size also depends on viewport height (`svh`), so the name, the photo and the summary fit one screen on a short laptop.
 
 ### 2.3 Layout and spacing
 
-| Token | Value |
-| :--- | :--- |
-| Reading column | `container max-w-3xl` (768 px) |
-| Section padding | `py-8 sm:py-10 md:py-12 px-4 sm:px-6` (inside `Section`) |
-| Heading to content | `mb-4 sm:mb-6` |
-| Card stack gap | `space-y-3.5 sm:space-y-4` |
-| Scroll offset for anchors | `scroll-padding-top: 4.5rem` (clears the fixed header) |
+| Token | Value | Use |
+| :--- | :--- | :--- |
+| `.shell` | max `--shell-max` (1480 px), inline padding `--gutter` | Every section's content box |
+| `--gutter` | `clamp(1.25rem, 4.2vw, 4rem)` | Side padding; also `px-gutter` |
+| `--section-y` | `clamp(5.5rem, 14vh, 11rem)` | Vertical rhythm: `py-section`, `my-section` |
+| Grid | 12 columns from `lg` | Split layouts (5/7 in Experience, 7/5 in About) |
+| `--header-h` | 4.25 rem | `scroll-padding-top` for native anchor jumps |
 
 ### 2.4 Radius
 
 | Token | Value | Use |
 | :--- | :--- | :--- |
-| `rounded-2xl` | 16 px | Surfaces |
-| `rounded-xl` | 12 px | Large icon buttons, link chips |
-| `rounded-lg` | `--radius` 12 px | Small icon buttons |
+| `rounded-[2rem]` | 32 px | Photo card, award card |
+| `rounded-[1.75rem]` | 28 px | Project cards |
+| `rounded-full` | | Header pills, icon buttons, tags, dots |
 | `rounded-md` | 10 px | Box tags |
-| `rounded-full` | | Pill tags, dots, timeline nodes |
 
 ### 2.5 Surfaces and layers
 
@@ -80,44 +90,54 @@ All pass AA for body text. `--muted-foreground` in light mode moved from 45% to 
 | :--- | :--- | :--- |
 | Background | `z-0` | WebGL canvas or 2D fallback, `pointer-events: none` |
 | Content | `z-10` | Sections |
-| Header | `z-50` | Fixed glass bar with progress hairline |
+| Mobile menu | `z-40` | Full-screen dialog |
+| Header | `z-50` | Floating pills and the reading progress hairline |
+| Grain | `z-[60]` | Film grain, `pointer-events: none` |
+| Cursor | `z-[70]` | Pointer ring |
 
-`.glass-card` = `--glass-bg` fill + `backdrop-filter: blur(var(--surface-blur))` (16 px) + 1 px border. Always use it through `Surface`.
+`.glass-card` = `--glass-bg` fill + `backdrop-filter: blur(var(--surface-blur)) saturate(1.2)` + 1 px border + an inset top highlight (`--glass-highlight`) + a soft drop shadow. The 3D layer shows through as blurred light, which is the point.
+
+`.grain` is one oversized SVG noise tile, shifted in six steps on the compositor. `--grain-opacity` is 0.055 light, 0.075 dark.
 
 ### 2.6 Motion
 
 | Token | Value | Tailwind | Use |
 | :--- | :--- | :--- | :--- |
-| `--ease-expo` | `cubic-bezier(0.16, 1, 0.3, 1)` | `ease-expo` | Default easing: fast start, long settle |
-| `--duration-fast` | 150 ms | `duration-fast` | Color changes on hover |
-| `--duration-base` | 300 ms | `duration-base` | Underlines, dots, spotlight |
-| `--duration-slow` | 700 ms | `duration-slow` | Section reveal, canvas fade-in |
+| `--ease-expo` | `cubic-bezier(0.16, 1, 0.3, 1)` | `ease-expo` | Default: fast start, long settle |
+| `--ease-quint` | `cubic-bezier(0.22, 1, 0.36, 1)` | `ease-quint` | View transitions |
+| `--ease-in-out` | `cubic-bezier(0.76, 0, 0.24, 1)` | `ease-swift` | Loops (scroll cue), menu exit |
+| `--duration-fast` | 150 ms | `duration-fast` | Color on hover |
+| `--duration-base` | 300 ms | `duration-base` | Pills, dots, cursor ring |
+| `--duration-slow` | 700 ms | `duration-slow` | Reveals, row hovers, header hide |
+| `--duration-slower` | 1100 ms | `duration-slower` | Mask reveals, photo wipe |
 
-Keyframes: `signal-pulse` (current-role node, 2.4 s), `caret-blink` (hero prompt, 1.1 s, stepped).
+Motion by what drives it:
 
-Under `prefers-reduced-motion: reduce`, `index.css` sets every animation and transition to 0.01 ms and disables smooth scroll, both carousels stop autoplay (`usePrefersReducedMotion`), and the WebGL engine renders one still frame.
+| Kind | Driver | Examples |
+| :--- | :--- | :--- |
+| Entrance | CSS keyframes on first paint | Hero letters rise line by line, photo unclips, rule draws |
+| Reveal | `IntersectionObserver`, once | Titles rise out of a mask, rows stagger in, counters run |
+| Scroll-linked | `--progress` from the shared ticker | Hero recedes, About words light up, year marker, role focus, project track |
+| Pointer | pointer position, damped | Cursor ring, magnetic buttons, 3D tilt and glare, particle push |
+| Ambient | time | Marquee bands, seal rotation, grain, project covers, the 3D scene |
+
+Under `prefers-reduced-motion: reduce`: animations and transitions take 0.01 ms, smooth scrolling and Lenis are off, the cursor ring, magnets and tilt do nothing, scrubbed text and focus dimming are fully lit, carousels and marquees stand still, the project gallery becomes a plain scroll strip, covers draw one frame, and the WebGL engine renders one dimmed still.
 
 ## 3. Primitives
 
 Import from `@/components/ds`.
 
-### `Section`
+### `Section` and `SectionHeading`
 
-Page section shell: anchor id, reading column, numbered heading, reveal on enter.
+Section shell: anchor id, `.shell`, display heading, and the particle formation for the scene.
 
 ```tsx
-<Section id="skills" index={sectionIndex("skills")} title={t("skills.title")}>
+<Section id="education" index={sectionIndex("education")} title={t("edu.title")} scene={3}>
   ...
 </Section>
 
-<Section
-  as="footer"
-  id="contact"
-  index={sectionIndex("contact")}
-  title={t("contact.title")}
-  description={t("contact.cta")}
-  align="center"
->
+// Custom layouts compose the heading directly:
+<SectionHeading id="experience-title" index={2} title={t("exp.title")} description={lead} size="lg" />
 ```
 
 | Prop | Type | Notes |
@@ -125,9 +145,12 @@ Page section shell: anchor id, reading column, numbered heading, reveal on enter
 | `id` | string | Anchor target; heading gets `${id}-title` |
 | `index` | number | Use `sectionIndex()` from `data/navigation.ts`, never a literal |
 | `title`, `description` | string | Already translated |
-| `actions` | ReactNode | Right side of the heading row (carousel arrows) |
-| `align` | `"start" \| "center"` | |
+| `actions` | ReactNode | Right side of the heading row |
+| `size` | `"xl" \| "lg"` | `lg` when the heading shares a row or sits in a narrow column |
+| `scene` | number | Formation index written to `data-scene` (see §5) |
 | `as` | `"section" \| "footer"` | |
+
+The index sits small, in signal mono, at the cap line of the title. The title is a flex row, so the index never wraps onto a line of its own.
 
 ### `Surface`
 
@@ -143,7 +166,7 @@ Glass card.
 | `padding` | `sm` (16→20) · `md` (20→24) · `lg` (20→24→32) | `md` |
 | `interactive` | adds hover border and a signal spotlight that follows the pointer | `false` |
 
-Use `interactive` on cards that respond to hover (experience, projects, education). Leave it off on containers (tag groups).
+Use `interactive` on cards that respond to hover. Leave it off on plain containers.
 
 ### `Tag` / `TagList`
 
@@ -155,7 +178,7 @@ Use `interactive` on cards that respond to hover (experience, projects, educatio
 
 | Prop | Values | Default |
 | :--- | :--- | :--- |
-| `tone` | `solid` · `subtle` · `signal` | `solid` |
+| `tone` | `solid` · `subtle` · `signal` · `outline` | `solid` |
 | `size` | `xs` (mono, tech names) · `sm` (sans, skills) | `xs` |
 | `shape` | `pill` · `box` | `pill` |
 
@@ -194,67 +217,95 @@ Use `interactive` on cards that respond to hover (experience, projects, educatio
 
 ### `Reveal`
 
-Fades and lifts children 14 px the first time they enter the viewport. It renders visible (prerendered HTML reads without JavaScript); after mount it hides only content that starts below the fold. `Section` already wraps its content in one; use it directly only outside sections.
+Animates content in the first time it enters the viewport. It renders visible (prerendered HTML reads without JavaScript); after mount it hides only content that starts below the fold. It writes `data-visible` on the DOM node directly, so nothing re-renders. Other props pass through to the element.
 
-## 4. Patterns
+```tsx
+<Reveal variant="mask"><h3>...</h3></Reveal>
+<Reveal as="ul" variant="stagger" aria-label="...">{rows}</Reveal>
+```
 
-| Pattern | Where | Composition |
+| Variant | Effect |
+| :--- | :--- |
+| `up` (default) | Fade and rise 36 px |
+| `fade` · `scale` | Opacity only · fade and grow from 94% |
+| `mask` | The wrapper clips, its first child rises into it (headings) |
+| `line` · `clip` | Hairline draws from the left · image wipes in from the top |
+| `stagger` | Direct children enter 70 ms apart |
+
+## 4. Motion components
+
+Import from `@/components/motion/*`. All of them render their final state on the server and do nothing without the browser feature they need.
+
+| Component | Does | Notes |
 | :--- | :--- | :--- |
-| Numbered sections | All sections | `Section` + `NAV_ITEMS` order |
-| Scroll spy | Header | `useActiveSection(NAV_ITEMS)` → `aria-current` + signal underline |
-| Reading progress | Header | `ScrollProgress`, 1 px signal bar |
-| Timeline | Experience | `<ol>` with a gradient rail; signal pulsing node and date for the role whose period ends in "Present" |
-| Carousel | Projects, hero photo | Scroll-snap track + `IconButton` arrows + `PaginationDots`, pauses on hover, focus and touch |
-| Prompt line | Hero | `$ whoami` in mono with a blinking block caret, `aria-hidden` |
+| `SmoothScroll` | Starts per-frame scroll sampling; Lenis inertia on mouse devices | One per page |
+| `ScrubText` | Splits a paragraph into words that light up as an ancestor's `--scrub` goes 0→1 | Pure CSS after render |
+| `Marquee` | Endless band; speeds up with scroll velocity | Renders content once; the loop copy is added when it enters the viewport |
+| `Counter` | Counts up to a number on first view | Renders the final value |
+| `Magnetic` | Pulls its child toward the pointer | Mouse only |
+| `Tilt` | 3D tilt toward the pointer, with a `.tilt-glare` child | Mouse only |
+| `Scramble` | Decodes its text when the nearest link is hovered (nav links, the GitHub button) | Mouse only |
+| `Cursor` | Ring that trails the pointer; grows on links; shows `data-cursor-label` | The native cursor stays |
+| `Grain` | Film grain overlay | |
 
-## 5. WebGL art direction
+Hooks: `useProgress(ref, { mode })` writes `--progress` on an element; `useFocusItems(ref)` writes `--focus` on each child of a list; `useSceneDirector()` feeds the WebGL engine.
 
-The background renders the owner's field: a distributed system.
+## 5. Scenes
 
-| Element | Meaning | Look |
-| :--- | :--- | :--- |
-| Gateway node | A service | Large soft dot in signal color with a pulsing ring |
-| Pod node | An instance | Small soft dot in foreground color, slow pulse |
-| Backbone edge | Service-to-service link | Hairline tinted toward signal |
-| Local edge | Pod-to-gateway link | Fainter foreground hairline |
-| Packet | A message in flight | Bright signal dot moving along an edge, fading at both ends |
-| Binary field | The original binary rain, now in 3D | Falling `0`/`1` sprites behind the mesh, static while the mesh spins (parallax) |
+Each section sets `data-scene` to the formation the particle field should hold while that section is on screen. Between sections the particles flow from one formation to the next.
 
-**Choreography by scroll** (0 = top, 1 = bottom):
+| # | Section | DOM composition | Particle formation |
+| :--- | :--- | :--- | :--- |
+| 0 | Hero | Name in three lines of `display-2xl`, tilting photo card, rule with the scroll cue, role, summary, social links | Sparse haze of bokeh points around the service mesh |
+| 1 | About | Pinned for 230 svh: the statement lights up word by word beside the portrait stage; four counters follow | Dot-matrix portrait sampled from the profile photo |
+| 2 | Experience | Sticky heading and year scale on the left; roles scroll on the right, the one near mid-screen in focus | Rows of dots rolling like terrain under a horizon |
+| 3 | Education, Skills | Full-width degree rows, then languages and certifications as two definition lists; award card with a rotating seal; two skill bands; stack as a spec sheet | Globe of latitude rings and meridians, rising from the lower right (from the bottom edge on phones) so the text above stays clear |
+| 4 | Projects | Pinned gallery of the featured projects: vertical scroll moves the cards sideways; each cover runs its algorithm. Below it, the other repositories and the merged pull requests as rows | Tunnel around the screen edges that the scroll travels through |
+| 5 | Contact | Email as the headline, channels as rows, the name as an outlined band | Spiral disc lying under the content; the service mesh returns |
 
-- Mesh turns 1.1 π around y over the page and tilts 0.25 rad.
-- Camera descends 1.5 units and dollies in up to 3.5 units at mid page, then back out by the contact section.
-- Mesh opacity eases from 100% to 60% over the first 12% of the scroll, so it sits behind reading content without competing.
-- Pointer adds parallax on desktop only (touch input is ignored).
+**Service mesh** (hero and contact): gateways are services (signal dots with a pulsing ring), pods are instances, backbone links connect gateways, packets are messages in flight. Binary digits fall behind every scene.
 
-**Per-theme opacity** (`LAYER_OPACITY` in `MeshScene.ts`):
+**Portrait.** The engine samples the profile photo into one dot per particle (132 × 132 on the high tier). Dot size and opacity follow brightness on dark and darkness on light, so both themes show a positive image. It sits wherever the `[data-portrait-stage]` element is. Without WebGL, or with reduced motion, that element shows the photo through a CSS dot mask (`.halftone`).
 
-| Layer | Dark | Light |
-| :--- | ---: | ---: |
-| Nodes | 0.90 | 0.70 |
-| Edges | 0.20 | 0.18 |
-| Packets | 1.00 | 0.90 |
-| Glyphs | 0.17 | 0.13 |
+**Lens.** Points at the focal plane are small and sharp. Points in front of or behind it grow into flat discs with a brighter rim and lose brightness in proportion. Formations behind reading text are drawn at 20 to 55% so text stays the brightest thing on screen.
 
-Dark mode uses additive blending for nodes and packets (glow). Light mode uses normal blending.
+**Project covers.** Each gallery card (`featured: true` in the data) has a canvas sketch of the project's own algorithm, drawn in foreground gray with signal for the moving part. A private repository gets a lock label on its cover where the others have the link:
 
-**Portrait screens** (aspect < 0.8): the layout turns 90° so the wide constellation runs vertically.
+| Project | Cover |
+| :--- | :--- |
+| 8-puzzle | A* solving a scrambled board, with g, h and f |
+| git-github-in-action | Branches, commits and merges drawing left to right |
+| codecash | A request taking the cache-miss path, then the cache-hit path |
+| rinha-backend-2026-c | A query point finding its 5 nearest neighbours in a grid of labelled vectors |
+| megabrain-context-protocol | A coding agent and an MCP server exchanging `initialize`, `tools/list` and a tool call |
+| syntroph | A hexagonal core passing events between adapters, with the saga journal growing beside it |
+| fuzzymeans-ai | Fuzzy C-Means: centroids moving while each point takes the color of its memberships |
+| AlgorithmForest | AVL insertions; rotations show as nodes changing place |
+| zhang-suen-thinning | A shape eroding pass by pass to a one-pixel skeleton |
+| transaction.ledger | Events crossing API, table, stream and queue; duplicates rejected with 409 |
+| lime.stability.imputation | A local linear surrogate re-fitted over resampled perturbations |
+
+**Rows.** Repositories outside the gallery and open-source contributions use the `row-link` pattern from Education and Contact: name on the left, one description in the middle, stack and arrow on the right, stacked on phones. On hover the row gets a signal wash and the arrow slides into place; on touch screens the arrow sits in place from the start. Text between backticks in a description renders as `<code>` in the mono font.
 
 ## 6. Accessibility checklist
 
 - [ ] Text meets 4.5 : 1 against its background (see §2.1).
 - [ ] Icon-only controls have `aria-label` (`IconButton` requires it).
 - [ ] Focus is visible: global `:focus-visible` uses a 2 px signal outline.
-- [ ] Decorative elements (`$ whoami`, timeline nodes, canvases) are `aria-hidden`.
-- [ ] Every animation stops under `prefers-reduced-motion`.
-- [ ] Lists of things are real lists (`TagList`, social links, timeline).
+- [ ] Decorative elements (split hero letters, `$ whoami`, the closing band, canvases, the cursor ring) are `aria-hidden`; the hero keeps the full name in a visually hidden span.
+- [ ] Everything works without motion: content is visible before any animation runs, and every animation stops under `prefers-reduced-motion`.
+- [ ] Lists of things are real lists (`TagList`, social links, channels, stack as `<dl>`).
+- [ ] The pinned gallery follows keyboard focus and has previous/next buttons and tabs.
+- [ ] The mobile menu is a dialog, closes on Escape and locks page scroll while open.
 
 ## 7. Do and don't
 
 | Do | Don't |
 | :--- | :--- |
-| Build cards with `Surface` | Re-type `glass-card rounded-2xl border ...` |
+| Size type with the `text-display-*` scale | Hard-code a `text-[...]` for a title |
 | Take section numbers from `sectionIndex()` | Hard-code `01` |
-| Use signal for one live element per card | Color headings or paragraphs with signal |
-| Use the motion tokens (`duration-base ease-expo`) | Use ad-hoc `duration-500` |
+| Use signal for one live element per block | Color headings or paragraphs with signal |
+| Use the motion tokens (`duration-slow ease-expo`) | Use ad-hoc `duration-500` |
+| Render the final state first, then animate in an effect | Read `window` or `localStorage` during render |
+| Keep formations behind text dim | Let the 3D layer compete with reading content |
 | Add new copy to `translations.ts` in pt, en and es | Ship a string in one language |

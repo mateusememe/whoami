@@ -20,19 +20,24 @@
 
 ## ✨ Features
 
-- 🌐 **Trilingual Localization (i18n)**: Instant switching between **Português (PT-BR)**, **English (EN)**, and **Español (ES)**, with persistent `localStorage` memory.
-- 🛰️ **WebGL Service Mesh Background**: three.js scene of service clusters, links and message packets over a 3D binary field. All animation runs on the GPU, and colors come from the same CSS tokens as the page. Lazy-loaded, with quality tiers, adaptive resolution, a reduced-motion still frame and a 2D canvas fallback.
-- 🎨 **Design System**: Token set (one signal accent, motion tokens) and typed primitives (`Section`, `Surface`, `Tag`, `IconButton`, `PaginationDots`, `Reveal`). See [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md).
+- 🌐 **Trilingual Localization (i18n)**: Instant switching between **Português (PT-BR)**, **English (EN)**, and **Español (ES)**. Each language has its own prerendered URL (`/`, `/pt/`, `/es/`), and the choice persists in `localStorage`.
+- 🎬 **A presentation in scenes**: the page answers `whoami` scene by scene (name, statement, trajectory, degrees, stack, work, contact), each with its own layout and its own 3D formation.
+- 🛰️ **WebGL layer (three.js, custom GLSL)**: a service mesh with message packets, plus a particle field that morphs with the scroll between six formations: haze, a dot-matrix portrait sampled from the profile photo, terrain, globe, tunnel and galaxy. A thin-lens model turns out-of-focus points into bokeh. Lazy-loaded, with quality tiers, adaptive resolution, a reduced-motion still frame and a 2D canvas fallback.
+- 🧮 **Project covers that run the code**: each of the 11 gallery cards plays its own algorithm on a canvas (A* on the 8-puzzle, AVL rotations, Zhang-Suen thinning, Fuzzy C-Means, a nearest-neighbour search...). The other repositories and the merged open-source pull requests follow as rows.
+- 🌊 **Motion layer**: Lenis smooth scrolling, scroll-linked CSS variables from one rAF loop, pinned scenes with `position: sticky`, word-by-word text, magnetic buttons, 3D tilt, a cursor ring, marquees and View Transitions for theme and language. Everything renders visible first and stops under `prefers-reduced-motion`.
+- 🎨 **Design System**: fluid display type scale, one signal accent, glass surfaces, film grain, and typed primitives. See [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md).
 - 🌓 **Dark & Light Mode**: Modern glassmorphism UI with theme toggle and preference persistence.
 - 📱 **100% Responsive Design**: Fluid layout tailored for mobile, tablet, and desktop viewports.
-- 🔍 **SEO & AI Agent Ready**:
-  - Home page prerendered to static HTML at build time, then hydrated.
-  - `llms.txt` (llmstxt.org), `llms-full.txt` and Markdown profiles in PT/EN/ES, generated from the portfolio data.
-  - Open Graph / Twitter card image (1200x630).
-  - Semantic HTML5 with structured JSON-LD `Person` metadata.
-  - Automated `sitemap.xml` generation on build.
-  - `robots.txt` and `llms.txt` crawler context for AI models and search engines.
-- 🧪 **Automated Testing**: Vitest + Testing Library suites for context state, internationalization, navigation, section rendering, design-system primitives and WebGL scene generation.
+- 🔍 **SEO**:
+  - One static page per language, prerendered at build time and hydrated, each with its own title, description, canonical URL and `hreflang` links.
+  - JSON-LD graph: `WebSite`, `ProfilePage`, `Person` and an `ItemList` of `SoftwareSourceCode`.
+  - `sitemap.xml` with language alternates, Open Graph / Twitter card image (1200x630), `rel="me"` links, web manifest.
+- 🤖 **Agent-ready (AXO / ARO)**:
+  - `llms.txt` (llmstxt.org) with a key-facts list, `llms-full.txt` and Markdown profiles in PT/EN/ES.
+  - JSON Resume (`resume.json`, `resume.pt.json`, `resume.es.json`).
+  - WebMCP tools on the page (`get_profile`, `list_projects`, `get_contact`, `go_to_section`) for browser agents that support `document.modelContext`.
+  - Every one of these files is generated from the portfolio data, and the tests fail when they drift.
+- 🧪 **Automated Testing**: Vitest + Testing Library suites for context state, internationalization, navigation, section rendering, design-system primitives, WebGL scene generation, hydration, SEO metadata and agent files.
 - 🚀 **Full CI/CD Automation**:
   - **CI Workflow**: Automatic typechecking, linting, testing, and production build checks on pull requests and pushes.
   - **Deploy Workflow**: Automated zero-config deployment to **GitHub Pages**.
@@ -46,7 +51,9 @@
 | **Frontend Framework** | [React 18](https://react.dev/), [TypeScript 5](https://www.typescriptlang.org/) |
 | **Build & Tooling** | [Vite 5](https://vitejs.dev/), [SWC](https://swc.rs/), [TSX](https://github.com/privatenumber/tsx) |
 | **Styling & UI** | [Tailwind CSS](https://tailwindcss.com/), Glassmorphism, [Lucide React Icons](https://lucide.dev/) |
-| **3D / Graphics** | [three.js](https://threejs.org/) (WebGL 2, custom GLSL shaders) |
+| **3D / Graphics** | [three.js](https://threejs.org/) (WebGL 2, custom GLSL shaders), Canvas 2D sketches |
+| **Motion** | [Lenis](https://lenis.darkroom.engineering/), CSS scroll-linked variables, View Transitions API, Web Animations API |
+| **Fonts** | Space Grotesk, JetBrains Mono, Instrument Serif (self-hosted via [Fontsource](https://fontsource.org/)) |
 | **State & Data** | React Context API (`LanguageContext`), `localStorage` sync |
 | **Routing** | [React Router v6](https://reactrouter.com/) |
 | **Testing** | [Vitest](https://vitest.dev/), [@testing-library/react](https://testing-library.com/), JSDOM |
@@ -66,15 +73,23 @@ whoami/
 │       └── deploy.yml           # Automated deployment to GitHub Pages
 ├── public/
 │   ├── favicon.ico              # Site favicon
-│   ├── llms.txt                 # AI agent crawler summary
-│   ├── placeholder.svg          # SVG asset
+│   ├── llms.txt, llms-full.txt  # Generated: llmstxt.org index and full profile
+│   ├── index{,.pt,.es}.md       # Generated: Markdown profile per language
+│   ├── resume{,.pt,.es}.json    # Generated: JSON Resume per language
+│   ├── site.webmanifest         # Web app manifest
 │   ├── robots.txt               # Web crawler instructions
-│   └── sitemap.xml              # Generated sitemap
+│   └── sitemap.xml              # Generated: three language URLs with alternates
 ├── scripts/
-│   └── generate-sitemap.ts      # Automated sitemap generator script
+│   ├── generate-head.ts         # Rewrites the SEO block of index.html
+│   ├── generate-sitemap.ts      # Writes public/sitemap.xml
+│   ├── generate-llms.ts         # Writes the agent files to public/
+│   └── prerender.ts             # Renders /, /pt/ and /es/ after the build
 ├── src/
+│   ├── agents/                      # WebMCP tools for browser agents
 │   ├── components/
+│   │   ├── covers/                  # Project cover sketches and their algorithms
 │   │   ├── ds/                      # Design system primitives (Section, Surface, Tag, ...)
+│   │   ├── motion/                  # SmoothScroll, ScrubText, Marquee, Magnetic, Tilt, Cursor, ...
 │   │   ├── scene/
 │   │   │   ├── SceneBackground.tsx  # WebGL / 2D fallback selector
 │   │   │   └── WebGLBackground.tsx  # Lazy three.js mount
@@ -84,7 +99,7 @@ whoami/
 │   │   │   ├── ExperienceSection.tsx# Career timeline & tech tags
 │   │   │   ├── EducationSection.tsx # Academic degrees
 │   │   │   ├── SkillsSection.tsx    # Core competencies & tech stack
-│   │   │   ├── ProjectsSection.tsx  # Featured projects
+│   │   │   ├── ProjectsSection.tsx  # Gallery, more projects, open-source contributions
 │   │   │   └── ContactFooter.tsx    # Contact channels & footer
 │   │   ├── BinaryBackground.tsx     # 2D canvas fallback background
 │   │   ├── ScrollProgress.tsx       # Header reading-progress bar
@@ -97,13 +112,16 @@ whoami/
 │   ├── hooks/
 │   │   └── useLanguage.ts           # useLanguage consumer hook
 │   ├── i18n/
+│   │   ├── routes.ts                # Language ↔ URL (/, /pt/, /es/)
 │   │   └── translations.ts          # PT / EN / ES dictionary
+│   ├── motion/                      # rAF ticker, scroll store, progress, scene director
 │   ├── lib/
 │   │   ├── motion.ts                # damp, scroll progress (DOM + WebGL)
 │   │   └── utils.ts                 # ClassName merging utilities (cn)
 │   ├── pages/
 │   │   ├── Index.tsx                # Main single-page portfolio view
 │   │   └── NotFound.tsx             # 404 error page
+│   ├── seo/                         # Head block, JSON-LD, sitemap, llms.txt, JSON Resume
 │   ├── test/
 │   │   ├── setup.ts                 # Test environment setup & mocks
 │   │   ├── Header.test.tsx          # Navigation & controls unit tests
@@ -112,7 +130,7 @@ whoami/
 │   │   └── PortfolioSections.test.tsx# Sections rendering test
 │   ├── webgl/
 │   │   ├── core/                    # Engine, capabilities, input, governor, palette
-│   │   └── scene/                   # Graph generation, GLSL shaders, MeshScene
+│   │   └── scene/                   # Graph and particle buffers, GLSL shaders, MeshScene, ParticleField
 │   ├── App.tsx                      # Root application & providers
 │   ├── index.css                    # Design tokens, fonts & Tailwind layers
 │   └── main.tsx                     # React DOM entry point
@@ -162,8 +180,9 @@ Open [http://localhost:8080](http://localhost:8080) in your browser.
 
 | Command | Description |
 | :--- | :--- |
-| `npm run dev` | Runs predev sitemap generator and starts the Vite development server on port 8080. |
-| `npm run build` | Runs prebuild sitemap generator and compiles the production bundle into `/dist`. |
+| `npm run dev` | Regenerates the head block, sitemap and agent files, then starts the Vite development server on port 8080. |
+| `npm run build` | Regenerates the same files, builds the client and server bundles into `/dist` and prerenders `/`, `/pt/` and `/es/`. |
+| `npm run generate` | Rewrites the SEO block of `index.html`, `public/sitemap.xml` and the agent files from the portfolio data. |
 | `npm run preview` | Locally serves the production build from `/dist`. |
 | `npm test` | Runs the Vitest test suite once. |
 | `npm run test:watch`| Runs the Vitest test suite in interactive watch mode. |
@@ -199,7 +218,7 @@ To configure a custom domain (e.g. `mateus.dev`):
 - **Resume Data**: Update job roles, dates, company descriptions, skills, and projects in [`src/data/portfolio.ts`](src/data/portfolio.ts).
 - **Translations**: Add or adjust strings in [`src/i18n/translations.ts`](src/i18n/translations.ts).
 - **Social Links**: Manage URLs and contact info in [`src/data/portfolio.ts`](src/data/portfolio.ts).
-- **SEO & Meta Tags**: Customize title and descriptions in [`index.html`](index.html) and [`public/llms.txt`](public/llms.txt).
+- **SEO & Meta Tags**: Titles and descriptions are the `seo.*` keys in [`src/i18n/translations.ts`](src/i18n/translations.ts). The SEO block of [`index.html`](index.html), the sitemap and the files in `public/` are generated: after changing data, bump `profile.updatedAt` in [`src/data/portfolio.ts`](src/data/portfolio.ts) and run `npm run generate`.
 
 ---
 
