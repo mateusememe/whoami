@@ -325,3 +325,10 @@ export function nearest(points: Array<[number, number]>, query: [number, number]
     .slice(0, k)
     .map(({ index }) => index);
 }
+
+/** Mean of a set of 2D points: the centroid of a pose skeleton's keypoints. */
+export function centroid(points: Array<[number, number]>): [number, number] {
+  if (points.length === 0) throw new Error("centroid of no points");
+  const sum = points.reduce(([sx, sy], [x, y]) => [sx + x, sy + y], [0, 0]);
+  return [sum[0] / points.length, sum[1] / points.length];
+}

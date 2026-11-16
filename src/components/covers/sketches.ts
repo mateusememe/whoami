@@ -1,7 +1,8 @@
 /**
  * Project covers: one small canvas animation per featured project, each
  * showing what the project does (a puzzle being solved, a tree rebalancing,
- * a nearest-neighbour search, a shape thinning to its skeleton...). Every sketch is a pure function of time, so
+ * a nearest-neighbour search, a shape thinning to its skeleton, two poses
+ * whose centroids close in until the classifier calls it a fight...). Every sketch is a pure function of time, so
  * it loops, pauses and renders a still frame for reduced motion for free.
  *
  * Loaded on demand by ProjectCover, so this file stays out of the main bundle.
@@ -9,6 +10,7 @@
 import { createRng, gaussian } from "@/webgl/core/random";
 import {
   avlLayouts,
+  centroid,
   fuzzyCMeans,
   manhattan,
   nearest,
@@ -929,6 +931,175 @@ const lime: Sketch = ({ ctx, w, h, t, colors }) => {
 };
 
 /** Sketch per featured project id (see `projects` in src/data/portfolio.ts). */
+// ---------- find-the-fight: pose centroids and a sequence classifier ----------
+
+/** Pose keypoints (COCO-like subset) relative to the hips, in body heights; x points forward. */
+const SKELETON: Record<string, [number, number]> = {
+  head: [0, -0.98],
+  neck: [0, -0.78],
+  shoulderB: [-0.12, -0.74],
+  shoulderF: [0.12, -0.74],
+  elbowB: [-0.2, -0.52],
+  elbowF: [0.22, -0.52],
+  wristB: [-0.2, -0.3],
+  wristF: [0.24, -0.3],
+  hipB: [-0.09, -0.2],
+  hipF: [0.09, -0.2],
+  kneeB: [-0.11, 0.2],
+  kneeF: [0.11, 0.2],
+  ankleB: [-0.12, 0.6],
+  ankleF: [0.12, 0.6],
+};
+const BONES: Array<[string, string]> = [
+  ["head", "neck"],
+  ["neck", "shoulderB"],
+  ["neck", "shoulderF"],
+  ["shoulderB", "elbowB"],
+  ["elbowB", "wristB"],
+  ["shoulderF", "elbowF"],
+  ["elbowF", "wristF"],
+  ["shoulderB", "hipB"],
+  ["shoulderF", "hipF"],
+  ["hipB", "hipF"],
+  ["hipB", "kneeB"],
+  ["kneeB", "ankleB"],
+  ["hipF", "kneeF"],
+  ["kneeF", "ankleF"],
+];
+
+/** One 10-second loop: walk in (0-4 s), fight (4-7 s), part (7-10 s). Returns the gap between the two people, 0..1. */
+const fightGap = (t: number) => {
+  const local = t % 10;
+  if (local < 4) return lerp(0.62, 0.16, ease(local / 4));
+  if (local < 7) return 0.16 + Math.sin(local * 7) * 0.012;
+  return lerp(0.16, 0.62, ease((local - 7) / 3));
+};
+/** How hard they swing (0 while walking, 1 mid-fight). */
+const fightIntensity = (t: number) => {
+  const local = t % 10;
+  return clamp01(Math.min((local - 3.6) / 0.6, (7.2 - local) / 0.6));
+};
+/** Classifier output for a moment: high when the two are close and swinging. */
+const fightScore = (t: number) => clamp01(0.06 + 0.9 / (1 + Math.exp((fightGap(t) - 0.26) * 26)) * (0.55 + 0.45 * fightIntensity(t)));
+
+function pose(cx: number, ground: number, height: number, facing: 1 | -1, t: number, phase: number): Record<string, [number, number]> {
+  const walking = 1 - fightIntensity(t);
+  const swing = Math.sin(t * 6 + phase);
+  const punch = fightIntensity(t) * Math.max(0, Math.sin(t * 9 + phase));
+  const out: Record<string, [number, number]> = {};
+  for (const [name, [x, y]] of Object.entries(SKELETON)) {
+    let dx = x;
+    let dy = y;
+    if (name.startsWith("knee") || name.startsWith("ankle")) dx += (name.endsWith("F") ? 1 : -1) * swing * 0.07 * walking * (name.startsWith("ankle") ? 1.6 : 1);
+    if (name === "elbowF") {
+      dx += punch * 0.12 + fightIntensity(t) * 0.05;
+      dy -= fightIntensity(t) * 0.14;
+    }
+    if (name === "wristF") {
+      dx += punch * 0.3 + fightIntensity(t) * 0.08;
+      dy -= fightIntensity(t) * 0.36;
+    }
+    if (name === "elbowB" || name === "wristB") dy -= fightIntensity(t) * (name === "wristB" ? 0.3 : 0.12);
+    // Widened a little: a COCO skeleton at true proportions reads as a stick at this size.
+    out[name] = [cx + dx * height * 1.35 * facing, ground - 0.6 * height + dy * height];
+  }
+  return out;
+}
+
+const fight: Sketch = ({ ctx, w, h, t, colors }) => {
+  const size = textSize(w);
+  const stage = { x: w * 0.06, y: h * 0.2, w: w * 0.7, h: h * 0.52 };
+  const ground = stage.y + stage.h * 0.95;
+  const height = stage.h * 0.56;
+  const gap = fightGap(t);
+  const mid = stage.x + stage.w * 0.5;
+  const people = [pose(mid - (gap * stage.w) / 2, ground, height, 1, t, 0), pose(mid + (gap * stage.w) / 2, ground, height, -1, t, 1.7)];
+  const score = fightScore(t);
+  const fighting = score > 0.5;
+
+  // Floor line.
+  ctx.strokeStyle = hsl(colors.fg, 0.12);
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(stage.x, ground + 2);
+  ctx.lineTo(stage.x + stage.w, ground + 2);
+  ctx.stroke();
+
+  const centers = people.map((points) => centroid(Object.values(points)));
+  people.forEach((points) => {
+    ctx.strokeStyle = hsl(colors.fg, 0.7);
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    for (const [a, b] of BONES) {
+      ctx.moveTo(points[a][0], points[a][1]);
+      ctx.lineTo(points[b][0], points[b][1]);
+    }
+    ctx.stroke();
+    ctx.fillStyle = hsl(colors.fg);
+    for (const [x, y] of Object.values(points)) {
+      ctx.beginPath();
+      ctx.arc(x, y, 1.9, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  });
+
+  // Centroids and the distance between them, drawn as a dashed line.
+  const [a, b] = centers;
+  const dashes = 14;
+  ctx.strokeStyle = hsl(colors.signal, 0.75);
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  for (let i = 0; i < dashes; i += 2) {
+    ctx.moveTo(lerp(a[0], b[0], i / dashes), lerp(a[1], b[1], i / dashes));
+    ctx.lineTo(lerp(a[0], b[0], (i + 1) / dashes), lerp(a[1], b[1], (i + 1) / dashes));
+  }
+  ctx.stroke();
+  for (const [x, y] of centers) {
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, Math.PI * 2);
+    ctx.fillStyle = hsl(colors.card);
+    ctx.fill();
+    ctx.strokeStyle = hsl(colors.signal);
+    ctx.stroke();
+  }
+  label(ctx, `d = ${(Math.hypot(b[0] - a[0], b[1] - a[1]) / stage.w).toFixed(2)}`, (a[0] + b[0]) / 2, a[1] - size * 1.4, hsl(colors.signal), size * 0.9, "center");
+
+  // Detection box around both people once the score passes the threshold.
+  const xs = people.flatMap((points) => Object.values(points).map(([x]) => x));
+  const ys = people.flatMap((points) => Object.values(points).map(([, y]) => y));
+  const pad = size;
+  ctx.lineWidth = 1.4;
+  ctx.strokeStyle = fighting ? hsl(colors.signal, 0.9) : hsl(colors.fg, 0.15);
+  roundedRect(ctx, Math.min(...xs) - pad, Math.min(...ys) - pad, Math.max(...xs) - Math.min(...xs) + pad * 2, Math.max(...ys) - Math.min(...ys) + pad * 2, 6);
+  ctx.stroke();
+  if (fighting) label(ctx, "fight", Math.min(...xs) - pad, Math.min(...ys) - pad - size * 0.8, hsl(colors.signal), size * 0.9);
+
+  // The last 10 frames: the window the classifier reads.
+  const strip = { x: stage.x, y: h * 0.8, w: stage.w, h: h * 0.07 };
+  const cell = strip.w / 10;
+  for (let i = 0; i < 10; i++) {
+    const frameScore = fightScore(Math.max(0, t - (9 - i) * 0.3));
+    roundedRect(ctx, strip.x + i * cell + 2, strip.y, cell - 4, strip.h, 3);
+    ctx.fillStyle = hsl(colors.signal, 0.08 + 0.7 * frameScore);
+    ctx.fill();
+  }
+  label(ctx, "10 frames · 299×299", strip.x, strip.y + strip.h + size * 1.2, hsl(colors.muted), size * 0.9);
+
+  // Output of the sigmoid against the 0.5 threshold.
+  const bar = { x: w * 0.86, y: stage.y, w: Math.max(8, w * 0.025), h: stage.h + strip.h + (strip.y - (stage.y + stage.h)) };
+  ctx.fillStyle = hsl(colors.fg, 0.1);
+  ctx.fillRect(bar.x, bar.y, bar.w, bar.h);
+  ctx.fillStyle = hsl(colors.signal, fighting ? 0.95 : 0.45);
+  ctx.fillRect(bar.x, bar.y + bar.h * (1 - score), bar.w, bar.h * score);
+  ctx.fillStyle = hsl(colors.fg, 0.6);
+  ctx.fillRect(bar.x - 5, bar.y + bar.h * 0.5, bar.w + 10, 1);
+  label(ctx, "0.5", bar.x - 8, bar.y + bar.h * 0.5, hsl(colors.muted), size * 0.85, "right");
+  label(ctx, `p = ${score.toFixed(2)}`, bar.x + bar.w / 2, bar.y - size * 1.2, hsl(fighting ? colors.signal : colors.fg, 0.9), size * 0.9, "center");
+
+  label(ctx, "Xception → Bi-LSTM", w * 0.06, h * 0.1, hsl(colors.signal), size);
+  label(ctx, fighting ? "violence" : "no violence", w * 0.94, h * 0.1, hsl(fighting ? colors.signal : colors.muted), size, "right");
+};
+
 export const sketches: Record<string, Sketch> = {
   "rinha-backend-2026-c": knn,
   "megabrain-context-protocol": mcp,
@@ -938,6 +1109,7 @@ export const sketches: Record<string, Sketch> = {
   "8-puzzle": puzzle,
   "fuzzymeans-ai": fcm,
   "lime-stability": lime,
+  "find-the-fight": fight,
   "git-github-in-action": git,
   "algorithm-forest": tree,
   "zhang-suen-thinning": thinning,

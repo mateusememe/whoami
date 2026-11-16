@@ -271,6 +271,36 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mateusememe.github.io/whoami/projects/lime-stability/" />
   </url>
   <url>
+    <loc>https://mateusememe.github.io/whoami/projects/find-the-fight/</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mateusememe.github.io/whoami/projects/find-the-fight/" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://mateusememe.github.io/whoami/pt/projects/find-the-fight/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://mateusememe.github.io/whoami/es/projects/find-the-fight/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mateusememe.github.io/whoami/projects/find-the-fight/" />
+  </url>
+  <url>
+    <loc>https://mateusememe.github.io/whoami/pt/projects/find-the-fight/</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mateusememe.github.io/whoami/projects/find-the-fight/" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://mateusememe.github.io/whoami/pt/projects/find-the-fight/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://mateusememe.github.io/whoami/es/projects/find-the-fight/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mateusememe.github.io/whoami/projects/find-the-fight/" />
+  </url>
+  <url>
+    <loc>https://mateusememe.github.io/whoami/es/projects/find-the-fight/</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mateusememe.github.io/whoami/projects/find-the-fight/" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://mateusememe.github.io/whoami/pt/projects/find-the-fight/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://mateusememe.github.io/whoami/es/projects/find-the-fight/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mateusememe.github.io/whoami/projects/find-the-fight/" />
+  </url>
+  <url>
     <loc>https://mateusememe.github.io/whoami/projects/git-github-in-action/</loc>
     <lastmod>2026-11-16</lastmod>
     <changefreq>yearly</changefreq>

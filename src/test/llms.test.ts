@@ -1,7 +1,7 @@
 import { readFileSync } from "fs";
 import { resolve } from "path";
 import { describe, it, expect } from "vitest";
-import { contributions, education, experiences, profile, projects, socialLinks, talkUrl, talks } from "@/data/portfolio";
+import { contributions, education, experiences, profile, projects, publications, socialLinks, talkUrl, talks } from "@/data/portfolio";
 import { PROJECT_PAGE_IDS, pagePath } from "@/i18n/routes";
 import {
   PROFILE_FILES,
@@ -93,6 +93,7 @@ describe("Markdown profiles", () => {
     for (const project of projects) expect(markdown).toContain(project.name);
     for (const item of contributions) expect(markdown).toContain(`[${item.repo}](${item.url})`);
     for (const talk of talks) expect(markdown).toContain(`**${talk.title}**`);
+    for (const item of publications) expect(markdown).toContain(item.title);
   });
 
   it("localizes headings", () => {

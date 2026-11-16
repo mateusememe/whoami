@@ -2,7 +2,7 @@
 import { readFileSync } from "fs";
 import { resolve } from "path";
 import { describe, it, expect } from "vitest";
-import { contributions, education, experiences, profile, projects, socialLinks, talks } from "@/data/portfolio";
+import { contributions, education, experiences, profile, projects, publications, socialLinks, talks } from "@/data/portfolio";
 import {
   HTML_LANG,
   LANGUAGE_PATHS,
@@ -134,6 +134,14 @@ describe("generated <head>", () => {
     expect(types).toEqual(["WebSite", "Person", "WebPage", "SoftwareSourceCode", "BreadcrumbList"]);
     const code = ld["@graph"][3];
     expect(code.codeRepository).toBe(project.githubUrl);
+    // The thesis page links its paper.
+    const thesis = JSON.parse(
+      parse(renderHead("en", DEFAULT_SITE_URL, { kind: "project", id: "find-the-fight" })).querySelector(
+        'script[type="application/ld+json"]',
+      )!.textContent!,
+    )["@graph"][3];
+    expect(thesis.subjectOf["@type"]).toBe("ScholarlyArticle");
+    expect(thesis.subjectOf.about["@id"]).toBe(thesis["@id"]);
     expect(code.dateCreated).toBe(String(project.year));
     expect(ld["@graph"][4].itemListElement).toHaveLength(3);
   });
@@ -193,8 +201,18 @@ describe("JSON-LD", () => {
   const byType = (type: string) => graph.find((node) => node["@type"] === type) as Record<string, any>;
   const person = byType("Person");
 
-  it("describes the site, the page, the person and the projects", () => {
-    expect(graph.map((node) => node["@type"])).toEqual(["WebSite", "ProfilePage", "Person", "ItemList"]);
+  it("describes the site, the page, the person, the projects and the publications", () => {
+    expect(graph.map((node) => node["@type"])).toEqual([
+      "WebSite",
+      "ProfilePage",
+      "Person",
+      "ItemList",
+      ...publications.map(() => "ScholarlyArticle"),
+    ]);
+    const article = byType("ScholarlyArticle");
+    expect(article.headline).toBe(publications[0].title);
+    expect(article.author[0]["@id"]).toBe(person["@id"]);
+    expect(article.author).toHaveLength(publications[0].authors.length);
     expect(byType("ProfilePage").mainEntity["@id"]).toBe(person["@id"]);
     expect(byType("ProfilePage").dateModified).toBe(profile.updatedAt);
   });
@@ -286,6 +304,8 @@ describe("JSON Resume", () => {
     const featured = resume.projects.find((item: any) => item.name === projects.find((p) => p.featured)?.name);
     expect(featured.highlights.length).toBeGreaterThan(0);
     expect(resume.projects.filter((item: any) => item.type === "workshop")).toHaveLength(talks.length);
+    expect(resume.publications).toHaveLength(publications.length);
+    expect(resume.publications[0]).toMatchObject({ name: publications[0].title, releaseDate: String(publications[0].year) });
   });
 
   it("splits degree names in every language", () => {

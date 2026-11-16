@@ -1,11 +1,11 @@
 import type { CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, ArrowRight, ArrowUpRight, ExternalLink, Github, Lock, Presentation, Star } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, BookOpen, ExternalLink, Github, Lock, Presentation, Star } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Reveal, TagList } from "@/components/ds";
 import { ProjectCover } from "@/components/covers/ProjectCover";
 import { Magnetic } from "@/components/motion/Magnetic";
-import { profile, socialLinks, talks } from "@/data/portfolio";
+import { profile, publications, socialLinks, talks } from "@/data/portfolio";
 import { projectPages } from "@/data/projectPages";
 import { useSiteNavigation } from "@/hooks/useSiteNavigation";
 import { PROJECT_PAGE_IDS, pagePath } from "@/i18n/routes";
@@ -36,6 +36,7 @@ const ProjectPage = () => {
   const prev = projectById(PROJECT_PAGE_IDS[(position - 1 + total) % total]);
   const next = projectById(PROJECT_PAGE_IDS[(position + 1) % total]);
   const talk = project.talkId ? talks.find((item) => item.id === project.talkId) : undefined;
+  const publication = publications.find((item) => item.projectId === project.id);
   const index = String(position + 1).padStart(2, "0");
 
   const facts: Array<[string, string]> = [
@@ -144,6 +145,27 @@ const ProjectPage = () => {
               >
                 <ExternalLink size={14} aria-hidden="true" />
                 {t("project.live")}
+              </a>
+            )}
+            {publication && (
+              <a
+                // The proceedings PDF when it is online, else the publications list on the home page.
+                {...(publication.url
+                  ? { href: publication.url, target: "_blank", rel: "noopener noreferrer" }
+                  : { href: sectionHref("education"), onClick: onSectionClick("education") })}
+                className="group mt-2 flex items-start gap-3 text-sm text-muted-foreground transition-colors duration-base hover:text-foreground"
+              >
+                <BookOpen size={16} aria-hidden="true" className="mt-0.5 shrink-0 text-signal" />
+                <span>
+                  <span className="label block">{t("project.published")}</span>
+                  <span lang="pt-BR" className="mt-1 block text-foreground">
+                    {publication.title}
+                  </span>
+                  <span className="block">
+                    {publication.venue.split(" — ")[0]} {publication.year}
+                    {publication.pages ? `, p. ${publication.pages}` : ""}
+                  </span>
+                </span>
               </a>
             )}
             {talk && (

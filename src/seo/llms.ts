@@ -19,6 +19,8 @@ import {
   experiences,
   profile,
   projects,
+  publicationReference,
+  publications,
   socialLinks,
   spokenLanguages,
   talkUrl,
@@ -113,6 +115,11 @@ function projectPage(siteUrl: string, language: Language, id: string): string | 
   return PROJECT_PAGE_IDS.includes(id) ? siteHref(siteUrl, pagePath(language, { kind: "project", id })) : undefined;
 }
 
+/** ABNT reference, with the address of the proceedings when they are online. */
+function citation(item: (typeof publications)[number]): string {
+  return publicationReference(item).full;
+}
+
 function talkLine(language: Language, talk: (typeof talks)[number]): string {
   const links = [
     talk.links.repo ? `[${tr(language, "talks.repo")}](${talk.links.repo})` : "",
@@ -177,6 +184,14 @@ export function renderProfileMarkdown(language: Language, siteUrl: string): stri
     `**${tr(language, "edu.languages")}:** ${spokenLanguages.map((item) => `${item.name[language]} (${item.level[language].toLowerCase()})`).join(", ")}`,
     "",
     `**${tr(language, "edu.certifications")}:** ${certifications.map((item) => `${item.name}, ${item.detail[language]}`).join("; ")}`,
+    "",
+    `**${tr(language, "edu.publications")}:**`,
+    "",
+    ...publications.map((item) => {
+      const page = item.projectId ? projectPage(siteUrl, language, item.projectId) : undefined;
+      const link = page ? ` [${tr(language, "talks.project")}](${page})` : "";
+      return `- ${citation(item)} ${inline(item.summary[language])}${link}`;
+    }),
   );
 
   lines.push(
@@ -243,6 +258,7 @@ export function renderLlmsTxt(siteUrl: string): string {
       .map((skill) => skill.en)
       .join(", ")}`,
     `- Spoken languages: ${spokenLanguages.map((item) => `${item.name.en} (${item.level.en.toLowerCase()})`).join(", ")}`,
+    `- Publications: ${publications.map((item) => `${item.title} (${item.venue.split(" — ")[0]} ${item.year})`).join("; ")}`,
     `- Talks: ${talks.length} workshops (${talks.map((talk) => `${talk.title}, ${talk.event.en}`).join("; ")})`,
     ...(mail ? [`- Contact: ${mail.href.replace("mailto:", "")}`] : []),
     `- Last updated: ${profile.updatedAt}`,
@@ -274,6 +290,12 @@ export function renderLlmsTxt(siteUrl: string): string {
   lines.push("", "## Open-source contributions", "");
   for (const item of contributions) {
     lines.push(`- [${item.repo}](${item.url}): ${inline(item.desc.en)}`);
+  }
+
+  lines.push("", "## Publications", "");
+  for (const item of publications) {
+    const url = item.url ?? (item.projectId ? projectPage(siteUrl, "en", item.projectId) : undefined);
+    if (url) lines.push(`- [${item.title}](${url}): ${citation(item)} ${inline(item.summary.en)}`);
   }
 
   lines.push("", "## Talks", "");

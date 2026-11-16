@@ -9,6 +9,7 @@ Portfolio and résumé of a backend software engineer: experience, education, sk
 - Education: Master's in Computer Science at UNESP (in progress); Bachelor's in Computer Science at Universidade do Oeste Paulista
 - Focus: Distributed Systems, Data Engineering, Software Architecture, Data Mesh & Pipelines
 - Spoken languages: Portuguese (native), English (full professional)
+- Publications: Detecção de agressão física humana em vídeos de vigilância utilizando deep learning (ENEPE 2022)
 - Talks: 9 workshops (MCP: MegaBrain Context Protocol, DevFest Presidente Prudente 2026; O Incrível mundo mágico da web, 37th Infoeste · DevFest Presidente Prudente 2025; AI Autopsy, DevFest Presidente Prudente 2025; API Hero, DevFest Presidente Prudente 2025; Do Caos à Previsão: Domando Estruturas Temporais com Machine Learning, 36th Infoeste · DevFest Presidente Prudente 2024; Git e GitHub em Ação, 35th Infoeste; O Essencial de GIT e GitHub, 34th Infoeste; Intensivo ReactJS e Typescript, 34th Infoeste; Node.JS com testes unitários e PrismaORM, 34th Infoeste)
 - Contact: matt.mendon@gmail.com
 - Last updated: 2026-11-16
@@ -31,6 +32,7 @@ Portfolio and résumé of a backend software engineer: experience, education, sk
 - [8-puzzle](https://mateusememe.github.io/whoami/projects/8-puzzle/): 8-puzzle solver using heuristic search with A* and Best-First Search algorithms based on Manhattan distance. [Source](https://github.com/mateusememe/8-puzzle)
 - [fuzzymeans-ai](https://mateusememe.github.io/whoami/projects/fuzzymeans-ai/): Explainable imputation of missing costs in highway-rail crossing accident records (FRA data). Fuzzy C-Means and Noise Clustering over coordinates and speeds: each imputed value is a membership-weighted mean that can be audited. Validated by masking 30% of the known values across 5 seeds. [Source](https://github.com/mateusememe/fuzzymeans-ai)
 - [lime.stability.imputation](https://mateusememe.github.io/whoami/projects/lime-stability/): MSc experimental research on LIME stability with data imputation techniques across RandomForest and GradientBoosting models. Private repository.
+- [find-the-fight](https://mateusememe.github.io/whoami/projects/find-the-fight/): Bachelor's thesis: fight detection in surveillance camera video. A classifier reads 10 frames through a pretrained Xception, passes the features to two bidirectional LSTM layers and decides between violence and non-violence; a second approach measures the distance between the centroids of each person's pose. [Source](https://github.com/mateusememe/find-the-fight)
 - [git-github-in-action](https://mateusememe.github.io/whoami/projects/git-github-in-action/): Code examples and resources for the 'Git and GitHub in Action' workshop at 35th Infoeste, covering version control and workflows. [Source](https://github.com/mateusememe/git-github-in-action)
 - [AlgorithmForest](https://mateusememe.github.io/whoami/projects/algorithm-forest/): Implementation of tree data structures and algorithms in Java, including Binary Search Trees (BST) and AVL balancing. [Source](https://github.com/mateusememe/AlgorithmForest)
 - [zhang-suen-thinning](https://mateusememe.github.io/whoami/projects/zhang-suen-thinning/): Python implementation of the Zhang-Suen morphological thinning and skeletonization algorithm for binary images. [Source](https://github.com/mateusememe/zhang-suen-thinning)
@@ -46,6 +48,10 @@ Portfolio and résumé of a backend software engineer: experience, education, sk
 - [dmux/go-quality-gate](https://github.com/dmux/go-quality-gate/pull/32): Detection of the runtime and tools a project needs, with install hints per operating system. Extended `doctor` command, a `tools_policy: recommend` setting and the `check_environment` MCP tool for AI agents. 25 files, 1,353 lines added.
 - [leeozaka/Merkle](https://github.com/leeozaka/Merkle/pulls?q=is%3Apr+author%3Amateusememe+is%3Amerged): Two language adapters for Merkle's Protocol 1.0, one for Java and Spring Boot and one for Python. Each runs out of process and does language detection, deterministic AST indexing and test impact mapping.
 - [zanfranceschi/rinha-de-backend-2026](https://github.com/zanfranceschi/rinha-de-backend-2026/pull/7621): Submission accepted in the fourth Rinha de Backend: fraud detection with vector search, limited to 1 vCPU and 350 MB. The code is the rinha-backend-2026-c project.
+
+## Publications
+
+- [Detecção de agressão física humana em vídeos de vigilância utilizando deep learning](https://www.unoeste.br/Areas/Eventos/Content/documentos/EventosAnais/805/Exatas/Computa%c3%a7%c3%a3o.pdf?v=1): MONTEIRO, M. M.; PAZOTI, M. A.; SILVA, F. A.; ALMEIDA, L. L. Detecção de agressão física humana em vídeos de vigilância utilizando deep learning. In: ENEPE — Encontro Nacional de Ensino, Pesquisa e Extensão, 2022, Presidente Prudente. Anais [...]: Ciências Exatas e da Terra, Ciência da Computação. Presidente Prudente: Universidade do Oeste Paulista, 2022. p. 8. Disponível em: https://www.unoeste.br/Areas/Eventos/Content/documentos/EventosAnais/805/Exatas/Computa%c3%a7%c3%a3o.pdf?v=1. Acesso em: 16 nov. 2026. Abstract of the bachelor's thesis, presented orally: Xception with Bi-LSTM on the Surveillance Camera Fight Dataset (300 videos, 70% for training and 30% for testing), with 63% accuracy in the preliminary result.
 
 ## Talks
 

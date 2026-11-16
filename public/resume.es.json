@@ -157,6 +157,15 @@
       "issuer": "EF SET"
     }
   ],
+  "publications": [
+    {
+      "name": "Detecção de agressão física humana em vídeos de vigilância utilizando deep learning",
+      "publisher": "ENEPE — Encontro Nacional de Ensino, Pesquisa e Extensão, Universidade do Oeste Paulista",
+      "releaseDate": "2022",
+      "summary": "Resumen del trabajo de conclusión de carrera, presentado en comunicación oral: Xception con Bi-LSTM sobre el Surveillance Camera Fight Dataset (300 videos, 70% para entrenamiento y 30% para prueba), con 63% de exactitud en el resultado preliminar.",
+      "url": "https://www.unoeste.br/Areas/Eventos/Content/documentos/EventosAnais/805/Exatas/Computa%c3%a7%c3%a3o.pdf?v=1"
+    }
+  ],
   "skills": [
     {
       "name": "Lenguajes",
@@ -400,6 +409,25 @@
       ],
       "startDate": "2025",
       "url": "https://mateusememe.github.io/whoami/es/projects/lime-stability/",
+      "type": "application"
+    },
+    {
+      "name": "find-the-fight",
+      "description": "Trabajo de conclusión de carrera: detección de peleas en videos de cámaras de vigilancia. Un clasificador lee 10 cuadros con un Xception preentrenado, pasa las features por dos capas LSTM bidireccionales y decide entre violencia y no violencia; un segundo enfoque mide la distancia entre los centroides de las poses de cada persona.",
+      "highlights": [
+        "Cada video se convierte en una secuencia de 10 cuadros de 299 × 299. Un Xception preentrenado en ImageNet y congelado extrae las features de cada cuadro (TimeDistributed); dos capas LSTM bidireccionales de 64 unidades leen la secuencia, y una salida sigmoide da la probabilidad de violencia.",
+        "Entrenado con Adam (tasa 0,001) y entropía cruzada binaria durante 20 épocas. En el resultado preliminar publicado en el ENEPE 2022, sobre el Surveillance Camera Fight Dataset (300 videos, 150 con violencia, división 70/30), la exactitud fue del 63%.",
+        "Un segundo enfoque estima las poses con el modelo human-pose-estimation-0001 de OpenVINO, calcula el centroide de cada esqueleto y sigue la distancia entre las personas cuadro a cuadro.",
+        "Inferencia en vivo por webcam en un notebook, un servidor Flask que transmite el video con las poses de AlphaPose y un prototipo en Streamlit para subir un video. El resumen salió en los anales del ENEPE 2022."
+      ],
+      "keywords": [
+        "TensorFlow",
+        "Xception",
+        "Bi-LSTM",
+        "OpenVINO"
+      ],
+      "startDate": "2022",
+      "url": "https://github.com/mateusememe/find-the-fight",
       "type": "application"
     },
     {

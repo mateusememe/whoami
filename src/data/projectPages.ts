@@ -218,6 +218,33 @@ export const projectPages: Record<string, ProjectPageContent> = {
       ],
     },
   },
+  "find-the-fight": {
+    cover: {
+      pt: "Duas poses se aproximam até brigar. A linha tracejada é a distância entre os centróides, a faixa embaixo são os 10 quadros que o classificador lê e a barra à direita é a saída da sigmoide contra o limiar de 0,5.",
+      en: "Two poses close in until they fight. The dashed line is the distance between their centroids, the strip below is the 10 frames the classifier reads, and the bar on the right is the sigmoid output against the 0.5 threshold.",
+      es: "Dos poses se acercan hasta pelear. La línea discontinua es la distancia entre sus centroides, la franja de abajo son los 10 cuadros que lee el clasificador y la barra de la derecha es la salida de la sigmoide frente al umbral de 0,5.",
+    },
+    highlights: {
+      pt: [
+        "Cada vídeo vira uma sequência de 10 quadros de 299 × 299. Um Xception pré-treinado no ImageNet e congelado extrai as features de cada quadro (TimeDistributed); duas camadas LSTM bidirecionais de 64 unidades leem a sequência, e uma saída sigmoide dá a probabilidade de violência.",
+        "Treinado com Adam (taxa 0,001) e entropia cruzada binária por 20 épocas. No resultado preliminar publicado no ENEPE 2022, sobre a Surveillance Camera Fight Dataset (300 vídeos, 150 com violência, divisão 70/30), a acurácia foi de 63%.",
+        "Uma segunda abordagem estima as poses com o modelo human-pose-estimation-0001 do OpenVINO, calcula o centróide de cada esqueleto e acompanha a distância entre as pessoas quadro a quadro.",
+        "Inferência ao vivo pela webcam em notebook, um servidor Flask que transmite o vídeo com as poses do AlphaPose e um protótipo em Streamlit para enviar um vídeo. O resumo saiu nos anais do ENEPE 2022.",
+      ],
+      en: [
+        "Each video becomes a sequence of 10 frames at 299 × 299. A frozen Xception pretrained on ImageNet extracts the features of each frame (TimeDistributed); two bidirectional LSTM layers of 64 units read the sequence, and a sigmoid output gives the probability of violence.",
+        "Trained with Adam (learning rate 0.001) and binary cross-entropy for 20 epochs. The preliminary result published at ENEPE 2022, on the Surveillance Camera Fight Dataset (300 videos, 150 with violence, 70/30 split), was 63% accuracy.",
+        "A second approach estimates poses with OpenVINO's human-pose-estimation-0001 model, takes the centroid of each skeleton and tracks the distance between people frame by frame.",
+        "Live webcam inference in a notebook, a Flask server that streams the video with AlphaPose poses, and a Streamlit prototype to upload a video. The abstract was published in the ENEPE 2022 proceedings.",
+      ],
+      es: [
+        "Cada video se convierte en una secuencia de 10 cuadros de 299 × 299. Un Xception preentrenado en ImageNet y congelado extrae las features de cada cuadro (TimeDistributed); dos capas LSTM bidireccionales de 64 unidades leen la secuencia, y una salida sigmoide da la probabilidad de violencia.",
+        "Entrenado con Adam (tasa 0,001) y entropía cruzada binaria durante 20 épocas. En el resultado preliminar publicado en el ENEPE 2022, sobre el Surveillance Camera Fight Dataset (300 videos, 150 con violencia, división 70/30), la exactitud fue del 63%.",
+        "Un segundo enfoque estima las poses con el modelo human-pose-estimation-0001 de OpenVINO, calcula el centroide de cada esqueleto y sigue la distancia entre las personas cuadro a cuadro.",
+        "Inferencia en vivo por webcam en un notebook, un servidor Flask que transmite el video con las poses de AlphaPose y un prototipo en Streamlit para subir un video. El resumen salió en los anales del ENEPE 2022.",
+      ],
+    },
+  },
   "git-github-in-action": {
     cover: {
       pt: "Branches saem da main, recebem commits e voltam com merge, desenhados da esquerda para a direita.",

@@ -157,6 +157,15 @@
       "issuer": "EF SET"
     }
   ],
+  "publications": [
+    {
+      "name": "Detecção de agressão física humana em vídeos de vigilância utilizando deep learning",
+      "publisher": "ENEPE — Encontro Nacional de Ensino, Pesquisa e Extensão, Universidade do Oeste Paulista",
+      "releaseDate": "2022",
+      "summary": "Abstract of the bachelor's thesis, presented orally: Xception with Bi-LSTM on the Surveillance Camera Fight Dataset (300 videos, 70% for training and 30% for testing), with 63% accuracy in the preliminary result.",
+      "url": "https://www.unoeste.br/Areas/Eventos/Content/documentos/EventosAnais/805/Exatas/Computa%c3%a7%c3%a3o.pdf?v=1"
+    }
+  ],
   "skills": [
     {
       "name": "Languages",
@@ -400,6 +409,25 @@
       ],
       "startDate": "2025",
       "url": "https://mateusememe.github.io/whoami/projects/lime-stability/",
+      "type": "application"
+    },
+    {
+      "name": "find-the-fight",
+      "description": "Bachelor's thesis: fight detection in surveillance camera video. A classifier reads 10 frames through a pretrained Xception, passes the features to two bidirectional LSTM layers and decides between violence and non-violence; a second approach measures the distance between the centroids of each person's pose.",
+      "highlights": [
+        "Each video becomes a sequence of 10 frames at 299 × 299. A frozen Xception pretrained on ImageNet extracts the features of each frame (TimeDistributed); two bidirectional LSTM layers of 64 units read the sequence, and a sigmoid output gives the probability of violence.",
+        "Trained with Adam (learning rate 0.001) and binary cross-entropy for 20 epochs. The preliminary result published at ENEPE 2022, on the Surveillance Camera Fight Dataset (300 videos, 150 with violence, 70/30 split), was 63% accuracy.",
+        "A second approach estimates poses with OpenVINO's human-pose-estimation-0001 model, takes the centroid of each skeleton and tracks the distance between people frame by frame.",
+        "Live webcam inference in a notebook, a Flask server that streams the video with AlphaPose poses, and a Streamlit prototype to upload a video. The abstract was published in the ENEPE 2022 proceedings."
+      ],
+      "keywords": [
+        "TensorFlow",
+        "Xception",
+        "Bi-LSTM",
+        "OpenVINO"
+      ],
+      "startDate": "2022",
+      "url": "https://github.com/mateusememe/find-the-fight",
       "type": "application"
     },
     {

@@ -13,6 +13,7 @@ import {
   projects,
   socialLinks,
   spokenLanguages,
+  publications,
   talkUrl,
   talks,
   techStack,
@@ -53,6 +54,29 @@ function talkEvent(language: Language, talk: (typeof talks)[number], personId: s
     performer: [{ "@id": personId }, ...(talk.coSpeakers ?? []).map((name) => ({ "@type": "Person", name }))],
     ...(talkUrl(talk) ? { url: talkUrl(talk) } : {}),
     inLanguage: "pt-BR",
+  };
+}
+
+/** A publication as a schema.org ScholarlyArticle. Pass `about` to link the project it comes from. */
+function article(item: (typeof publications)[number], personId: string, about?: string) {
+  return {
+    "@type": "ScholarlyArticle",
+    "@id": `${personId.replace("#person", "")}#${item.id}`,
+    headline: item.title,
+    inLanguage: "pt-BR",
+    author: item.authors.map((name, index) => (index === 0 ? { "@id": personId } : { "@type": "Person", name })),
+    datePublished: String(item.year),
+    ...(item.pages ? { pagination: item.pages } : {}),
+    ...(item.kind === "abstract" ? { genre: "abstract" } : {}),
+    isPartOf: {
+      "@type": "PublicationIssue",
+      name: `Anais do ${item.venue.split(" — ")[0]} ${item.year}${item.section ? ` (${item.section})` : ""}`,
+      locationCreated: item.city,
+      ...(item.url ? { url: item.url } : {}),
+    },
+    publisher: { "@type": "Organization", name: item.publisher },
+    ...(item.url ? { url: item.url } : {}),
+    ...(about ? { about: { "@id": about } } : {}),
   };
 }
 
@@ -183,6 +207,8 @@ export function buildJsonLd(language: Language, siteUrl: string, target: Page = 
           },
         })),
       },
+      // The first author is Mateus (the Person node); co-authors are named.
+      ...publications.map((item) => article(item, personId)),
     ],
   };
 }
@@ -197,6 +223,7 @@ function buildProjectJsonLd(language: Language, siteUrl: string, id: string): Re
   const websiteId = `${home}#website`;
   const codeId = `${url}#code`;
   const homeUrl = siteHref(siteUrl, LANGUAGE_PATHS[language]);
+  const publication = publications.find((item) => item.projectId === id);
 
   return {
     "@context": "https://schema.org",
@@ -234,6 +261,7 @@ function buildProjectJsonLd(language: Language, siteUrl: string, id: string): Re
         dateCreated: String(project.year),
         author: [{ "@id": personId }, ...(project.coAuthors ?? []).map((name) => ({ "@type": "Person", name }))],
         ...(projectPages[id] ? { abstract: projectPages[id].highlights[language].join(" ").replace(/`/g, "") } : {}),
+        ...(publication ? { subjectOf: article(publication, personId, codeId) } : {}),
       },
       {
         "@type": "BreadcrumbList",

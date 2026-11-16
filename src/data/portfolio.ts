@@ -99,6 +99,31 @@ export interface TalkItem {
   tech: string[];
 }
 
+/** A paper or abstract in proceedings or a journal. */
+export interface Publication {
+  id: string;
+  kind: "abstract" | "paper";
+  /** Title as published. */
+  title: string;
+  /** Authors as cited (ABNT), in the order printed in the publication. */
+  authors: string[];
+  /** Event or journal, with its full name. */
+  venue: string;
+  /** Section of the proceedings, as printed. */
+  section?: string;
+  publisher: string;
+  city: string;
+  year: number;
+  pages?: string;
+  summary: LocalizedString;
+  /** Project the publication comes from (a `projects` id). */
+  projectId?: string;
+  /** Where the text is published (the proceedings PDF). */
+  url?: string;
+  /** Date the URL was last checked, `YYYY-MM-DD` (ABNT "Acesso em"). */
+  accessed?: string;
+}
+
 export interface SpokenLanguage {
   /** BCP 47 tag. */
   code: string;
@@ -635,6 +660,21 @@ export const projects: ProjectItem[] = [
     // Private repository: no public link.
   },
   {
+    id: "find-the-fight",
+    name: "find-the-fight",
+    featured: true,
+    language: "Python",
+    year: 2022,
+    license: "GPL-3.0",
+    desc: {
+      pt: "Trabalho de conclusão de curso: detecção de brigas em vídeos de câmeras de vigilância. Um classificador lê 10 quadros com um Xception pré-treinado, passa as features por duas camadas LSTM bidirecionais e decide entre violência e não violência; uma segunda abordagem mede a distância entre os centróides das poses de cada pessoa.",
+      en: "Bachelor's thesis: fight detection in surveillance camera video. A classifier reads 10 frames through a pretrained Xception, passes the features to two bidirectional LSTM layers and decides between violence and non-violence; a second approach measures the distance between the centroids of each person's pose.",
+      es: "Trabajo de conclusión de carrera: detección de peleas en videos de cámaras de vigilancia. Un clasificador lee 10 cuadros con un Xception preentrenado, pasa las features por dos capas LSTM bidireccionales y decide entre violencia y no violencia; un segundo enfoque mide la distancia entre los centroides de las poses de cada persona.",
+    },
+    tech: ["TensorFlow", "Xception", "Bi-LSTM", "OpenVINO"],
+    githubUrl: "https://github.com/mateusememe/find-the-fight",
+  },
+  {
     id: "git-github-in-action",
     name: "git-github-in-action",
     stars: 5,
@@ -1008,6 +1048,56 @@ export const talks: TalkItem[] = [
   },
 ];
 
+/** Authors joined as in an ABNT reference, ending with a single period. */
+export function publicationAuthors(item: Publication): string {
+  const names = item.authors.join("; ");
+  return names.endsWith(".") ? names : `${names}.`;
+}
+
+const ABNT_MONTHS = ["jan.", "fev.", "mar.", "abr.", "maio", "jun.", "jul.", "ago.", "set.", "out.", "nov.", "dez."];
+
+/**
+ * ABNT (NBR 6023) reference for a publication in event proceedings, in
+ * Portuguese like the publication itself. `main` ends before the URL, so a
+ * page can render the address as a link.
+ */
+export function publicationReference(item: Publication): { main: string; url?: string; accessed?: string; full: string } {
+  const city = item.city.split(",")[0];
+  const section = item.section ? `: ${item.section}` : "";
+  const pages = item.pages ? ` p. ${item.pages}.` : "";
+  const main = `${publicationAuthors(item)} ${item.title}. In: ${item.venue}, ${item.year}, ${city}. Anais [...]${section}. ${city}: ${item.publisher}, ${item.year}.${pages}`;
+  const accessed = item.accessed
+    ? (([y, m, d]) => `${Number(d)} ${ABNT_MONTHS[Number(m) - 1]} ${y}`)(item.accessed.split("-"))
+    : undefined;
+  const online = item.url ? ` Disponível em: ${item.url}.${accessed ? ` Acesso em: ${accessed}.` : ""}` : "";
+  return { main, url: item.url, accessed, full: `${main}${online}` };
+}
+
+/** Papers and abstracts, newest first. */
+export const publications: Publication[] = [
+  {
+    id: "enepe-2022-fight-detection",
+    kind: "abstract",
+    title: "Detecção de agressão física humana em vídeos de vigilância utilizando deep learning",
+    // Order as printed on p. 8 of the proceedings.
+    authors: ["MONTEIRO, M. M.", "PAZOTI, M. A.", "SILVA, F. A.", "ALMEIDA, L. L."],
+    venue: "ENEPE — Encontro Nacional de Ensino, Pesquisa e Extensão",
+    section: "Ciências Exatas e da Terra, Ciência da Computação",
+    publisher: "Universidade do Oeste Paulista",
+    city: "Presidente Prudente, SP",
+    year: 2022,
+    pages: "8",
+    summary: {
+      pt: "Resumo do trabalho de conclusão de curso, apresentado em comunicação oral: Xception com Bi-LSTM sobre a Surveillance Camera Fight Dataset (300 vídeos, 70% para treino e 30% para teste), com 63% de acurácia no resultado preliminar.",
+      en: "Abstract of the bachelor's thesis, presented orally: Xception with Bi-LSTM on the Surveillance Camera Fight Dataset (300 videos, 70% for training and 30% for testing), with 63% accuracy in the preliminary result.",
+      es: "Resumen del trabajo de conclusión de carrera, presentado en comunicación oral: Xception con Bi-LSTM sobre el Surveillance Camera Fight Dataset (300 videos, 70% para entrenamiento y 30% para prueba), con 63% de exactitud en el resultado preliminar.",
+    },
+    projectId: "find-the-fight",
+    url: "https://www.unoeste.br/Areas/Eventos/Content/documentos/EventosAnais/805/Exatas/Computa%c3%a7%c3%a3o.pdf?v=1",
+    accessed: "2026-11-16",
+  },
+];
+
 /** The link that best represents a talk: the slides, else the code, else the event page. */
 export function talkUrl(talk: TalkItem): string | undefined {
   return talk.links.slides ?? talk.links.repo ?? talk.links.event;
@@ -1026,5 +1116,6 @@ export const portfolioStats = (() => {
     stars: projects.reduce((total, project) => total + (project.stars ?? 0), 0),
     contributions: contributions.length,
     talks: talks.length,
+    publications: publications.length,
   };
 })();

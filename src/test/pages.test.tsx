@@ -4,7 +4,8 @@ import { Route, Routes } from "react-router-dom";
 import CommandPalette from "@/components/CommandPalette";
 import TalksSection from "@/components/sections/TalksSection";
 import ProjectPage from "@/pages/ProjectPage";
-import { projects, talkUrl, talks } from "@/data/portfolio";
+import { projects, publications, talkUrl, talks } from "@/data/portfolio";
+import EducationSection from "@/components/sections/EducationSection";
 import { projectPages } from "@/data/projectPages";
 import { PROJECT_PAGE_IDS } from "@/i18n/routes";
 import { filterCommands } from "@/lib/commands";
@@ -51,6 +52,12 @@ describe("Project page", () => {
     expect(screen.getByText("MCP: MegaBrain Context Protocol")).toBeInTheDocument();
   });
 
+  it("links the thesis page to its publication", () => {
+    renderProject("find-the-fight");
+    expect(screen.getByText("Published in")).toBeInTheDocument();
+    expect(screen.getByText(publications[0].title).closest("a")).toHaveAttribute("href", publications[0].url);
+  });
+
   it("renders the 404 content for an id without a page", () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
     renderProject("kruskal-algorithm");
@@ -78,6 +85,23 @@ describe("Talks", () => {
     // Month when it is on record, the year alone when it is not.
     expect(screen.getAllByText("Oct").length).toBeGreaterThan(0);
     expect(screen.getByText("2023")).toBeInTheDocument();
+  });
+});
+
+describe("Publications", () => {
+  it("lists each publication in Education with its reference and project", () => {
+    renderWithProviders(<EducationSection />, "pt");
+    const item = publications[0];
+    expect(screen.getByRole("heading", { level: 3, name: "Publicações" })).toBeInTheDocument();
+    expect(screen.getByText(item.title)).toBeInTheDocument();
+    // ABNT reference with the proceedings address and the access date.
+    const reference = screen.getByText(/In: ENEPE/);
+    expect(reference).toHaveTextContent(`${item.authors.join("; ")} ${item.title}`);
+    expect(reference).toHaveTextContent(`Anais [...]: ${item.section}`);
+    expect(reference).toHaveTextContent(`p. ${item.pages}. Disponível em: unoeste.br/…/Computação.pdf. Acesso em: 16 nov. 2026.`);
+    expect(screen.getByRole("link", { name: "unoeste.br/…/Computação.pdf" })).toHaveAttribute("href", item.url);
+    expect(screen.getByRole("link", { name: /Anais \(PDF\)/ })).toHaveAttribute("href", item.url);
+    expect(screen.getByRole("link", { name: /Projeto/ })).toHaveAttribute("href", `/pt/projects/${item.projectId}/`);
   });
 });
 
