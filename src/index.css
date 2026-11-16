@@ -495,9 +495,11 @@
   .hero-photo {
     animation: hero-photo 1.5s var(--ease-expo) 260ms both;
   }
+  /* No opacity in the entrance: the photo is the largest element on phones, and
+     a fully transparent first frame would delay Largest Contentful Paint. */
   @keyframes hero-photo {
-    from { opacity: 0; clip-path: inset(18% 12% 18% 12% round 2rem); transform: scale(1.12); }
-    to { opacity: 1; clip-path: inset(0 0 0 0 round 2rem); transform: scale(1); }
+    from { clip-path: inset(18% 12% 18% 12% round 2rem); transform: scale(1.12); }
+    to { clip-path: inset(0 0 0 0 round 2rem); transform: scale(1); }
   }
   /* Scroll-out: the hero recedes as the page scrolls. --progress is set by JS. */
   .hero-parallax {

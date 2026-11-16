@@ -1,3 +1,4 @@
+import { startTransition } from "react";
 import { createRoot, hydrateRoot } from "react-dom/client";
 import App from "./App.tsx";
 import { isHomePath, stripBase } from "@/i18n/routes";
@@ -11,7 +12,12 @@ const container = document.getElementById("root")!;
 const path = stripBase(window.location.pathname.replace(/index\.html$/, ""), import.meta.env.BASE_URL);
 
 if (container.firstElementChild && isHomePath(path)) {
-  hydrateRoot(container, <App />);
+  // Hydrating inside a transition lets React yield to the browser every few
+  // milliseconds instead of blocking the main thread for the whole page. The
+  // prerendered HTML is already on screen, so nothing waits for it.
+  startTransition(() => {
+    hydrateRoot(container, <App />);
+  });
 } else {
   container.replaceChildren();
   createRoot(container).render(<App />);

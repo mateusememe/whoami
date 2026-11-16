@@ -69,10 +69,15 @@ describe("Design system primitives", () => {
 });
 
 describe("SceneBackground", () => {
-  it("falls back to the 2D canvas when WebGL 2 is unavailable", () => {
+  it("falls back to the 2D canvas when WebGL 2 is unavailable, once the page is idle", () => {
+    vi.useFakeTimers();
     const { container } = render(<SceneBackground />);
+    // Nothing yet: the background starts after hydration, when the main thread is free.
+    expect(container.querySelector("canvas")).not.toBeInTheDocument();
+    act(() => vi.advanceTimersByTime(1300));
     expect(screen.queryByTestId("webgl-background")).not.toBeInTheDocument();
     expect(container.querySelector("canvas")).toBeInTheDocument();
+    vi.useRealTimers();
   });
 });
 
