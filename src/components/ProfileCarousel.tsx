@@ -8,7 +8,10 @@ import { cn } from "@/lib/utils";
 
 interface PhotoSlide {
   id: string;
+  /** JPEG fallback. */
   src: string;
+  /** Smaller formats, best first; the browser takes the first it supports. */
+  sources: Array<{ type: string; srcSet: string }>;
   labelKey: string;
   icon: React.ReactNode;
 }
@@ -31,12 +34,17 @@ export const ProfileCarousel: React.FC<{ className?: string }> = ({ className })
     {
       id: "profile",
       src: `${normalizedBase}images/profile-avatar.jpg`,
+      sources: [
+        { type: "image/avif", srcSet: `${normalizedBase}images/profile-avatar.avif` },
+        { type: "image/webp", srcSet: `${normalizedBase}images/profile-avatar.webp` },
+      ],
       labelKey: "hero.photoProfile",
       icon: <User size={12} className="inline mr-1" />,
     },
     {
       id: "teaching",
       src: `${normalizedBase}images/profile-teaching.jpg`,
+      sources: [{ type: "image/webp", srcSet: `${normalizedBase}images/profile-teaching.webp` }],
       labelKey: "hero.photoTeaching",
       icon: <Presentation size={12} className="inline mr-1" />,
     },
@@ -106,17 +114,22 @@ export const ProfileCarousel: React.FC<{ className?: string }> = ({ className })
                   )}
                   aria-hidden={!isActive}
                 >
-                  <img
-                    src={slide.src}
-                    alt={`Mateus Mendonça Monteiro - ${t(slide.labelKey)}`}
-                    width={620}
-                    height={775}
-                    className="h-full w-full object-cover object-center transition-transform duration-slower ease-expo group-hover:scale-[1.04]"
-                    loading={index === 0 ? "eager" : "lazy"}
-                    decoding="async"
-                    // Lowercase on purpose: React 18 passes it through as the HTML attribute.
-                    {...(index === 0 ? { fetchpriority: "high" } : {})}
-                  />
+                  <picture className="contents">
+                    {slide.sources.map((source) => (
+                      <source key={source.type} type={source.type} srcSet={source.srcSet} />
+                    ))}
+                    <img
+                      src={slide.src}
+                      alt={`Mateus Mendonça Monteiro - ${t(slide.labelKey)}`}
+                      width={620}
+                      height={775}
+                      className="h-full w-full object-cover object-center transition-transform duration-slower ease-expo group-hover:scale-[1.04]"
+                      loading={index === 0 ? "eager" : "lazy"}
+                      decoding="async"
+                      // Lowercase on purpose: React 18 passes it through as the HTML attribute.
+                      {...(index === 0 ? { fetchpriority: "high" } : {})}
+                    />
+                  </picture>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent" />
                 </div>
               );

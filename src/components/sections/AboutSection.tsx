@@ -20,7 +20,7 @@ const AboutSection = () => {
   useProgress(pinRef, { mode: "contain" });
 
   const base = import.meta.env.BASE_URL || "/";
-  const avatar = `${base.endsWith("/") ? base : `${base}/`}images/profile-avatar.jpg`;
+  const avatar = `${base.endsWith("/") ? base : `${base}/`}images/profile-avatar.webp`;
 
   const stats = [
     { value: portfolioStats.roles, label: t("about.statRoles", { year: portfolioStats.firstYear }) },

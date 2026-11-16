@@ -33,7 +33,7 @@ const WebGLBackground = ({ onError }: WebGLBackgroundProps) => {
         canvas,
         quality: getQualitySettings(),
         reducedMotion: prefersReducedMotion(),
-        portraitUrl: `${base.endsWith("/") ? base : `${base}/`}images/profile-avatar.jpg`,
+        portraitUrl: `${base.endsWith("/") ? base : `${base}/`}images/profile-avatar.webp`,
         onFirstFrame: () => {
           host.setAttribute("data-ready", "true");
           // Tells CSS the particle portrait is live, so the image fallback steps aside.
