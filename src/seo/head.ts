@@ -8,7 +8,7 @@ import { profile, socialLinks } from "@/data/portfolio";
 import { HOME, HTML_LANG, LANGUAGES, pagePath, type Page } from "@/i18n/routes";
 import { type Language } from "@/i18n/translations";
 import { buildJsonLd } from "@/seo/jsonld";
-import { PROFILE_FILES, RESUME_FILES } from "@/seo/files";
+import { OG_IMAGE_FILES, PROFILE_FILES, RESUME_FILES } from "@/seo/files";
 import { pageMeta, tr } from "@/seo/meta";
 import { siteHref } from "@/seo/site";
 
@@ -23,7 +23,7 @@ const escape = (value: string) =>
 export function renderHead(language: Language, siteUrl: string, target: Page = HOME): string {
   const { title, description, path } = pageMeta(target, language);
   const page = siteHref(siteUrl, path);
-  const image = siteHref(siteUrl, "og-image.png");
+  const image = siteHref(siteUrl, OG_IMAGE_FILES[language]);
   const isHome = target.kind === "home";
   const imageAlt = tr(language, "seo.imageAlt");
   const twitter = socialLinks.find((link) => link.iconName === "X")?.displayText;

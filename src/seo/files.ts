@@ -13,3 +13,10 @@ export const RESUME_FILES: Record<Language, string> = {
   pt: "resume.pt.json",
   es: "resume.es.json",
 };
+
+/** Share card (1200x630) per language, rendered by scripts/render-og-image.ts. */
+export const OG_IMAGE_FILES: Record<Language, string> = {
+  en: "og-image.png",
+  pt: "og-image.pt.png",
+  es: "og-image.es.png",
+};

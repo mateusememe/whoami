@@ -17,7 +17,7 @@ import {
   stripBase,
 } from "@/i18n/routes";
 import { projectPages } from "@/data/projectPages";
-import { PROFILE_FILES, RESUME_FILES } from "@/seo/files";
+import { OG_IMAGE_FILES, PROFILE_FILES, RESUME_FILES } from "@/seo/files";
 import { HEAD_END, HEAD_START, renderHead, replaceHead } from "@/seo/head";
 import { buildJsonLd } from "@/seo/jsonld";
 import { renderAgentFiles } from "@/seo/llms";
@@ -105,14 +105,15 @@ describe("generated <head>", () => {
     });
   });
 
-  it("points og:image and twitter:image at a 1200x630 PNG that exists", () => {
-    const image = siteHref(DEFAULT_SITE_URL, "og-image.png");
-    expect(metaOf(doc, "og:image")).toBe(image);
-    expect(metaOf(doc, "twitter:image")).toBe(image);
-    const png = readFileSync(resolve("public/og-image.png"));
+  it.each(LANGUAGES)("points og:image and twitter:image at the %s 1200x630 PNG, which exists", (language) => {
+    const localized = parse(renderHead(language, DEFAULT_SITE_URL));
+    const image = siteHref(DEFAULT_SITE_URL, OG_IMAGE_FILES[language]);
+    expect(metaOf(localized, "og:image")).toBe(image);
+    expect(metaOf(localized, "twitter:image")).toBe(image);
+    const png = readFileSync(resolve("public", OG_IMAGE_FILES[language]));
     expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([1200, 630]);
-    expect(metaOf(doc, "og:image:width")).toBe("1200");
-    expect(metaOf(doc, "og:image:height")).toBe("630");
+    expect(metaOf(localized, "og:image:width")).toBe("1200");
+    expect(metaOf(localized, "og:image:height")).toBe("630");
   });
 
   it("describes a project page with its own title, canonical URL and alternates", () => {

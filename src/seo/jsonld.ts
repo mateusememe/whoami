@@ -22,6 +22,7 @@ import {
 import { HOME, HTML_LANG, LANGUAGE_PATHS, LANGUAGES, PROJECT_PAGE_IDS, pagePath, type Page } from "@/i18n/routes";
 import { translations, type Language } from "@/i18n/translations";
 import { projectPages } from "@/data/projectPages";
+import { OG_IMAGE_FILES } from "@/seo/files";
 import { currentRole, pageMeta, projectById, seoDescription, tr } from "@/seo/meta";
 import { parsePeriod, siteHref } from "@/seo/site";
 
@@ -116,7 +117,7 @@ export function buildJsonLd(language: Language, siteUrl: string, target: Page = 
         dateModified: profile.updatedAt,
         primaryImageOfPage: {
           "@type": "ImageObject",
-          url: siteHref(siteUrl, "og-image.png"),
+          url: siteHref(siteUrl, OG_IMAGE_FILES[language]),
           width: 1200,
           height: 630,
         },
@@ -243,7 +244,7 @@ function buildProjectJsonLd(language: Language, siteUrl: string, id: string): Re
         dateModified: profile.updatedAt,
         primaryImageOfPage: {
           "@type": "ImageObject",
-          url: siteHref(siteUrl, "og-image.png"),
+          url: siteHref(siteUrl, OG_IMAGE_FILES[language]),
           width: 1200,
           height: 630,
         },
