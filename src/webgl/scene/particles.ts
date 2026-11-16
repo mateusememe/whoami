@@ -120,5 +120,5 @@ export function buildPlaceholderPortrait(count: number): PortraitBuffers {
  * gone while other formations hold the stage, back for the contact finale.
  */
 export function meshPresence(morph: number): number {
-  return Math.max(1 - smoothstep(0.08, 0.85, morph), 0.85 * smoothstep(4.3, 5, morph));
+  return Math.max(1 - smoothstep(0.08, 0.85, morph), 0.85 * smoothstep(5.3, 6, morph));
 }

@@ -14,7 +14,7 @@ export interface PortraitFrame {
 export const sceneState = {
   /**
    * Which formation the particle field shows, as a float: 0 hero haze,
-   * 1 portrait, 2 terrain, 3 globe, 4 tunnel, 5 galaxy. Fractions blend.
+   * 1 portrait, 2 terrain, 3 globe, 4 tunnel, 5 wave, 6 galaxy. Fractions blend.
    */
   morph: 0,
   portrait: { x: 0.45, y: 0, size: 0.75 } as PortraitFrame,

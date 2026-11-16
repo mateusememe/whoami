@@ -1,15 +1,15 @@
 import type { CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, ArrowRight, ArrowUpRight, ExternalLink, Github, Lock, Star } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, ExternalLink, Github, Lock, Presentation, Star } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Reveal, TagList } from "@/components/ds";
 import { ProjectCover } from "@/components/covers/ProjectCover";
 import { Magnetic } from "@/components/motion/Magnetic";
-import { profile, socialLinks } from "@/data/portfolio";
+import { profile, socialLinks, talks } from "@/data/portfolio";
 import { projectPages } from "@/data/projectPages";
 import { useSiteNavigation } from "@/hooks/useSiteNavigation";
 import { PROJECT_PAGE_IDS, pagePath } from "@/i18n/routes";
-import { withCode } from "@/lib/text";
+import { formatMonth, withCode } from "@/lib/text";
 import { projectById } from "@/seo/meta";
 import NotFound from "./NotFound";
 
@@ -35,6 +35,7 @@ const ProjectPage = () => {
   const total = PROJECT_PAGE_IDS.length;
   const prev = projectById(PROJECT_PAGE_IDS[(position - 1 + total) % total]);
   const next = projectById(PROJECT_PAGE_IDS[(position + 1) % total]);
+  const talk = project.talkId ? talks.find((item) => item.id === project.talkId) : undefined;
   const index = String(position + 1).padStart(2, "0");
 
   const facts: Array<[string, string]> = [
@@ -143,6 +144,22 @@ const ProjectPage = () => {
               >
                 <ExternalLink size={14} aria-hidden="true" />
                 {t("project.live")}
+              </a>
+            )}
+            {talk && (
+              <a
+                href={sectionHref("talks")}
+                onClick={onSectionClick("talks")}
+                className="group mt-2 flex items-start gap-3 text-sm text-muted-foreground transition-colors duration-base hover:text-foreground"
+              >
+                <Presentation size={16} aria-hidden="true" className="mt-0.5 shrink-0 text-signal" />
+                <span>
+                  <span className="label block">{t("project.talk")}</span>
+                  <span className="mt-1 block text-foreground">{talk.title}</span>
+                  <span className="block">
+                    {talk.event[language]} · {formatMonth(talk.date, language)}
+                  </span>
+                </span>
               </a>
             )}
           </div>

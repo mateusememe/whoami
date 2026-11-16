@@ -529,6 +529,154 @@
       "startDate": "2026",
       "url": "https://github.com/mateusememe/whoami",
       "type": "application"
+    },
+    {
+      "name": "MCP: MegaBrain Context Protocol",
+      "description": "Hands-on course on the Model Context Protocol. Attendees build DevBrain, an MCP server in Python that tells a coding agent whether a branch is ready for a pull request, and connect it to a real host.",
+      "entity": "DevFest Presidente Prudente 2026 (GDG Presidente Prudente)",
+      "type": "workshop",
+      "startDate": "2026-10",
+      "roles": [
+        "Workshop"
+      ],
+      "keywords": [
+        "MCP",
+        "Python",
+        "AI Agents"
+      ],
+      "url": "https://github.com/mateusememe/megabrain-context-protocol/tree/main/apresentacao"
+    },
+    {
+      "name": "O Incrível mundo mágico da web",
+      "description": "How the web works, from a click to the server: protocols (TCP and UDP), APIs and webhooks, frontend and backend, SPA and SSR, monolith and microservices, and the path to full-stack development. No programming background required.",
+      "entity": "37th Infoeste · DevFest Presidente Prudente 2025 (Unoeste)",
+      "type": "workshop",
+      "startDate": "2025-10-31",
+      "roles": [
+        "Workshop"
+      ],
+      "keywords": [
+        "HTTP",
+        "TCP/UDP",
+        "APIs",
+        "Microservices"
+      ],
+      "url": "https://www.unoeste.br/site/controleeventos/VerAtividade.aspx?eve_codigo=1755&atv_codigo=9367"
+    },
+    {
+      "name": "AI Autopsy",
+      "description": "How to debug a model's decisions: train a LightGBM classifier on the Titanic dataset, then explain single predictions with LIME and global behaviour with SHAP.",
+      "entity": "DevFest Presidente Prudente 2025 (GDG Presidente Prudente)",
+      "type": "workshop",
+      "startDate": "2025-10",
+      "roles": [
+        "Workshop"
+      ],
+      "keywords": [
+        "Python",
+        "LightGBM",
+        "LIME",
+        "SHAP"
+      ],
+      "url": "https://github.com/mateusememe/ai-autopsy-devfest-2025/blob/main/slides/presentation-ai-autopsy.pdf"
+    },
+    {
+      "name": "API Hero",
+      "description": "Building a transactional API with Spring Boot and GraphQL, PostgreSQL for storage and Redis as a cache.",
+      "entity": "DevFest Presidente Prudente 2025 (GDG Presidente Prudente)",
+      "type": "workshop",
+      "startDate": "2025-10",
+      "roles": [
+        "Workshop"
+      ],
+      "keywords": [
+        "Java",
+        "Spring Boot",
+        "GraphQL",
+        "Redis"
+      ],
+      "url": "https://github.com/mateusememe/codecash/blob/main/DevFest2025-ApiHero-GDG-Viceri.pdf"
+    },
+    {
+      "name": "Do Caos à Previsão: Domando Estruturas Temporais com Machine Learning",
+      "description": "Hands-on introduction to machine learning for time series: prepare stock data (cleaning, missing values, normalization), build and train an LSTM network with TensorFlow and Keras, compare it with ARIMA and regression, and check the forecasts against the real values.",
+      "entity": "36th Infoeste · DevFest Presidente Prudente 2024 (Unoeste)",
+      "type": "workshop",
+      "startDate": "2024-10-31",
+      "roles": [
+        "Workshop"
+      ],
+      "keywords": [
+        "Python",
+        "TensorFlow",
+        "Keras",
+        "LSTM"
+      ],
+      "url": "https://www.unoeste.br/site/controleeventos/VerAtividade.aspx?eve_codigo=1351&atv_codigo=8067"
+    },
+    {
+      "name": "Git e GitHub em Ação",
+      "description": "Version control with Git and collaborative development on GitHub, with exercises on a C program.",
+      "entity": "35th Infoeste (Unoeste)",
+      "type": "workshop",
+      "startDate": "2023",
+      "roles": [
+        "Workshop"
+      ],
+      "keywords": [
+        "Git",
+        "GitHub"
+      ],
+      "url": "https://github.com/mateusememe/git-github-in-action/blob/master/git-and-github-in-action-day-one.pdf"
+    },
+    {
+      "name": "O Essencial de GIT e GitHub",
+      "description": "Version control from scratch: commits, branches, merge and rebase in Git, a remote repository on GitHub, and real cases such as restoring an old version, opening an issue and sending a pull request to an open-source project.",
+      "entity": "34th Infoeste (Unoeste)",
+      "type": "workshop",
+      "startDate": "2022-10-28",
+      "roles": [
+        "Workshop"
+      ],
+      "keywords": [
+        "Git",
+        "GitHub"
+      ],
+      "url": "https://www.unoeste.br/site/controleeventos/VerAtividade.aspx?eve_codigo=886&atv_codigo=5140"
+    },
+    {
+      "name": "Intensivo ReactJS e Typescript",
+      "description": "A full day (8 hours) of React with TypeScript: environment setup, components and state, the Context API, lifecycle, routing, built-in and custom hooks, API data, and deploying the finished app to online hosting.",
+      "entity": "34th Infoeste (Unoeste)",
+      "type": "workshop",
+      "startDate": "2022-10-27",
+      "roles": [
+        "Workshop"
+      ],
+      "keywords": [
+        "React",
+        "TypeScript",
+        "Hooks",
+        "Context API"
+      ],
+      "url": "https://www.unoeste.br/site/controleeventos/VerAtividade.aspx?eve_codigo=886&atv_codigo=5148"
+    },
+    {
+      "name": "Node.JS com testes unitários e PrismaORM",
+      "description": "A CRUD REST API in Node.js and Express, PostgreSQL through Prisma ORM, and unit tests with Jest, starting from HTTP, REST and TDD. A full day (8 hours).",
+      "entity": "34th Infoeste (Unoeste)",
+      "type": "workshop",
+      "startDate": "2022-10-24",
+      "roles": [
+        "Workshop"
+      ],
+      "keywords": [
+        "Node.js",
+        "Express",
+        "Prisma",
+        "Jest"
+      ],
+      "url": "https://www.unoeste.br/site/controleeventos/VerAtividade.aspx?eve_codigo=886&atv_codigo=5137"
     }
   ],
   "meta": {

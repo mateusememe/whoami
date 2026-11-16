@@ -1,5 +1,5 @@
-/** Page sections in nav order. Section headings derive their `01`..`06` index from this list. */
-export const NAV_ITEMS = ["about", "experience", "education", "skills", "projects", "contact"] as const;
+/** Page sections in nav order. Section headings derive their `01`..`07` index from this list. */
+export const NAV_ITEMS = ["about", "experience", "education", "skills", "projects", "talks", "contact"] as const;
 
 export type SectionId = (typeof NAV_ITEMS)[number];
 

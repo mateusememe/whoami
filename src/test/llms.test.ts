@@ -1,7 +1,7 @@
 import { readFileSync } from "fs";
 import { resolve } from "path";
 import { describe, it, expect } from "vitest";
-import { contributions, education, experiences, profile, projects, socialLinks } from "@/data/portfolio";
+import { contributions, education, experiences, profile, projects, socialLinks, talkUrl, talks } from "@/data/portfolio";
 import { PROJECT_PAGE_IDS, pagePath } from "@/i18n/routes";
 import {
   PROFILE_FILES,
@@ -61,7 +61,7 @@ describe("llms.txt", () => {
     for (const href of links(text)) expect(href).toMatch(/^(https?:|mailto:)/);
   });
 
-  it("links every profile file, project page, public repository, contribution and contact channel", () => {
+  it("links every profile file, project page, public repository, contribution, talk and contact channel", () => {
     const hrefs = links(text);
     for (const file of [...Object.values(PROFILE_FILES), ...Object.values(RESUME_FILES)]) {
       expect(hrefs).toContain(siteHref(SITE, file));
@@ -77,6 +77,7 @@ describe("llms.txt", () => {
     const privateProject = projects.find((project) => !project.githubUrl && !project.liveUrl);
     expect(privateProject && text).toContain(`[${privateProject?.name}](${SITE}/projects/`);
     for (const item of contributions) expect(hrefs).toContain(item.url);
+    for (const talk of talks) expect(hrefs).toContain(talkUrl(talk));
     for (const link of socialLinks) expect(hrefs).toContain(link.href);
   });
 });
@@ -91,6 +92,7 @@ describe("Markdown profiles", () => {
     for (const item of education) expect(markdown).toContain(item.period[language]);
     for (const project of projects) expect(markdown).toContain(project.name);
     for (const item of contributions) expect(markdown).toContain(`[${item.repo}](${item.url})`);
+    for (const talk of talks) expect(markdown).toContain(`**${talk.title}**`);
   });
 
   it("localizes headings", () => {

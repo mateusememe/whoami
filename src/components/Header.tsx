@@ -141,7 +141,7 @@ const Header = () => {
                   data-nav={item}
                   aria-current={isActive ? "true" : undefined}
                   className={cn(
-                    "relative rounded-full px-4 py-2 font-mono text-[11px] uppercase tracking-[0.14em] transition-colors duration-base",
+                    "relative rounded-full px-3 py-2 font-mono text-[11px] uppercase tracking-[0.12em] transition-colors duration-base xl:px-4 xl:tracking-[0.14em]",
                     isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground",
                   )}
                 >

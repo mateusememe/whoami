@@ -168,15 +168,16 @@ export const glyphFragment = /* glsl */ `
 `;
 
 /**
- * Particle field ("dust"). One Points object morphs between six formations
- * as uMorph goes 0..5:
+ * Particle field ("dust"). One Points object morphs between seven formations
+ * as uMorph goes 0..6:
  *   0 haze      scattered volume around the hero mesh
  *   1 portrait  dot-matrix photo (aPortrait / aTone), placed by uFrame
  *   2 terrain   rows of dots rolling like a landscape
  *   3 globe     latitude rings and meridians
  *   4 tunnel    ring around the viewport edges, travelling toward the camera
- *   5 galaxy    three-armed spiral disc
- * Formations 2..5 are computed from aSeed, so only the haze and the portrait
+ *   5 wave      a bundle of sine waves, like a voice on an oscilloscope
+ *   6 galaxy    three-armed spiral disc
+ * Formations 2..6 are computed from aSeed, so only the haze and the portrait
  * take buffer space.
  *
  * Realism comes from a thin-lens model: points off the focal plane grow into
@@ -256,6 +257,20 @@ export const dustVertex = /* glsl */ `
     return vec3(cos(angle) * uView.x * r, sin(angle) * uView.y * r, z);
   }
 
+  vec3 formWave() {
+    // Seven sine waves share one envelope that tapers at the screen edges and
+    // swells in bursts, so the bundle reads as a voice, not a pattern.
+    float line = floor(aSeed.y * 7.0);
+    float xn = (aSeed.x - 0.5) * 2.4;
+    float taper = exp(-xn * xn * 1.6);
+    float burst = 0.55 + 0.45 * sin(uTime * 0.9 + line * 1.3) * sin(xn * 2.1 - uTime * 0.7);
+    float amplitude = uView.y * 0.22 * taper * burst;
+    float y = sin(xn * (5.0 + line * 0.6) - uTime * (1.2 + line * 0.15) + line * 0.9) * amplitude;
+    float z = -2.0 - line * 0.55 + (aSeed.z - 0.5) * 0.3;
+    // Low in the frame, under the reading line of the talks.
+    return vec3(xn * uView.x, y - uView.y * 0.62, z);
+  }
+
   vec3 formGalaxy() {
     float radius = max(uView.x, uView.y) * 1.15;
     float r = pow(aSeed.x, 0.62) * radius;
@@ -270,7 +285,7 @@ export const dustVertex = /* glsl */ `
   void main() {
     // Per-particle stagger: each particle leaves a little later than the last,
     // but all of them arrive, so integer morph values are exact formations.
-    float base = floor(min(uMorph, 4.9999));
+    float base = floor(min(uMorph, 5.9999));
     float local = uMorph - base;
     float eased = smoothstep(0.0, 1.0, clamp((local - aSeed.w * 0.3) / 0.7, 0.0, 1.0));
     float m = base + eased;
@@ -281,13 +296,15 @@ export const dustVertex = /* glsl */ `
     float w3 = max(0.0, 1.0 - abs(m - 3.0));
     float w4 = max(0.0, 1.0 - abs(m - 4.0));
     float w5 = max(0.0, 1.0 - abs(m - 5.0));
+    float w6 = max(0.0, 1.0 - abs(m - 6.0));
 
     vec3 pos = formHaze() * w0
       + formPortrait() * w1
       + formTerrain() * w2
       + formGlobe() * w3
       + formTunnel() * w4
-      + formGalaxy() * w5;
+      + formWave() * w5
+      + formGalaxy() * w6;
 
     // Mid-transition the particles follow a swirl instead of a straight line.
     float flow = sin(PI * eased);
@@ -315,7 +332,7 @@ export const dustVertex = /* glsl */ `
     float horizon = smoothstep(44.0, 16.0, depth);
     // In the tunnel only a third of the particles are lit, and the far end stays dark.
     float streak = step(0.66, fract(aSeed.x * 3.37 + aSeed.z * 5.11)) * smoothstep(62.0, 22.0, depth);
-    float layer = w0 * 0.6 * sparse + w1 + w2 * 0.5 * horizon + w3 * 0.2 + w4 * 0.55 * streak + w5 * 0.42 * horizon;
+    float layer = w0 * 0.6 * sparse + w1 + w2 * 0.5 * horizon + w3 * 0.2 + w4 * 0.55 * streak + w5 * 0.17 + w6 * 0.42 * horizon;
     float shown = mix(1.0, (0.12 + 0.88 * tone) * aTone.y, w1);
     vAlpha = layer * shown * pow(sharp / size, 1.35) * smoothstep(0.4, 3.0, depth);
     vBlur = clamp(bokeh / max(sharp, 0.75), 0.0, 4.0) * 0.25;

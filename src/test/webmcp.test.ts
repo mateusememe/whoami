@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { createAgentTools, registerAgentTools } from "@/agents/webmcp";
 import { NAV_ITEMS } from "@/data/navigation";
-import { contributions, projects } from "@/data/portfolio";
+import { contributions, projects, talks } from "@/data/portfolio";
 import { PROJECT_PAGE_IDS } from "@/i18n/routes";
 
 const options = { language: "en" as const, siteUrl: "https://example.test/whoami", goToSection: vi.fn() };
@@ -17,9 +17,9 @@ describe("WebMCP tools", () => {
     delete (document as unknown as { modelContext?: unknown }).modelContext;
   });
 
-  it("describes four tools with JSON Schema inputs", () => {
+  it("describes five tools with JSON Schema inputs", () => {
     const tools = createAgentTools(options);
-    expect(tools.map((tool) => tool.name)).toEqual(["get_profile", "list_projects", "get_contact", "go_to_section"]);
+    expect(tools.map((tool) => tool.name)).toEqual(["get_profile", "list_projects", "list_talks", "get_contact", "go_to_section"]);
     for (const tool of tools) {
       expect(tool.description.length).toBeGreaterThan(20);
       expect(tool.inputSchema.type).toBe("object");
@@ -45,6 +45,13 @@ describe("WebMCP tools", () => {
     expect(withPage[0].details.length).toBeGreaterThan(0);
     const inPortuguese = JSON.parse(await run("list_projects", { language: "pt" }));
     expect(inPortuguese.projects.find((project: { page: string | null }) => project.page).page).toContain("/pt/projects/");
+  });
+
+  it("list_talks returns every talk with its material", async () => {
+    const data = JSON.parse(await run("list_talks"));
+    expect(data.talks).toHaveLength(talks.length);
+    for (const talk of data.talks) expect(talk.links.slides ?? talk.links.repo ?? talk.links.event).toMatch(/^https:\/\//);
+    expect(JSON.parse(await run("list_talks", { language: "pt" })).talks[0].description).toBe(talks[0].desc.pt);
   });
 
   it("get_contact gives the email and no phone number", async () => {
@@ -76,7 +83,7 @@ describe("WebMCP tools", () => {
     (document as unknown as { modelContext: unknown }).modelContext = { registerTool };
 
     const unregister = registerAgentTools(options);
-    expect(registerTool).toHaveBeenCalledTimes(4);
+    expect(registerTool).toHaveBeenCalledTimes(5);
     expect(signals.every((signal) => !signal.aborted)).toBe(true);
     unregister();
     expect(signals.every((signal) => signal.aborted)).toBe(true);

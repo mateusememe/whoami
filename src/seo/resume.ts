@@ -11,6 +11,8 @@ import {
   projects,
   socialLinks,
   spokenLanguages,
+  talkUrl,
+  talks,
   techGroups,
 } from "@/data/portfolio";
 import { projectPages } from "@/data/projectPages";
@@ -89,6 +91,18 @@ export function buildResume(language: Language, siteUrl: string): Record<string,
           type: "application",
         };
       }),
+      // Talks and workshops: the schema has no section for them, and suggests
+      // projects with a type ("presentation", "talk", ...).
+      ...talks.map((talk) => ({
+        name: talk.title,
+        description: talk.desc[language],
+        entity: `${talk.event[language]} (${talk.organizer})`,
+        type: talk.kind === "workshop" ? "workshop" : "talk",
+        startDate: talk.date,
+        roles: [tr(language, talk.kind === "workshop" ? "talks.workshop" : "talks.talk")],
+        keywords: talk.tech,
+        ...(talkUrl(talk) ? { url: talkUrl(talk) } : {}),
+      })),
     ],
     meta: {
       canonical: siteHref(siteUrl, RESUME_FILES[language]),

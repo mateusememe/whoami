@@ -142,7 +142,7 @@ export class ParticleField {
   update(frame: FieldFrame): void {
     const { uniforms } = this.material;
     uniforms.uTime.value = frame.time;
-    uniforms.uMorph.value = Math.min(Math.max(frame.morph, 0), 5);
+    uniforms.uMorph.value = Math.min(Math.max(frame.morph, 0), 6);
     uniforms.uTravel.value = frame.travel;
     uniforms.uPointer.value.set(frame.pointerX, frame.pointerY, frame.pointerStrength);
     uniforms.uFrame.value.set(frame.frameX, frame.frameY, frame.frameSize);

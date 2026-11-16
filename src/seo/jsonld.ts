@@ -1,6 +1,7 @@
 /**
  * schema.org graph per page and language. The home page describes the site,
- * the page (a ProfilePage), the person and the project list; a project page describes the project as SoftwareSourceCode
+ * the page (a ProfilePage), the person (with the talks as events) and the
+ * project list; a project page describes the project as SoftwareSourceCode
  * with a breadcrumb. Built from the same data as the page, so structured
  * data cannot drift from what is shown.
  */
@@ -12,6 +13,8 @@ import {
   projects,
   socialLinks,
   spokenLanguages,
+  talkUrl,
+  talks,
   techStack,
   topSkills,
 } from "@/data/portfolio";
@@ -24,6 +27,34 @@ import { parsePeriod, siteHref } from "@/seo/site";
 export { currentRole, seoDescription };
 
 const SPDX = (id: string) => `https://spdx.org/licenses/${id}.html`;
+
+/** A talk as a schema.org Event. Dates are as precise as the record: `2022-10-28`, `2026-10` or `2023`. */
+function talkEvent(language: Language, talk: (typeof talks)[number], personId: string) {
+  const [city, region] = talk.city.split(", ");
+  return {
+    "@type": "Event",
+    name: `${talk.title} — ${talk.event[language]}`,
+    description: talk.desc[language],
+    startDate: talk.date,
+    ...(talk.online
+      ? {
+          eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
+          location: { "@type": "VirtualLocation", url: talkUrl(talk) },
+        }
+      : {
+          eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+          location: {
+            "@type": "Place",
+            name: talk.organizer,
+            address: { "@type": "PostalAddress", addressLocality: city, addressRegion: region, addressCountry: "BR" },
+          },
+        }),
+    organizer: { "@type": "Organization", name: talk.organizer },
+    performer: [{ "@id": personId }, ...(talk.coSpeakers ?? []).map((name) => ({ "@type": "Person", name }))],
+    ...(talkUrl(talk) ? { url: talkUrl(talk) } : {}),
+    inLanguage: "pt-BR",
+  };
+}
 
 export function buildJsonLd(language: Language, siteUrl: string, target: Page = HOME): Record<string, unknown> {
   if (target.kind === "project") return buildProjectJsonLd(language, siteUrl, target.id);
@@ -114,6 +145,7 @@ export function buildJsonLd(language: Language, siteUrl: string, target: Page = 
           })),
         ],
         award: tr(language, "skills.scholarship"),
+        performerIn: talks.map((talk) => talkEvent(language, talk, personId)),
         sameAs: socialLinks.filter((link) => !link.href.startsWith("mailto:")).map((link) => link.href),
         ...(mail
           ? {

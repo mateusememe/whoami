@@ -21,12 +21,13 @@ import {
   Hash,
   Languages,
   Moon,
+  Presentation,
   Search,
   type LucideIcon,
 } from "lucide-react";
 import { useLanguage, type Language } from "@/contexts/LanguageContext";
 import { NAV_ITEMS } from "@/data/navigation";
-import { projects, socialLinks } from "@/data/portfolio";
+import { projects, socialLinks, talkUrl, talks } from "@/data/portfolio";
 import { useSiteNavigation } from "@/hooks/useSiteNavigation";
 import { useTheme } from "@/hooks/useTheme";
 import { LANGUAGES, PROJECT_PAGE_IDS } from "@/i18n/routes";
@@ -37,11 +38,12 @@ import { runViewTransition } from "@/motion/viewTransition";
 import { filterCommands } from "@/lib/commands";
 import { cn } from "@/lib/utils";
 
-type Group = "sections" | "projects" | "actions" | "links";
+type Group = "sections" | "projects" | "talks" | "actions" | "links";
 
 const GROUPS: Array<{ id: Group; key: string }> = [
   { id: "sections", key: "palette.groupSections" },
   { id: "projects", key: "palette.groupProjects" },
+  { id: "talks", key: "palette.groupTalks" },
   { id: "actions", key: "palette.groupActions" },
   { id: "links", key: "palette.groupLinks" },
 ];
@@ -141,6 +143,18 @@ const CommandPalettePanel = ({ onClose, onToast }: CommandPalettePanelProps) => 
             run: () => openExternal(project.githubUrl ?? project.liveUrl ?? ""),
           }),
         ),
+      ...talks.map(
+        (talk): Command => ({
+          id: `talk-${talk.id}`,
+          group: "talks",
+          label: talk.title,
+          hint: talk.event[language],
+          keywords: `${talk.tech.join(" ")} ${t(`talks.${talk.kind}`)}`,
+          icon: Presentation,
+          external: true,
+          run: () => openExternal(talkUrl(talk) ?? ""),
+        }),
+      ),
       ...(mail
         ? [
             {

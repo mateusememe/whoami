@@ -2,19 +2,20 @@
 
 > Backend Software Engineer. I build backend services in Go, Python, and Java, focusing on messaging and cloud infrastructure. Currently at Itaú Unibanco and doing MSc research at UNESP.
 
-Portfolio and résumé of a backend software engineer: experience, education, skills, open-source projects and contact channels. The website is a single-page React app, prerendered to static HTML in Portuguese, English and Spanish. The files below carry the same content as plain text and as structured data, rendered at build time from the same source as the page. To answer questions about Mateus, read one Markdown profile or the JSON Resume; neither needs JavaScript.
+Portfolio and résumé of a backend software engineer: experience, education, skills, open-source projects, talks and contact channels. The website is a single-page React app, prerendered to static HTML in Portuguese, English and Spanish. The files below carry the same content as plain text and as structured data, rendered at build time from the same source as the page. To answer questions about Mateus, read one Markdown profile or the JSON Resume; neither needs JavaScript.
 
 - Current role: Software Engineer at Itaú Unibanco (since May 2026)
 - Location: São Paulo, Brazil
 - Education: Master's in Computer Science at UNESP (in progress); Bachelor's in Computer Science at Universidade do Oeste Paulista
 - Focus: Distributed Systems, Data Engineering, Software Architecture, Data Mesh & Pipelines
 - Spoken languages: Portuguese (native), English (full professional)
+- Talks: 9 workshops (MCP: MegaBrain Context Protocol, DevFest Presidente Prudente 2026; O Incrível mundo mágico da web, 37th Infoeste · DevFest Presidente Prudente 2025; AI Autopsy, DevFest Presidente Prudente 2025; API Hero, DevFest Presidente Prudente 2025; Do Caos à Previsão: Domando Estruturas Temporais com Machine Learning, 36th Infoeste · DevFest Presidente Prudente 2024; Git e GitHub em Ação, 35th Infoeste; O Essencial de GIT e GitHub, 34th Infoeste; Intensivo ReactJS e Typescript, 34th Infoeste; Node.JS com testes unitários e PrismaORM, 34th Infoeste)
 - Contact: matt.mendon@gmail.com
 - Last updated: 2026-11-16
 
 ## Profile
 
-- [Profile (English)](https://mateusememe.github.io/whoami/index.md): About, experience, education, skills, projects, contributions and contact
+- [Profile (English)](https://mateusememe.github.io/whoami/index.md): About, experience, education, skills, projects, contributions, talks and contact
 - [Perfil (Português)](https://mateusememe.github.io/whoami/index.pt.md): Same content in Brazilian Portuguese
 - [Perfil (Español)](https://mateusememe.github.io/whoami/index.es.md): Same content in Spanish
 - [JSON Resume](https://mateusememe.github.io/whoami/resume.json): The profile as structured data (jsonresume.org schema), with ISO dates
@@ -46,6 +47,18 @@ Portfolio and résumé of a backend software engineer: experience, education, sk
 - [leeozaka/Merkle](https://github.com/leeozaka/Merkle/pulls?q=is%3Apr+author%3Amateusememe+is%3Amerged): Two language adapters for Merkle's Protocol 1.0, one for Java and Spring Boot and one for Python. Each runs out of process and does language detection, deterministic AST indexing and test impact mapping.
 - [zanfranceschi/rinha-de-backend-2026](https://github.com/zanfranceschi/rinha-de-backend-2026/pull/7621): Submission accepted in the fourth Rinha de Backend: fraud detection with vector search, limited to 1 vCPU and 350 MB. The code is the rinha-backend-2026-c project.
 
+## Talks
+
+- [MCP: MegaBrain Context Protocol](https://github.com/mateusememe/megabrain-context-protocol/tree/main/apresentacao): Workshop at DevFest Presidente Prudente 2026, 2026-10. Hands-on course on the Model Context Protocol. Attendees build DevBrain, an MCP server in Python that tells a coding agent whether a branch is ready for a pull request, and connect it to a real host. With Maria Beatriz França.
+- [O Incrível mundo mágico da web](https://www.unoeste.br/site/controleeventos/VerAtividade.aspx?eve_codigo=1755&atv_codigo=9367): Workshop at 37th Infoeste · DevFest Presidente Prudente 2025, 2025-10-31. How the web works, from a click to the server: protocols (TCP and UDP), APIs and webhooks, frontend and backend, SPA and SSR, monolith and microservices, and the path to full-stack development. No programming background required. With Leonardo Aniceto das Neves.
+- [AI Autopsy](https://github.com/mateusememe/ai-autopsy-devfest-2025/blob/main/slides/presentation-ai-autopsy.pdf): Workshop at DevFest Presidente Prudente 2025, 2025-10. How to debug a model's decisions: train a LightGBM classifier on the Titanic dataset, then explain single predictions with LIME and global behaviour with SHAP. With Maria Beatriz França.
+- [API Hero](https://github.com/mateusememe/codecash/blob/main/DevFest2025-ApiHero-GDG-Viceri.pdf): Workshop at DevFest Presidente Prudente 2025, 2025-10. Building a transactional API with Spring Boot and GraphQL, PostgreSQL for storage and Redis as a cache.
+- [Do Caos à Previsão: Domando Estruturas Temporais com Machine Learning](https://www.unoeste.br/site/controleeventos/VerAtividade.aspx?eve_codigo=1351&atv_codigo=8067): Workshop at 36th Infoeste · DevFest Presidente Prudente 2024, 2024-10-31. Hands-on introduction to machine learning for time series: prepare stock data (cleaning, missing values, normalization), build and train an LSTM network with TensorFlow and Keras, compare it with ARIMA and regression, and check the forecasts against the real values. With Maria Beatriz França.
+- [Git e GitHub em Ação](https://github.com/mateusememe/git-github-in-action/blob/master/git-and-github-in-action-day-one.pdf): Workshop at 35th Infoeste, 2023. Version control with Git and collaborative development on GitHub, with exercises on a C program.
+- [O Essencial de GIT e GitHub](https://www.unoeste.br/site/controleeventos/VerAtividade.aspx?eve_codigo=886&atv_codigo=5140): Workshop at 34th Infoeste, 2022-10-28. Version control from scratch: commits, branches, merge and rebase in Git, a remote repository on GitHub, and real cases such as restoring an old version, opening an issue and sending a pull request to an open-source project. With José Paulo Lobo Saturnino.
+- [Intensivo ReactJS e Typescript](https://www.unoeste.br/site/controleeventos/VerAtividade.aspx?eve_codigo=886&atv_codigo=5148): Workshop at 34th Infoeste, 2022-10-27. A full day (8 hours) of React with TypeScript: environment setup, components and state, the Context API, lifecycle, routing, built-in and custom hooks, API data, and deploying the finished app to online hosting. With José Paulo Lobo Saturnino, Irineu de Almeida Júnior.
+- [Node.JS com testes unitários e PrismaORM](https://www.unoeste.br/site/controleeventos/VerAtividade.aspx?eve_codigo=886&atv_codigo=5137): Workshop at 34th Infoeste, 2022-10-24. A CRUD REST API in Node.js and Express, PostgreSQL through Prisma ORM, and unit tests with Jest, starting from HTTP, REST and TDD. A full day (8 hours). With Jose Antônio Junior Barros Souza, Igor Xavier.
+
 ## Contact
 
 - [LinkedIn](https://linkedin.com/in/mateus-men): mateus-men
@@ -59,7 +72,7 @@ Portfolio and résumé of a backend software engineer: experience, education, sk
 
 ## Optional
 
-- [Website (English)](https://mateusememe.github.io/whoami/): Interactive version of the profile with a WebGL background. In browsers with WebMCP it registers the tools get_profile, list_projects, get_contact and go_to_section
+- [Website (English)](https://mateusememe.github.io/whoami/): Interactive version of the profile with a WebGL background. In browsers with WebMCP it registers the tools get_profile, list_projects, list_talks, get_contact and go_to_section
 - [Website (Português)](https://mateusememe.github.io/whoami/pt/): Same page in Portuguese
 - [Website (Español)](https://mateusememe.github.io/whoami/es/): Same page in Spanish
 - [JSON Resume (Português)](https://mateusememe.github.io/whoami/resume.pt.json): Structured data in Portuguese

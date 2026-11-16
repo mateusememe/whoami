@@ -233,6 +233,7 @@ describe("particle field buffers", () => {
     expect(meshPresence(0)).toBe(1);
     expect(meshPresence(1)).toBe(0);
     expect(meshPresence(3)).toBe(0);
-    expect(meshPresence(5)).toBeCloseTo(0.85);
+    expect(meshPresence(5)).toBe(0);
+    expect(meshPresence(6)).toBeCloseTo(0.85);
   });
 });

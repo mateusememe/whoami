@@ -21,6 +21,8 @@ import {
   projects,
   socialLinks,
   spokenLanguages,
+  talkUrl,
+  talks,
   techStack,
   topSkills,
 } from "@/data/portfolio";
@@ -109,6 +111,17 @@ function summary(language: Language): string {
 /** URL of a project's own page, for featured projects. */
 function projectPage(siteUrl: string, language: Language, id: string): string | undefined {
   return PROJECT_PAGE_IDS.includes(id) ? siteHref(siteUrl, pagePath(language, { kind: "project", id })) : undefined;
+}
+
+function talkLine(language: Language, talk: (typeof talks)[number]): string {
+  const links = [
+    talk.links.repo ? `[${tr(language, "talks.repo")}](${talk.links.repo})` : "",
+    talk.links.slides ? `[${tr(language, "talks.slides")}](${talk.links.slides})` : "",
+    talk.links.notebook ? `[${tr(language, "talks.notebook")}](${talk.links.notebook})` : "",
+    talk.links.event ? `[${tr(language, "talks.event")}](${talk.links.event})` : "",
+  ].filter(Boolean);
+  const people = talk.coSpeakers?.length ? ` ${tr(language, "talks.with").replace("{names}", talk.coSpeakers.join(", "))}.` : "";
+  return `- **${talk.title}** — ${tr(language, `talks.${talk.kind}`)}, ${talk.event[language]}, ${talk.date} (${talk.organizer}, ${talk.online ? tr(language, "talks.online").toLowerCase() : talk.city}). ${inline(talk.desc[language])}${people} ${links.join(" · ")}`.trimEnd();
 }
 
 function contactLines(): string[] {
@@ -200,6 +213,9 @@ export function renderProfileMarkdown(language: Language, siteUrl: string): stri
     lines.push(`- [${item.repo}](${item.url}) (${item.merged}): ${inline(item.desc[language])}`);
   }
 
+  lines.push("", `## ${tr(language, "talks.title")}`, "");
+  for (const talk of talks) lines.push(talkLine(language, talk));
+
   lines.push("", `## ${tr(language, "contact.title")}`, "", tr(language, "contact.cta"), "", ...contactLines(), "");
   return lines.join("\n");
 }
@@ -216,7 +232,7 @@ export function renderLlmsTxt(siteUrl: string): string {
     "",
     `> ${summary("en")}`,
     "",
-    "Portfolio and résumé of a backend software engineer: experience, education, skills, open-source projects and contact channels. The website is a single-page React app, prerendered to static HTML in Portuguese, English and Spanish. The files below carry the same content as plain text and as structured data, rendered at build time from the same source as the page. To answer questions about Mateus, read one Markdown profile or the JSON Resume; neither needs JavaScript.",
+    "Portfolio and résumé of a backend software engineer: experience, education, skills, open-source projects, talks and contact channels. The website is a single-page React app, prerendered to static HTML in Portuguese, English and Spanish. The files below carry the same content as plain text and as structured data, rendered at build time from the same source as the page. To answer questions about Mateus, read one Markdown profile or the JSON Resume; neither needs JavaScript.",
     "",
     // Key facts as a plain list (no heading), which llmstxt.org allows before the link sections.
     ...(role ? [`- Current role: ${role.role.en} at ${role.company} (since ${role.period.en.split(" – ")[0]})`] : []),
@@ -227,12 +243,13 @@ export function renderLlmsTxt(siteUrl: string): string {
       .map((skill) => skill.en)
       .join(", ")}`,
     `- Spoken languages: ${spokenLanguages.map((item) => `${item.name.en} (${item.level.en.toLowerCase()})`).join(", ")}`,
+    `- Talks: ${talks.length} workshops (${talks.map((talk) => `${talk.title}, ${talk.event.en}`).join("; ")})`,
     ...(mail ? [`- Contact: ${mail.href.replace("mailto:", "")}`] : []),
     `- Last updated: ${profile.updatedAt}`,
     "",
     "## Profile",
     "",
-    `- [Profile (English)](${siteHref(siteUrl, PROFILE_FILES.en)}): About, experience, education, skills, projects, contributions and contact`,
+    `- [Profile (English)](${siteHref(siteUrl, PROFILE_FILES.en)}): About, experience, education, skills, projects, contributions, talks and contact`,
     `- [Perfil (Português)](${siteHref(siteUrl, PROFILE_FILES.pt)}): Same content in Brazilian Portuguese`,
     `- [Perfil (Español)](${siteHref(siteUrl, PROFILE_FILES.es)}): Same content in Spanish`,
     `- [JSON Resume](${siteHref(siteUrl, RESUME_FILES.en)}): The profile as structured data (jsonresume.org schema), with ISO dates`,
@@ -259,6 +276,13 @@ export function renderLlmsTxt(siteUrl: string): string {
     lines.push(`- [${item.repo}](${item.url}): ${inline(item.desc.en)}`);
   }
 
+  lines.push("", "## Talks", "");
+  for (const talk of talks) {
+    const url = talkUrl(talk);
+    const people = talk.coSpeakers?.length ? ` With ${talk.coSpeakers.join(", ")}.` : "";
+    if (url) lines.push(`- [${talk.title}](${url}): Workshop at ${talk.event.en}, ${talk.date}. ${inline(talk.desc.en)}${people}`);
+  }
+
   lines.push(
     "",
     "## Contact",
@@ -267,7 +291,7 @@ export function renderLlmsTxt(siteUrl: string): string {
     "",
     "## Optional",
     "",
-    `- [Website (English)](${siteHref(siteUrl)}): Interactive version of the profile with a WebGL background. In browsers with WebMCP it registers the tools get_profile, list_projects, get_contact and go_to_section`,
+    `- [Website (English)](${siteHref(siteUrl)}): Interactive version of the profile with a WebGL background. In browsers with WebMCP it registers the tools get_profile, list_projects, list_talks, get_contact and go_to_section`,
     `- [Website (Português)](${siteHref(siteUrl, LANGUAGE_PATHS.pt)}): Same page in Portuguese`,
     `- [Website (Español)](${siteHref(siteUrl, LANGUAGE_PATHS.es)}): Same page in Spanish`,
     `- [JSON Resume (Português)](${siteHref(siteUrl, RESUME_FILES.pt)}): Structured data in Portuguese`,

@@ -2,7 +2,7 @@
 import { readFileSync } from "fs";
 import { resolve } from "path";
 import { describe, it, expect } from "vitest";
-import { contributions, education, experiences, profile, projects, socialLinks } from "@/data/portfolio";
+import { contributions, education, experiences, profile, projects, socialLinks, talks } from "@/data/portfolio";
 import {
   HTML_LANG,
   LANGUAGE_PATHS,
@@ -217,6 +217,18 @@ describe("JSON-LD", () => {
     expect(person.alumniOf).toHaveLength(education.filter((item) => !item.current).length);
   });
 
+  it("lists the talks as events the person performed in", () => {
+    expect(person.performerIn).toHaveLength(talks.length);
+    for (const event of person.performerIn) {
+      expect(event["@type"]).toBe("Event");
+      expect(event.startDate).toMatch(/^\d{4}(-\d{2}(-\d{2})?)?$/);
+      expect(event.performer[0]["@id"]).toBe(person["@id"]);
+    }
+    const online = person.performerIn.filter((event: any) => event.eventAttendanceMode.endsWith("OnlineEventAttendanceMode"));
+    expect(online).toHaveLength(talks.filter((talk) => talk.online).length);
+    for (const event of online) expect(event.location["@type"]).toBe("VirtualLocation");
+  });
+
   it("lists every project as source code, with a repository only when it is public", () => {
     const list = byType("ItemList");
     expect(list.numberOfItems).toBe(projects.length);
@@ -270,9 +282,10 @@ describe("JSON Resume", () => {
     expect(resume.work[0].endDate).toBeUndefined();
     expect(resume.education).toHaveLength(education.length);
     expect(resume.education[0]).toMatchObject({ studyType: "Master's", area: "Computer Science" });
-    expect(resume.projects).toHaveLength(projects.length);
+    expect(resume.projects).toHaveLength(projects.length + talks.length);
     const featured = resume.projects.find((item: any) => item.name === projects.find((p) => p.featured)?.name);
     expect(featured.highlights.length).toBeGreaterThan(0);
+    expect(resume.projects.filter((item: any) => item.type === "workshop")).toHaveLength(talks.length);
   });
 
   it("splits degree names in every language", () => {

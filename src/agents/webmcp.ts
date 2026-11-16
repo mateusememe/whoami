@@ -11,7 +11,7 @@
  * the Markdown profiles, JSON Resume), from the same data module.
  */
 import { NAV_ITEMS, type SectionId } from "@/data/navigation";
-import { contributions, projects, profile, socialLinks, spokenLanguages } from "@/data/portfolio";
+import { contributions, projects, profile, socialLinks, spokenLanguages, talks } from "@/data/portfolio";
 import { PROJECT_PAGE_IDS, pagePath } from "@/i18n/routes";
 import type { Language } from "@/i18n/translations";
 
@@ -116,6 +116,34 @@ export function createAgentTools({ language, siteUrl, goToSection }: AgentToolsO
                 technologies: item.tech,
                 merged: item.merged,
                 url: item.url,
+              })),
+            },
+            null,
+            2,
+          ),
+        );
+      },
+    },
+    {
+      name: "list_talks",
+      description: `Lists the talks and workshops ${profile.name} gave, with event, date, co-speakers and links to the code and slides.`,
+      inputSchema: { type: "object", properties: { language: languageProperty } },
+      annotations: { readOnlyHint: true },
+      execute: (input) => {
+        const chosen = pickLanguage(input, language);
+        return text(
+          JSON.stringify(
+            {
+              talks: talks.map((talk) => ({
+                title: talk.title,
+                kind: talk.kind,
+                event: talk.event[chosen],
+                organizer: talk.organizer,
+                city: talk.city,
+                date: talk.date,
+                description: talk.desc[chosen],
+                coSpeakers: talk.coSpeakers ?? [],
+                links: talk.links,
               })),
             },
             null,

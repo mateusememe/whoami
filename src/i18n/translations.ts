@@ -9,6 +9,7 @@ export const translations: Translations = {
   "nav.education": { pt: "Educação", en: "Education", es: "Educación" },
   "nav.skills": { pt: "Skills", en: "Skills", es: "Skills" },
   "nav.projects": { pt: "Projetos", en: "Projects", es: "Proyectos" },
+  "nav.talks": { pt: "Palestras", en: "Talks", es: "Charlas" },
   "nav.contact": { pt: "Contato", en: "Contact", es: "Contacto" },
 
   // SEO (document title and descriptions, per language)
@@ -171,6 +172,23 @@ export const translations: Translations = {
   },
   "projects.merged": { pt: "Aceito em {date}", en: "Merged {date}", es: "Aceptado en {date}" },
 
+  // Talks
+  "talks.title": { pt: "Palestras e minicursos", en: "Talks & workshops", es: "Charlas y talleres" },
+  "talks.lead": {
+    pt: "{count} minicursos de {first} a {last}, com o material aberto quando existe.",
+    en: "{count} workshops from {first} to {last}, with the material open where it exists.",
+    es: "{count} talleres de {first} a {last}, con el material abierto cuando existe.",
+  },
+  "talks.workshop": { pt: "Minicurso", en: "Workshop", es: "Taller" },
+  "talks.talk": { pt: "Palestra", en: "Talk", es: "Charla" },
+  "talks.with": { pt: "com {names}", en: "with {names}", es: "con {names}" },
+  "talks.repo": { pt: "Código", en: "Code", es: "Código" },
+  "talks.slides": { pt: "Slides", en: "Slides", es: "Diapositivas" },
+  "talks.notebook": { pt: "Notebook", en: "Notebook", es: "Notebook" },
+  "talks.online": { pt: "Online", en: "Online", es: "En línea" },
+  "talks.event": { pt: "Página do evento", en: "Event page", es: "Página del evento" },
+  "talks.project": { pt: "Projeto", en: "Project", es: "Proyecto" },
+
   // Project pages
   "project.back": { pt: "Todos os projetos", en: "All projects", es: "Todos los proyectos" },
   "project.repo": { pt: "Repositório", en: "Repository", es: "Repositorio" },
@@ -182,6 +200,7 @@ export const translations: Translations = {
   "project.coAuthors": { pt: "Coautoria", en: "Co-authors", es: "Coautoría" },
   "project.details": { pt: "Detalhes", en: "Details", es: "Detalles" },
   "project.stack": { pt: "Stack", en: "Stack", es: "Stack" },
+  "project.talk": { pt: "Apresentado em", en: "Presented at", es: "Presentado en" },
   "project.figure": { pt: "fig.", en: "fig.", es: "fig." },
   "project.prev": { pt: "Anterior", en: "Previous", es: "Anterior" },
   "project.next": { pt: "Próximo", en: "Next", es: "Siguiente" },
@@ -320,6 +339,7 @@ export const translations: Translations = {
 
   "a11y.contactLinks": { pt: "Contatos e Redes", en: "Contacts and social networks", es: "Contactos y redes" },
   "a11y.openProject": { pt: "Abrir a página de {name}", en: "Open the {name} page", es: "Abrir la página de {name}" },
+  "a11y.talkLinks": { pt: "Material de {title}", en: "Material for {title}", es: "Material de {title}" },
   "a11y.projectNav": { pt: "Outros projetos", en: "Other projects", es: "Otros proyectos" },
   "a11y.breadcrumb": { pt: "Você está em", en: "You are here", es: "Estás en" },
 };

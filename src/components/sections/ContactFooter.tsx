@@ -33,7 +33,7 @@ const ContactFooter = () => {
   };
 
   return (
-    <footer id="contact" aria-labelledby="contact-title" data-scene="5" className="relative z-10 pt-section">
+    <footer id="contact" aria-labelledby="contact-title" data-scene="6" className="relative z-10 pt-section">
       <div className="shell">
         <SectionHeading
           id="contact-title"

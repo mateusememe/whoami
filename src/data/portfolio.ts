@@ -52,6 +52,8 @@ export interface ProjectItem {
   license?: string;
   /** People who wrote the project with Mateus. */
   coAuthors?: string[];
+  /** Talk or workshop the project was built for (a `talks` id). */
+  talkId?: string;
   /** Omit for private repositories: the card then carries no link. */
   githubUrl?: string;
   liveUrl?: string;
@@ -72,6 +74,28 @@ export interface ContributionItem {
   merged: string;
   stars?: number;
   desc: LocalizedString;
+  tech: string[];
+}
+
+/** A talk or workshop given at an event. */
+export interface TalkItem {
+  id: string;
+  /** Title as announced, in the language it was given. */
+  title: string;
+  kind: "workshop" | "talk";
+  event: LocalizedString;
+  organizer: string;
+  city: string;
+  /** Given online instead of in the city. */
+  online?: boolean;
+  /** `YYYY-MM-DD` when the day is on record, else `YYYY-MM` or `YYYY`. */
+  date: string;
+  desc: LocalizedString;
+  coSpeakers?: string[];
+  /** Related project (a `projects` id). */
+  projectId?: string;
+  /** At least one link. `event` is the activity's page in the event program. */
+  links: { repo?: string; slides?: string; notebook?: string; event?: string };
   tech: string[];
 }
 
@@ -511,6 +535,7 @@ export const projects: ProjectItem[] = [
     year: 2026,
     license: "MIT",
     coAuthors: ["Maria Beatriz França"],
+    talkId: "mcp-devfest-2026",
     desc: {
       pt: "Material do minicurso de Model Context Protocol (MCP) no DevFest 2026. Constrói o DevBrain, um servidor MCP em Python que diz a um agente de código se uma branch está pronta para virar pull request. As regras de revisão ficam no código, e o mesmo servidor roda no Claude Code, Gemini CLI, Copilot e Codex.",
       en: "Material for the Model Context Protocol (MCP) workshop at DevFest 2026. Builds DevBrain, an MCP server in Python that tells a coding agent whether a branch is ready for a pull request. Review rules live in code, and the same server runs in Claude Code, Gemini CLI, Copilot and Codex.",
@@ -555,6 +580,7 @@ export const projects: ProjectItem[] = [
     language: "Java",
     year: 2025,
     license: "MIT",
+    talkId: "api-hero-devfest-2025",
     desc: {
       pt: "API transacional desenvolvida para o minicurso 'API Hero' no DevFest 2025. Utiliza Spring Boot, consultas em GraphQL, banco PostgreSQL e cache em Redis.",
       en: "Transactional API built for the 'API Hero' workshop at DevFest 2025. Uses Spring Boot, GraphQL queries, PostgreSQL storage, and Redis caching.",
@@ -616,6 +642,7 @@ export const projects: ProjectItem[] = [
     language: "C++",
     year: 2023,
     license: "MIT",
+    talkId: "git-infoeste-2023",
     desc: {
       pt: "Material e exemplos práticos do minicurso 'Git e GitHub em Ação' ministrado na 35ª Infoeste, cobrindo controle de versão e fluxos colaborativos.",
       en: "Code examples and resources for the 'Git and GitHub in Action' workshop at 35th Infoeste, covering version control and workflows.",
@@ -664,6 +691,7 @@ export const projects: ProjectItem[] = [
     year: 2025,
     license: "MIT",
     coAuthors: ["Maria Beatriz França"],
+    talkId: "ai-autopsy-devfest-2025",
     desc: {
       pt: "Código e slides do workshop 'AI Autopsy' no DevFest 2025. Treina um classificador LightGBM no dataset do Titanic e depois explica previsões individuais e o comportamento global com LIME e SHAP.",
       en: "Code and slides for the 'AI Autopsy' workshop at DevFest 2025. Trains a LightGBM classifier on the Titanic dataset, then explains single predictions and global behavior with LIME and SHAP.",
@@ -788,6 +816,203 @@ export const contributions: ContributionItem[] = [
   },
 ];
 
+/** Talks and workshops, newest first. Material is public unless a link is missing. */
+export const talks: TalkItem[] = [
+  {
+    id: "mcp-devfest-2026",
+    title: "MCP: MegaBrain Context Protocol",
+    kind: "workshop",
+    event: { pt: "DevFest Presidente Prudente 2026", en: "DevFest Presidente Prudente 2026", es: "DevFest Presidente Prudente 2026" },
+    organizer: "GDG Presidente Prudente",
+    city: "Presidente Prudente, SP",
+    date: "2026-10",
+    coSpeakers: ["Maria Beatriz França"],
+    projectId: "megabrain-context-protocol",
+    desc: {
+      pt: "Minicurso prático de Model Context Protocol. A turma constrói o DevBrain, um servidor MCP em Python que diz a um agente de código se uma branch está pronta para virar pull request, e o conecta a um host real.",
+      en: "Hands-on course on the Model Context Protocol. Attendees build DevBrain, an MCP server in Python that tells a coding agent whether a branch is ready for a pull request, and connect it to a real host.",
+      es: "Taller práctico de Model Context Protocol. El grupo construye DevBrain, un servidor MCP en Python que le dice a un agente de código si una rama está lista para un pull request, y lo conecta a un host real.",
+    },
+    links: {
+      repo: "https://github.com/mateusememe/megabrain-context-protocol",
+      slides: "https://github.com/mateusememe/megabrain-context-protocol/tree/main/apresentacao",
+    },
+    tech: ["MCP", "Python", "AI Agents"],
+  },
+  {
+    id: "web-infoeste-2025",
+    title: "O Incrível mundo mágico da web",
+    kind: "workshop",
+    event: {
+      pt: "37ª Infoeste · DevFest Presidente Prudente 2025",
+      en: "37th Infoeste · DevFest Presidente Prudente 2025",
+      es: "37ª Infoeste · DevFest Presidente Prudente 2025",
+    },
+    organizer: "Unoeste",
+    city: "Presidente Prudente, SP",
+    date: "2025-10-31",
+    coSpeakers: ["Leonardo Aniceto das Neves"],
+    desc: {
+      pt: "Como a web funciona, do clique ao servidor: protocolos (TCP e UDP), APIs e webhooks, frontend e backend, SPA e SSR, monólito e microsserviços, e o caminho para o desenvolvimento full-stack. Sem pré-requisito de programação.",
+      en: "How the web works, from a click to the server: protocols (TCP and UDP), APIs and webhooks, frontend and backend, SPA and SSR, monolith and microservices, and the path to full-stack development. No programming background required.",
+      es: "Cómo funciona la web, del clic al servidor: protocolos (TCP y UDP), APIs y webhooks, frontend y backend, SPA y SSR, monolito y microservicios, y el camino hacia el desarrollo full-stack. Sin requisitos de programación.",
+    },
+    links: {
+      event: "https://www.unoeste.br/site/controleeventos/VerAtividade.aspx?eve_codigo=1755&atv_codigo=9367",
+    },
+    tech: ["HTTP", "TCP/UDP", "APIs", "Microservices"],
+  },
+  {
+    id: "ai-autopsy-devfest-2025",
+    title: "AI Autopsy",
+    kind: "workshop",
+    event: { pt: "DevFest Presidente Prudente 2025", en: "DevFest Presidente Prudente 2025", es: "DevFest Presidente Prudente 2025" },
+    organizer: "GDG Presidente Prudente",
+    city: "Presidente Prudente, SP",
+    date: "2025-10",
+    coSpeakers: ["Maria Beatriz França"],
+    projectId: "ai-autopsy-devfest-2025",
+    desc: {
+      pt: "Como depurar as decisões de um modelo: treinar um classificador LightGBM no dataset do Titanic e explicar previsões individuais com LIME e o comportamento global com SHAP.",
+      en: "How to debug a model's decisions: train a LightGBM classifier on the Titanic dataset, then explain single predictions with LIME and global behaviour with SHAP.",
+      es: "Cómo depurar las decisiones de un modelo: entrenar un clasificador LightGBM con el dataset del Titanic y explicar predicciones individuales con LIME y el comportamiento global con SHAP.",
+    },
+    links: {
+      repo: "https://github.com/mateusememe/ai-autopsy-devfest-2025",
+      slides: "https://github.com/mateusememe/ai-autopsy-devfest-2025/blob/main/slides/presentation-ai-autopsy.pdf",
+      notebook:
+        "https://colab.research.google.com/github/mateusememe/ai-autopsy-devfest-2025/blob/main/ai_autopsy_xai_titanic.ipynb",
+    },
+    tech: ["Python", "LightGBM", "LIME", "SHAP"],
+  },
+  {
+    id: "api-hero-devfest-2025",
+    title: "API Hero",
+    kind: "workshop",
+    event: { pt: "DevFest Presidente Prudente 2025", en: "DevFest Presidente Prudente 2025", es: "DevFest Presidente Prudente 2025" },
+    organizer: "GDG Presidente Prudente",
+    city: "Presidente Prudente, SP",
+    date: "2025-10",
+    projectId: "codecash",
+    desc: {
+      pt: "Construção de uma API transacional com Spring Boot e GraphQL, PostgreSQL para armazenamento e Redis como cache.",
+      en: "Building a transactional API with Spring Boot and GraphQL, PostgreSQL for storage and Redis as a cache.",
+      es: "Construcción de una API transaccional con Spring Boot y GraphQL, PostgreSQL para el almacenamiento y Redis como caché.",
+    },
+    links: {
+      repo: "https://github.com/mateusememe/codecash",
+      slides: "https://github.com/mateusememe/codecash/blob/main/DevFest2025-ApiHero-GDG-Viceri.pdf",
+    },
+    tech: ["Java", "Spring Boot", "GraphQL", "Redis"],
+  },
+  {
+    id: "time-series-infoeste-2024",
+    title: "Do Caos à Previsão: Domando Estruturas Temporais com Machine Learning",
+    kind: "workshop",
+    event: {
+      pt: "36ª Infoeste · DevFest Presidente Prudente 2024",
+      en: "36th Infoeste · DevFest Presidente Prudente 2024",
+      es: "36ª Infoeste · DevFest Presidente Prudente 2024",
+    },
+    organizer: "Unoeste",
+    city: "Presidente Prudente, SP",
+    date: "2024-10-31",
+    coSpeakers: ["Maria Beatriz França"],
+    desc: {
+      pt: "Introdução prática a machine learning para séries temporais: preparar dados de ações (limpeza, valores ausentes, normalização), construir e treinar uma rede LSTM com TensorFlow e Keras, comparar com ARIMA e regressão e avaliar as previsões contra os valores reais.",
+      en: "Hands-on introduction to machine learning for time series: prepare stock data (cleaning, missing values, normalization), build and train an LSTM network with TensorFlow and Keras, compare it with ARIMA and regression, and check the forecasts against the real values.",
+      es: "Introducción práctica a machine learning para series temporales: preparar datos de acciones (limpieza, valores faltantes, normalización), construir y entrenar una red LSTM con TensorFlow y Keras, compararla con ARIMA y regresión, y evaluar las predicciones frente a los valores reales.",
+    },
+    links: {
+      event: "https://www.unoeste.br/site/controleeventos/VerAtividade.aspx?eve_codigo=1351&atv_codigo=8067",
+    },
+    tech: ["Python", "TensorFlow", "Keras", "LSTM"],
+  },
+  {
+    id: "git-infoeste-2023",
+    title: "Git e GitHub em Ação",
+    kind: "workshop",
+    event: { pt: "35ª Infoeste", en: "35th Infoeste", es: "35ª Infoeste" },
+    organizer: "Unoeste",
+    city: "Presidente Prudente, SP",
+    date: "2023",
+    projectId: "git-github-in-action",
+    desc: {
+      pt: "Controle de versão com Git e desenvolvimento colaborativo no GitHub, com exercícios sobre um programa em C.",
+      en: "Version control with Git and collaborative development on GitHub, with exercises on a C program.",
+      es: "Control de versiones con Git y desarrollo colaborativo en GitHub, con ejercicios sobre un programa en C.",
+    },
+    links: {
+      repo: "https://github.com/mateusememe/git-github-in-action",
+      slides: "https://github.com/mateusememe/git-github-in-action/blob/master/git-and-github-in-action-day-one.pdf",
+    },
+    tech: ["Git", "GitHub"],
+  },
+  {
+    id: "git-infoeste-2022",
+    title: "O Essencial de GIT e GitHub",
+    kind: "workshop",
+    event: { pt: "34ª Infoeste", en: "34th Infoeste", es: "34ª Infoeste" },
+    organizer: "Unoeste",
+    city: "Presidente Prudente, SP",
+    online: true,
+    date: "2022-10-28",
+    coSpeakers: ["José Paulo Lobo Saturnino"],
+    desc: {
+      pt: "Controle de versão do zero: commits, branches, merge e rebase no Git, repositório remoto no GitHub e casos reais como restaurar uma versão antiga, abrir uma issue e enviar um pull request para um projeto open source.",
+      en: "Version control from scratch: commits, branches, merge and rebase in Git, a remote repository on GitHub, and real cases such as restoring an old version, opening an issue and sending a pull request to an open-source project.",
+      es: "Control de versiones desde cero: commits, branches, merge y rebase en Git, un repositorio remoto en GitHub y casos reales como restaurar una versión antigua, abrir un issue y enviar un pull request a un proyecto open source.",
+    },
+    links: {
+      event: "https://www.unoeste.br/site/controleeventos/VerAtividade.aspx?eve_codigo=886&atv_codigo=5140",
+    },
+    tech: ["Git", "GitHub"],
+  },
+  {
+    id: "react-infoeste-2022",
+    title: "Intensivo ReactJS e Typescript",
+    kind: "workshop",
+    event: { pt: "34ª Infoeste", en: "34th Infoeste", es: "34ª Infoeste" },
+    organizer: "Unoeste",
+    city: "Presidente Prudente, SP",
+    date: "2022-10-27",
+    coSpeakers: ["José Paulo Lobo Saturnino", "Irineu de Almeida Júnior"],
+    desc: {
+      pt: "Um dia inteiro (8 horas) de React com TypeScript: configuração do ambiente, componentes e estado, Context API, ciclo de vida, rotas, hooks nativos e customizados, consumo de API e deploy da aplicação pronta em uma hospedagem online.",
+      en: "A full day (8 hours) of React with TypeScript: environment setup, components and state, the Context API, lifecycle, routing, built-in and custom hooks, API data, and deploying the finished app to online hosting.",
+      es: "Un día completo (8 horas) de React con TypeScript: configuración del entorno, componentes y estado, Context API, ciclo de vida, rutas, hooks nativos y personalizados, consumo de API y deploy de la aplicación terminada en un hosting online.",
+    },
+    links: {
+      event: "https://www.unoeste.br/site/controleeventos/VerAtividade.aspx?eve_codigo=886&atv_codigo=5148",
+    },
+    tech: ["React", "TypeScript", "Hooks", "Context API"],
+  },
+  {
+    id: "node-infoeste-2022",
+    title: "Node.JS com testes unitários e PrismaORM",
+    kind: "workshop",
+    event: { pt: "34ª Infoeste", en: "34th Infoeste", es: "34ª Infoeste" },
+    organizer: "Unoeste",
+    city: "Presidente Prudente, SP",
+    date: "2022-10-24",
+    coSpeakers: ["Jose Antônio Junior Barros Souza", "Igor Xavier"],
+    desc: {
+      pt: "Uma API REST com CRUD em Node.js e Express, PostgreSQL pelo Prisma ORM e testes unitários com Jest, partindo de HTTP, REST e TDD. Um dia inteiro (8 horas).",
+      en: "A CRUD REST API in Node.js and Express, PostgreSQL through Prisma ORM, and unit tests with Jest, starting from HTTP, REST and TDD. A full day (8 hours).",
+      es: "Una API REST con CRUD en Node.js y Express, PostgreSQL con Prisma ORM y pruebas unitarias con Jest, partiendo de HTTP, REST y TDD. Un día completo (8 horas).",
+    },
+    links: {
+      event: "https://www.unoeste.br/site/controleeventos/VerAtividade.aspx?eve_codigo=886&atv_codigo=5137",
+    },
+    tech: ["Node.js", "Express", "Prisma", "Jest"],
+  },
+];
+
+/** The link that best represents a talk: the slides, else the code, else the event page. */
+export function talkUrl(talk: TalkItem): string | undefined {
+  return talk.links.slides ?? talk.links.repo ?? talk.links.event;
+}
+
 /** Facts derived from the lists above, so headline numbers never go stale. */
 export const portfolioStats = (() => {
   const years = experiences.flatMap((exp) => (exp.period.en.match(/\d{4}/g) ?? []).map(Number));
@@ -800,5 +1025,6 @@ export const portfolioStats = (() => {
     featured: projects.filter((project) => project.featured).length,
     stars: projects.reduce((total, project) => total + (project.stars ?? 0), 0),
     contributions: contributions.length,
+    talks: talks.length,
   };
 })();
