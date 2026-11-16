@@ -75,11 +75,15 @@ export function scrollToTarget(target: ScrollTarget, options: { immediate?: bool
   const offset = options.offset ?? 0;
 
   if (lenis) {
-    lenis.scrollTo(target, { offset, immediate });
+    // After a route change the page height differs from what Lenis measured;
+    // refresh it, or the target is clamped to the old page's limit.
+    lenis.resize();
+    lenis.scrollTo(target, { offset, immediate, force: true });
     return;
   }
   const top = typeof target === "number" ? target : target.getBoundingClientRect().top + window.scrollY;
-  window.scrollTo({ top: top + offset, behavior: immediate ? "auto" : "smooth" });
+  // "instant", not "auto": the root has `scroll-behavior: smooth`, which "auto" would follow.
+  window.scrollTo({ top: top + offset, behavior: immediate ? "instant" : "smooth" });
 }
 
 /** Pauses or resumes smooth scrolling (used while the mobile menu is open). */

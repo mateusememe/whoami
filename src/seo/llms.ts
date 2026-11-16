@@ -24,7 +24,7 @@ import {
   techStack,
   topSkills,
 } from "@/data/portfolio";
-import { LANGUAGE_PATHS } from "@/i18n/routes";
+import { LANGUAGE_PATHS, PROJECT_PAGE_IDS, pagePath } from "@/i18n/routes";
 import { translations, type Language } from "@/i18n/translations";
 import { PROFILE_FILES, RESUME_FILES } from "@/seo/files";
 import { currentRole } from "@/seo/jsonld";
@@ -42,9 +42,21 @@ const LANGUAGE_NAMES: Record<Language, string> = {
 /** Labels that exist only in the Markdown output. */
 const LABELS: Record<
   Language,
-  { website: string; otherLanguages: string; stack: string; stars: string; location: string; updated: string; resume: string }
+  {
+    website: string;
+    otherLanguages: string;
+    stack: string;
+    stars: string;
+    location: string;
+    updated: string;
+    resume: string;
+    source: string;
+    page: string;
+  }
 > = {
   en: {
+    source: "Source",
+    page: "Project page",
     website: "Website",
     otherLanguages: "Other languages",
     stack: "Stack",
@@ -54,6 +66,8 @@ const LABELS: Record<
     resume: "Structured data (JSON Resume)",
   },
   pt: {
+    source: "Código",
+    page: "Página do projeto",
     website: "Site",
     otherLanguages: "Outros idiomas",
     stack: "Stack",
@@ -63,6 +77,8 @@ const LABELS: Record<
     resume: "Dados estruturados (JSON Resume)",
   },
   es: {
+    source: "Código",
+    page: "Página del proyecto",
     website: "Sitio",
     otherLanguages: "Otros idiomas",
     stack: "Stack",
@@ -88,6 +104,11 @@ function inline(text: string): string {
 
 function summary(language: Language): string {
   return `${tr(language, "hero.title")}. ${tr(language, "hero.summary")}`;
+}
+
+/** URL of a project's own page, for featured projects. */
+function projectPage(siteUrl: string, language: Language, id: string): string | undefined {
+  return PROJECT_PAGE_IDS.includes(id) ? siteHref(siteUrl, pagePath(language, { kind: "project", id })) : undefined;
 }
 
 function contactLines(): string[] {
@@ -161,10 +182,17 @@ export function renderProfileMarkdown(language: Language, siteUrl: string): stri
 
   for (const project of projects) {
     const url = project.githubUrl ?? project.liveUrl;
-    const name = url ? `[${project.name}](${url})` : `${project.name} (${tr(language, "projects.private").toLowerCase()})`;
-    const stars = typeof project.stars === "number" ? ` (${project.stars} ${label.stars})` : "";
+    const page = projectPage(siteUrl, language, project.id);
+    const target = page ?? url;
+    const name = target ? `[${project.name}](${target})` : project.name;
+    const notes = [
+      typeof project.stars === "number" ? `${project.stars} ${label.stars}` : "",
+      String(project.year),
+      url ? "" : tr(language, "projects.private").toLowerCase(),
+    ].filter(Boolean);
     const stack = project.tech?.length ? ` ${label.stack}: ${project.tech.join(", ")}.` : "";
-    lines.push(`- ${name}${stars}: ${inline(project.desc[language])}${stack}`);
+    const source = page && url ? ` ${label.source}: ${url}` : "";
+    lines.push(`- ${name} (${notes.join(", ")}): ${inline(project.desc[language])}${stack}${source}`);
   }
 
   lines.push("", `## ${tr(language, "projects.contributions")}`, "", tr(language, "projects.contributionsLead"), "");
@@ -214,9 +242,16 @@ export function renderLlmsTxt(siteUrl: string): string {
     "",
   ];
 
+  // Featured projects link to their own page (with details), the rest to the repository.
   for (const project of projects) {
     const url = project.githubUrl ?? project.liveUrl;
-    if (url) lines.push(`- [${project.name}](${url}): ${inline(project.desc.en)}`);
+    const page = projectPage(siteUrl, "en", project.id);
+    if (page) {
+      const source = url ? ` [Source](${url})` : " Private repository.";
+      lines.push(`- [${project.name}](${page}): ${inline(project.desc.en)}${source}`);
+    } else if (url) {
+      lines.push(`- [${project.name}](${url}): ${inline(project.desc.en)}`);
+    }
   }
 
   lines.push("", "## Open-source contributions", "");
@@ -238,7 +273,7 @@ export function renderLlmsTxt(siteUrl: string): string {
     `- [JSON Resume (Português)](${siteHref(siteUrl, RESUME_FILES.pt)}): Structured data in Portuguese`,
     `- [JSON Resume (Español)](${siteHref(siteUrl, RESUME_FILES.es)}): Structured data in Spanish`,
     `- [Source code](${SOURCE_REPO_URL}): React, TypeScript, Vite, Tailwind CSS and three.js`,
-    `- [Sitemap](${siteHref(siteUrl, "sitemap.xml")}): XML sitemap with the three language URLs`,
+    `- [Sitemap](${siteHref(siteUrl, "sitemap.xml")}): XML sitemap with every page in the three languages`,
     "",
   );
   return lines.join("\n");

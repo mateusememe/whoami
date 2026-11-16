@@ -3,7 +3,20 @@ import { readFileSync } from "fs";
 import { resolve } from "path";
 import { describe, it, expect } from "vitest";
 import { contributions, education, experiences, profile, projects, socialLinks } from "@/data/portfolio";
-import { HTML_LANG, LANGUAGE_PATHS, LANGUAGES, isHomePath, languageFromPath, stripBase } from "@/i18n/routes";
+import {
+  HTML_LANG,
+  LANGUAGE_PATHS,
+  LANGUAGES,
+  PAGES,
+  PROJECT_PAGE_IDS,
+  isHomePath,
+  isPrerenderedPath,
+  languageFromPath,
+  pagePath,
+  parseRoute,
+  stripBase,
+} from "@/i18n/routes";
+import { projectPages } from "@/data/projectPages";
 import { PROFILE_FILES, RESUME_FILES } from "@/seo/files";
 import { HEAD_END, HEAD_START, renderHead, replaceHead } from "@/seo/head";
 import { buildJsonLd } from "@/seo/jsonld";
@@ -29,6 +42,35 @@ describe("language routes", () => {
     expect(isHomePath("/")).toBe(true);
     expect(isHomePath("/es")).toBe(true);
     expect(isHomePath("/does-not-exist")).toBe(false);
+  });
+
+  it("gives every featured project a page in each language", () => {
+    expect(PROJECT_PAGE_IDS).toEqual(projects.filter((project) => project.featured).map((project) => project.id));
+    for (const id of PROJECT_PAGE_IDS) {
+      const content = projectPages[id];
+      expect(content, id).toBeDefined();
+      for (const language of LANGUAGES) {
+        // Same number of highlights in each language, and 2 or 4 of them (no lists of three).
+        expect(content.highlights[language]).toHaveLength(content.highlights.en.length);
+        expect([2, 4]).toContain(content.highlights[language].length);
+        expect(content.cover[language].length).toBeGreaterThan(20);
+      }
+    }
+    expect(Object.keys(projectPages).sort()).toEqual([...PROJECT_PAGE_IDS].sort());
+    expect(pagePath("en", { kind: "project", id: "8-puzzle" })).toBe("/projects/8-puzzle/");
+    expect(pagePath("pt", { kind: "project", id: "8-puzzle" })).toBe("/pt/projects/8-puzzle/");
+    expect(parseRoute("/es/projects/8-puzzle")).toEqual({ language: "es", page: { kind: "project", id: "8-puzzle" } });
+    expect(parseRoute("/projects/8-puzzle/")).toEqual({ language: null, page: { kind: "project", id: "8-puzzle" } });
+    expect(languageFromPath("/pt/projects/8-puzzle/")).toBe("pt");
+  });
+
+  it("knows which paths are prerendered", () => {
+    expect(isPrerenderedPath("/pt/projects/codecash/")).toBe(true);
+    // Listed projects without a page, unknown ids and unknown prefixes are not.
+    expect(isPrerenderedPath("/projects/kruskal-algorithm/")).toBe(false);
+    expect(isPrerenderedPath("/projects/nope/")).toBe(false);
+    expect(isPrerenderedPath("/en/")).toBe(false);
+    expect(PAGES).toHaveLength(1 + PROJECT_PAGE_IDS.length);
   });
 
   it("strips the deployment base", () => {
@@ -71,6 +113,29 @@ describe("generated <head>", () => {
     expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([1200, 630]);
     expect(metaOf(doc, "og:image:width")).toBe("1200");
     expect(metaOf(doc, "og:image:height")).toBe("630");
+  });
+
+  it("describes a project page with its own title, canonical URL and alternates", () => {
+    const project = projects.find((item) => item.id === PROJECT_PAGE_IDS[0])!;
+    const page = { kind: "project", id: project.id } as const;
+    const head = parse(renderHead("pt", DEFAULT_SITE_URL, page));
+    const url = siteHref(DEFAULT_SITE_URL, `pt/projects/${project.id}/`);
+    expect(head.title).toContain(project.name);
+    expect(head.querySelector('link[rel="canonical"]')?.getAttribute("href")).toBe(url);
+    expect(metaOf(head, "og:url")).toBe(url);
+    expect(metaOf(head, "og:type")).toBe("website");
+    expect(metaOf(head, "profile:username")).toBeUndefined();
+    expect(metaOf(head, "description")!.length).toBeLessThanOrEqual(160);
+    expect(head.querySelector('link[hreflang="en"]')?.getAttribute("href")).toBe(
+      siteHref(DEFAULT_SITE_URL, `projects/${project.id}/`),
+    );
+    const ld = JSON.parse(head.querySelector('script[type="application/ld+json"]')!.textContent!);
+    const types = ld["@graph"].map((node: any) => node["@type"]);
+    expect(types).toEqual(["WebSite", "Person", "WebPage", "SoftwareSourceCode", "BreadcrumbList"]);
+    const code = ld["@graph"][3];
+    expect(code.codeRepository).toBe(project.githubUrl);
+    expect(code.dateCreated).toBe(String(project.year));
+    expect(ld["@graph"][4].itemListElement).toHaveLength(3);
   });
 
   it("advertises llms.txt, the Markdown profile and the JSON Resume", () => {
@@ -172,10 +237,16 @@ describe("JSON-LD", () => {
 describe("sitemap", () => {
   const xml = renderSitemap(DEFAULT_SITE_URL);
 
-  it("lists the three language URLs with hreflang alternates", () => {
-    expect(xml.match(/<loc>/g)).toHaveLength(3);
-    for (const language of LANGUAGES) expect(xml).toContain(`<loc>${siteHref(DEFAULT_SITE_URL, LANGUAGE_PATHS[language])}</loc>`);
-    expect(xml.match(/hreflang="x-default"/g)).toHaveLength(3);
+  it("lists every page in the three languages with hreflang alternates", () => {
+    const count = PAGES.length * LANGUAGES.length;
+    expect(xml.match(/<loc>/g)).toHaveLength(count);
+    for (const page of PAGES) {
+      for (const language of LANGUAGES) {
+        expect(xml).toContain(`<loc>${siteHref(DEFAULT_SITE_URL, pagePath(language, page))}</loc>`);
+      }
+    }
+    expect(xml.match(/hreflang="x-default"/g)).toHaveLength(count);
+    expect(xml.match(/<lastmod>/g)).toHaveLength(count);
     expect(xml).toContain(`<lastmod>${profile.updatedAt}</lastmod>`);
   });
 
@@ -200,6 +271,8 @@ describe("JSON Resume", () => {
     expect(resume.education).toHaveLength(education.length);
     expect(resume.education[0]).toMatchObject({ studyType: "Master's", area: "Computer Science" });
     expect(resume.projects).toHaveLength(projects.length);
+    const featured = resume.projects.find((item: any) => item.name === projects.find((p) => p.featured)?.name);
+    expect(featured.highlights.length).toBeGreaterThan(0);
   });
 
   it("splits degree names in every language", () => {

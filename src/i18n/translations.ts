@@ -28,6 +28,13 @@ export const translations: Translations = {
     es: "Mateus Mendonça Monteiro, Backend Software Engineer, sobre un gráfico de malla de servicios",
   },
 
+  // SEO for project pages
+  "seo.projectTitle": {
+    pt: "{name} — projeto de Mateus Mendonça",
+    en: "{name} — a project by Mateus Mendonça",
+    es: "{name} — proyecto de Mateus Mendonça",
+  },
+
   // Hero
   "hero.title": {
     pt: "Backend Software Engineer",
@@ -164,6 +171,22 @@ export const translations: Translations = {
   },
   "projects.merged": { pt: "Aceito em {date}", en: "Merged {date}", es: "Aceptado en {date}" },
 
+  // Project pages
+  "project.back": { pt: "Todos os projetos", en: "All projects", es: "Todos los proyectos" },
+  "project.repo": { pt: "Repositório", en: "Repository", es: "Repositorio" },
+  "project.live": { pt: "Ver online", en: "Live site", es: "Ver en línea" },
+  "project.year": { pt: "Ano", en: "Year", es: "Año" },
+  "project.language": { pt: "Linguagem", en: "Language", es: "Lenguaje" },
+  "project.license": { pt: "Licença", en: "License", es: "Licencia" },
+  "project.stars": { pt: "Estrelas", en: "Stars", es: "Estrellas" },
+  "project.coAuthors": { pt: "Coautoria", en: "Co-authors", es: "Coautoría" },
+  "project.details": { pt: "Detalhes", en: "Details", es: "Detalles" },
+  "project.stack": { pt: "Stack", en: "Stack", es: "Stack" },
+  "project.figure": { pt: "fig.", en: "fig.", es: "fig." },
+  "project.prev": { pt: "Anterior", en: "Previous", es: "Anterior" },
+  "project.next": { pt: "Próximo", en: "Next", es: "Siguiente" },
+  "project.page": { pt: "Página do projeto", en: "Project page", es: "Página del proyecto" },
+
   // Contact
   "contact.title": { pt: "Contato", en: "Contact", es: "Contacto" },
   "contact.cta": {
@@ -247,4 +270,7 @@ export const translations: Translations = {
   "a11y.projectTech": { pt: "Tecnologias do projeto", en: "Project technologies", es: "Tecnologías del proyecto" },
 
   "a11y.contactLinks": { pt: "Contatos e Redes", en: "Contacts and social networks", es: "Contactos y redes" },
+  "a11y.openProject": { pt: "Abrir a página de {name}", en: "Open the {name} page", es: "Abrir la página de {name}" },
+  "a11y.projectNav": { pt: "Outros projetos", en: "Other projects", es: "Otros proyectos" },
+  "a11y.breadcrumb": { pt: "Você está em", en: "You are here", es: "Estás en" },
 };

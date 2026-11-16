@@ -12,6 +12,7 @@
  */
 import { NAV_ITEMS, type SectionId } from "@/data/navigation";
 import { contributions, projects, profile, socialLinks, spokenLanguages } from "@/data/portfolio";
+import { PROJECT_PAGE_IDS, pagePath } from "@/i18n/routes";
 import type { Language } from "@/i18n/translations";
 
 interface AgentTool {
@@ -84,22 +85,30 @@ export function createAgentTools({ language, siteUrl, goToSection }: AgentToolsO
     },
     {
       name: "list_projects",
-      description: `Lists the software projects of ${profile.name} and the pull requests merged into other people's repositories, with descriptions, technologies, GitHub stars and URLs.`,
+      description: `Lists the software projects of ${profile.name} and the pull requests merged into other people's repositories, with descriptions, technologies, GitHub stars and URLs. Featured projects have their own page with details.`,
       inputSchema: { type: "object", properties: { language: languageProperty } },
       annotations: { readOnlyHint: true },
-      execute: (input) => {
+      execute: async (input) => {
         const chosen = pickLanguage(input, language);
+        const { projectPages } = await import("@/data/projectPages");
         return text(
           JSON.stringify(
             {
               projects: projects.map((project) => ({
                 name: project.name,
                 description: project.desc[chosen],
+                ...(projectPages[project.id]
+                  ? { details: projectPages[project.id].highlights[chosen].map((line) => line.replace(/`/g, "")) }
+                  : {}),
                 technologies: project.tech ?? [],
                 language: project.language,
+                year: project.year,
                 stars: project.stars ?? 0,
                 repository: project.githubUrl ?? null,
                 website: project.liveUrl ?? null,
+                page: PROJECT_PAGE_IDS.includes(project.id)
+                  ? `${siteUrl}${pagePath(chosen, { kind: "project", id: project.id })}`
+                  : null,
               })),
               contributions: contributions.map((item) => ({
                 repository: item.repo,

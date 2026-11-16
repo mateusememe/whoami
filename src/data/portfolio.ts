@@ -46,10 +46,19 @@ export interface ProjectItem {
   tech?: string[];
   /** Main programming language, for structured data. */
   language?: string;
+  /** Year the repository was created. */
+  year: number;
+  /** SPDX id, when the repository declares a license. */
+  license?: string;
+  /** People who wrote the project with Mateus. */
+  coAuthors?: string[];
   /** Omit for private repositories: the card then carries no link. */
   githubUrl?: string;
   liveUrl?: string;
-  /** Featured projects get a gallery card with an animated cover; the rest are listed below it. */
+  /**
+   * Featured projects get a gallery card with an animated cover and their own
+   * page (content in src/data/projectPages.ts); the rest are listed below it.
+   */
   featured?: boolean;
 }
 
@@ -89,7 +98,7 @@ export const profile = {
   countryCode: "BR",
   githubUser: "mateusememe",
   /** ISO date of the last content update. Feeds sitemap lastmod, JSON-LD dateModified and llms.txt. */
-  updatedAt: "2026-11-13",
+  updatedAt: "2026-11-16",
 } as const;
 
 export const socialLinks: SocialLink[] = [
@@ -483,6 +492,8 @@ export const projects: ProjectItem[] = [
     stars: 1,
     featured: true,
     language: "C",
+    year: 2026,
+    license: "MIT",
     desc: {
       pt: "Detecção de fraude por busca vetorial para a Rinha de Backend 2026, em C11. KNN sobre 1.000.000 de vetores de referência em memória compartilhada, com SIMD ARM Neon, quantização em ponto fixo de 16 bits e 4.096 buckets espaciais. Latência mediana perto de 250 µs com 1 vCPU e 350 MB.",
       en: "Fraud detection by vector search for Rinha de Backend 2026, in C11. KNN over 1,000,000 reference vectors in shared memory, with ARM Neon SIMD, 16-bit fixed-point quantization and 4,096 spatial buckets. Median latency near 250 µs on 1 vCPU and 350 MB.",
@@ -497,6 +508,9 @@ export const projects: ProjectItem[] = [
     stars: 3,
     featured: true,
     language: "Python",
+    year: 2026,
+    license: "MIT",
+    coAuthors: ["Maria Beatriz França"],
     desc: {
       pt: "Material do minicurso de Model Context Protocol (MCP) no DevFest 2026. Constrói o DevBrain, um servidor MCP em Python que diz a um agente de código se uma branch está pronta para virar pull request. As regras de revisão ficam no código, e o mesmo servidor roda no Claude Code, Gemini CLI, Copilot e Codex.",
       en: "Material for the Model Context Protocol (MCP) workshop at DevFest 2026. Builds DevBrain, an MCP server in Python that tells a coding agent whether a branch is ready for a pull request. Review rules live in code, and the same server runs in Claude Code, Gemini CLI, Copilot and Codex.",
@@ -510,6 +524,7 @@ export const projects: ProjectItem[] = [
     name: "syntroph",
     featured: true,
     language: "Go",
+    year: 2026,
     desc: {
       pt: "Toolkit e orquestrador em Go que conecta ferramentas de desenvolvimento em torno de um núcleo hexagonal. Um barramento de eventos em processo entrega a saída de um adaptador ao próximo, um saga journal append-only registra cada passo, e a memória de sessão fica local, com GitHub Issues ou Wiki como espelho.",
       en: "Go toolkit and orchestrator that connects development tools around a hexagonal core. An in-process event bus hands one adapter's output to the next, an append-only saga journal records each step, and session memory stays local, with GitHub Issues or Wiki as a mirror.",
@@ -523,6 +538,7 @@ export const projects: ProjectItem[] = [
     name: "transaction.ledger",
     featured: true,
     language: "Python",
+    year: 2026,
     desc: {
       pt: "Serviço financeiro de registro de ordens em arquitetura serverless AWS. Implementa escrita condicional para idempotência, padrão outbox com CDC, circuit breakers e observabilidade via CloudWatch.",
       en: "Financial order registration service on AWS serverless. Implements conditional writes for idempotency, outbox pattern with CDC, circuit breakers, and CloudWatch observability.",
@@ -537,6 +553,8 @@ export const projects: ProjectItem[] = [
     stars: 4,
     featured: true,
     language: "Java",
+    year: 2025,
+    license: "MIT",
     desc: {
       pt: "API transacional desenvolvida para o minicurso 'API Hero' no DevFest 2025. Utiliza Spring Boot, consultas em GraphQL, banco PostgreSQL e cache em Redis.",
       en: "Transactional API built for the 'API Hero' workshop at DevFest 2025. Uses Spring Boot, GraphQL queries, PostgreSQL storage, and Redis caching.",
@@ -551,6 +569,8 @@ export const projects: ProjectItem[] = [
     stars: 17,
     featured: true,
     language: "Python",
+    year: 2021,
+    coAuthors: ["Vinicius Santana"],
     desc: {
       pt: "Resolução do quebra-cabeça 8-puzzle utilizando busca heurística com os algoritmos A* e Best-First Search baseados na distância de Manhattan.",
       en: "8-puzzle solver using heuristic search with A* and Best-First Search algorithms based on Manhattan distance.",
@@ -564,6 +584,8 @@ export const projects: ProjectItem[] = [
     name: "fuzzymeans-ai",
     featured: true,
     language: "Python",
+    year: 2026,
+    license: "MIT",
     desc: {
       pt: "Imputação explicável de custos ausentes em registros de acidentes em passagens de nível (dados da FRA). Fuzzy C-Means e Noise Clustering sobre coordenadas e velocidades: cada valor imputado é uma média ponderada pelas pertinências, que pode ser auditada. Validado mascarando 30% dos valores conhecidos em 5 sementes.",
       en: "Explainable imputation of missing costs in highway-rail crossing accident records (FRA data). Fuzzy C-Means and Noise Clustering over coordinates and speeds: each imputed value is a membership-weighted mean that can be audited. Validated by masking 30% of the known values across 5 seeds.",
@@ -577,6 +599,7 @@ export const projects: ProjectItem[] = [
     name: "lime.stability.imputation",
     featured: true,
     language: "Python",
+    year: 2025,
     desc: {
       pt: "Pesquisa experimental de mestrado sobre a estabilidade do método LIME com técnicas de imputação de dados em modelos RandomForest e GradientBoosting.",
       en: "MSc experimental research on LIME stability with data imputation techniques across RandomForest and GradientBoosting models.",
@@ -591,6 +614,8 @@ export const projects: ProjectItem[] = [
     stars: 5,
     featured: true,
     language: "C++",
+    year: 2023,
+    license: "MIT",
     desc: {
       pt: "Material e exemplos práticos do minicurso 'Git e GitHub em Ação' ministrado na 35ª Infoeste, cobrindo controle de versão e fluxos colaborativos.",
       en: "Code examples and resources for the 'Git and GitHub in Action' workshop at 35th Infoeste, covering version control and workflows.",
@@ -605,6 +630,8 @@ export const projects: ProjectItem[] = [
     stars: 2,
     featured: true,
     language: "Java",
+    year: 2021,
+    license: "MIT",
     desc: {
       pt: "Implementação de algoritmos e estruturas de dados de árvores em Java, incluindo Árvores Binárias de Busca (BST) e balanceamento AVL.",
       en: "Implementation of tree data structures and algorithms in Java, including Binary Search Trees (BST) and AVL balancing.",
@@ -619,6 +646,8 @@ export const projects: ProjectItem[] = [
     stars: 2,
     featured: true,
     language: "Python",
+    year: 2021,
+    license: "MIT",
     desc: {
       pt: "Implementação em Python do algoritmo morfológico de afinamento e esqueletização de Zhang-Suen para imagens binárias.",
       en: "Python implementation of the Zhang-Suen morphological thinning and skeletonization algorithm for binary images.",
@@ -632,6 +661,9 @@ export const projects: ProjectItem[] = [
     name: "ai-autopsy-devfest-2025",
     stars: 1,
     language: "Python",
+    year: 2025,
+    license: "MIT",
+    coAuthors: ["Maria Beatriz França"],
     desc: {
       pt: "Código e slides do workshop 'AI Autopsy' no DevFest 2025. Treina um classificador LightGBM no dataset do Titanic e depois explica previsões individuais e o comportamento global com LIME e SHAP.",
       en: "Code and slides for the 'AI Autopsy' workshop at DevFest 2025. Trains a LightGBM classifier on the Titanic dataset, then explains single predictions and global behavior with LIME and SHAP.",
@@ -644,6 +676,7 @@ export const projects: ProjectItem[] = [
     id: "llm-edu-cards",
     name: "llm-edu-cards",
     language: "Python",
+    year: 2025,
     desc: {
       pt: "App em Streamlit que gera cards de estudo com o Meta-Llama-3-8B-Instruct: um resumo para qualquer tema e subtemas relacionados para explorar em árvore. Interface bilíngue. Feito para a disciplina de Aprendizado Profundo do mestrado da UNESP.",
       en: "Streamlit app that generates study cards with Meta-Llama-3-8B-Instruct: a summary for any topic and related subtopics to explore as a tree. Bilingual interface. Built for the Deep Learning course of the UNESP graduate program.",
@@ -656,6 +689,8 @@ export const projects: ProjectItem[] = [
     id: "iron-ledger",
     name: "iron.ledger",
     language: "Python",
+    year: 2026,
+    license: "MIT",
     desc: {
       pt: "SDK e CLI em Python que importam programas de treino para o Hevy pela API oficial. Mapeia exercícios por fuzzy matching, valida antes do envio, repete com backoff exponencial em HTTP 429 e mantém as importações idempotentes.",
       en: "Python SDK and CLI that import workout programs into Hevy through its official API. Maps exercises by fuzzy matching, validates before upload, retries with exponential backoff on HTTP 429 and keeps imports idempotent.",
@@ -669,6 +704,8 @@ export const projects: ProjectItem[] = [
     id: "search-it",
     name: "search.it",
     language: "Java",
+    year: 2024,
+    license: "MIT",
     desc: {
       pt: "Busca por linha de comando em arquivos de filmes, feita para o desafio técnico do time de busca do LuizaLabs. Monta um índice invertido em memória e responde consultas por termo, com limite de resultados e contagem de ocorrências. Compilado para binário nativo com GraalVM.",
       en: "Command-line search over movie files, written for the LuizaLabs search team technical challenge. Builds an in-memory inverted index and answers term queries with a result limit and match counts. Compiled to a native binary with GraalVM.",
@@ -681,6 +718,8 @@ export const projects: ProjectItem[] = [
     id: "kruskal-algorithm",
     name: "kruskal-algorithm",
     language: "Python",
+    year: 2021,
+    license: "MIT",
     desc: {
       pt: "Implementação em Python do algoritmo guloso de Kruskal para árvore geradora mínima.",
       en: "Python implementation of Kruskal's greedy algorithm for the minimum spanning tree.",
@@ -693,6 +732,8 @@ export const projects: ProjectItem[] = [
     id: "whoami",
     name: "whoami",
     language: "TypeScript",
+    year: 2026,
+    license: "Apache-2.0",
     desc: {
       pt: "Este site. React e TypeScript, pré-renderizado no build, com uma camada three.js em que um campo de partículas muda entre seis formações, capas em canvas que executam o algoritmo de cada projeto, e llms.txt, Markdown e JSON Resume para agentes.",
       en: "This site. React and TypeScript, prerendered at build time, with a three.js layer where a particle field morphs between six formations, canvas covers that run each project's algorithm, and llms.txt, Markdown and JSON Resume for agents.",

@@ -256,39 +256,69 @@
     {
       "name": "rinha-backend-2026-c",
       "description": "Detección de fraude por búsqueda vectorial para la Rinha de Backend 2026, en C11. KNN sobre 1.000.000 de vectores de referencia en memoria compartida, con SIMD ARM Neon, cuantización en punto fijo de 16 bits y 4.096 buckets espaciales. Latencia mediana cercana a 250 µs con 1 vCPU y 350 MB.",
+      "highlights": [
+        "Latencia mediana cercana a 250 µs y p95 cercano a 430 µs bajo carga, unas 2.400 solicitudes por segundo en un solo núcleo de worker.",
+        "Tres binarios en C comparten memoria vía POSIX SHM: un loader que cuantiza 1.000.000 de vectores de referencia en 4.096 buckets espaciales, workers HTTP que ejecutan KNN con k = 5 y un balanceador de carga.",
+        "Cada consulta lee su propio bucket y los más cercanos, unos 8.000 registros en lugar de 1.000.000, y termina antes cuando los primeros 1.024 registros dan 5 etiquetas iguales.",
+        "Las distancias usan SIMD ARM Neon sobre valores en punto fijo de 16 bits, y cada registro ocupa 64 bytes para caber en una línea de caché."
+      ],
       "keywords": [
         "C11",
         "ARM Neon SIMD",
         "KNN",
         "POSIX SHM"
       ],
-      "url": "https://github.com/mateusememe/rinha-backend-2026-c"
+      "startDate": "2026",
+      "url": "https://github.com/mateusememe/rinha-backend-2026-c",
+      "type": "application"
     },
     {
       "name": "megabrain-context-protocol",
       "description": "Material del taller de Model Context Protocol (MCP) en DevFest 2026. Construye DevBrain, un servidor MCP en Python que indica a un agente de código si una rama está lista para un pull request. Las reglas de revisión viven en el código, y el mismo servidor funciona en Claude Code, Gemini CLI, Copilot y Codex.",
+      "highlights": [
+        "DevBrain responde una pregunta para el agente de código: ¿esta rama está lista para un pull request? Las reglas de revisión viven en el código, y el agente justifica su respuesta con lo que devolvieron las tools.",
+        "El servidor se divide en domain, application y adapters, y sus pruebas lo usan a través del cliente MCP, sin LLM en el medio.",
+        "El mismo servidor funciona en Antigravity, Gemini CLI, Claude Code, GitHub Copilot y Codex; el repositorio trae una configuración para cada host.",
+        "La guía del alumno tiene los labs en el orden de la clase, y las 56 diapositivas son un deck en reveal.js que abre sin internet. Impartido con Maria Beatriz França."
+      ],
       "keywords": [
         "Python",
         "MCP",
         "AI Agents",
         "Cloud Run"
       ],
-      "url": "https://github.com/mateusememe/megabrain-context-protocol"
+      "startDate": "2026",
+      "url": "https://github.com/mateusememe/megabrain-context-protocol",
+      "type": "application"
     },
     {
       "name": "syntroph",
       "description": "Toolkit y orquestador en Go que conecta herramientas de desarrollo alrededor de un núcleo hexagonal. Un bus de eventos en proceso entrega la salida de un adaptador al siguiente, un saga journal append-only registra cada paso, y la memoria de sesión queda local, con GitHub Issues o Wiki como espejo.",
+      "highlights": [
+        "Un núcleo hexagonal con un bus de eventos síncrono en proceso: la salida de un adaptador se vuelve la entrada del siguiente, y un saga journal append-only registra cada paso.",
+        "La memoria de sesión se escribe localmente en .syntroph/memory/ y se refleja en GitHub Issues o en la Wiki mediante un proveedor explícito: REST, MCP o el repositorio Git de la wiki.",
+        "Una caída del remoto nunca hace fallar una escritura local: se vuelve una sincronización pendiente, atendida por los comandos sync status, sync recovery, sync retry y sync resolve.",
+        "Funciona con los CLI de Claude Code, Codex y Antigravity, y mantiene un catálogo de skills de ingeniería offline que solo se publica después de verificado."
+      ],
       "keywords": [
         "Go",
         "Hexagonal Architecture",
         "Event Bus",
         "MCP"
       ],
-      "url": "https://github.com/mateusememe/syntroph"
+      "startDate": "2026",
+      "url": "https://github.com/mateusememe/syntroph",
+      "type": "application"
     },
     {
       "name": "transaction.ledger",
       "description": "Servicio financiero de registro de órdenes en arquitectura serverless de AWS. Implementa escrituras condicionales para idempotencia, patrón outbox con CDC, circuit breakers y observabilidad en CloudWatch.",
+      "highlights": [
+        "API Gateway con throttling (burst 20, rate 10) y un Lambda authorizer de JWT delante de un servicio FastAPI que corre en AWS Lambda.",
+        "Escrituras condicionales en DynamoDB sobre una clave de idempotencia, así una solicitud repetida nunca crea una segunda orden.",
+        "DynamoDB Streams alimenta un Lambda de outbox que publica el evento de orden creada; tras 3 intentos fallidos, el mensaje pasa a una dead-letter queue de SQS vigilada por alarmas de CloudWatch.",
+        "La validación del solicitante está detrás de un circuit breaker con retry, y LocalStack con WireMock reproducen el entorno de AWS en Docker Compose."
+      ],
       "keywords": [
         "Python",
         "AWS Lambda",
@@ -296,11 +326,17 @@
         "SQS",
         "Clean Arch"
       ],
-      "url": "https://github.com/mateusememe/transaction.ledger"
+      "startDate": "2026",
+      "url": "https://github.com/mateusememe/transaction.ledger",
+      "type": "application"
     },
     {
       "name": "codecash",
       "description": "API transaccional desarrollada para el taller 'API Hero' en DevFest 2025. Utiliza Spring Boot, consultas en GraphQL, base PostgreSQL y caché en Redis.",
+      "highlights": [
+        "API transaccional en Spring Boot con schema GraphQL, PostgreSQL para el almacenamiento y Redis como caché de lectura, levantada con Docker Compose.",
+        "Hecha para el curso API Hero en DevFest Presidente Prudente 2025; las diapositivas están en el repositorio en PDF."
+      ],
       "keywords": [
         "Java",
         "Spring Boot",
@@ -308,73 +344,114 @@
         "PostgreSQL",
         "Redis"
       ],
-      "url": "https://github.com/mateusememe/codecash"
+      "startDate": "2025",
+      "url": "https://github.com/mateusememe/codecash",
+      "type": "application"
     },
     {
       "name": "8-puzzle",
       "description": "Resolución del rompecabezas 8-puzzle mediante búsqueda heurística con algoritmos A* y Best-First Search basados en distancia de Manhattan.",
+      "highlights": [
+        "Resuelve el rompecabezas deslizante 3 × 3 con A* y Best-First Search, ambos guiados por la distancia de Manhattan de cada pieza a su destino.",
+        "Interfaz en Pygame, con build en cx_Freeze para un ejecutable de Windows. Escrito con Vinicius Santana en 2021."
+      ],
       "keywords": [
         "Python",
         "A* Algorithm",
         "Heuristics",
         "BFS"
       ],
-      "url": "https://github.com/mateusememe/8-puzzle"
+      "startDate": "2021",
+      "url": "https://github.com/mateusememe/8-puzzle",
+      "type": "application"
     },
     {
       "name": "fuzzymeans-ai",
       "description": "Imputación explicable de costos ausentes en registros de accidentes en pasos a nivel (datos de la FRA). Fuzzy C-Means y Noise Clustering sobre coordenadas y velocidades: cada valor imputado es una media ponderada por las pertenencias, que se puede auditar. Validado enmascarando 30% de los valores conocidos en 5 semillas.",
+      "highlights": [
+        "Imputa costos de daños ausentes en registros de accidentes en pasos a nivel de la FRA, agrupando por latitud, longitud, velocidad del tren y velocidad del vehículo.",
+        "Noise Clustering (Davé, 1991) agrega un cluster de ruido a una distancia fija, así los outliers como daños de miles de millones mal escritos dejan de arrastrar a los centroides reales.",
+        "Cada costo imputado es la media de los clusters ponderada por las pertenencias del accidente: una ecuación que cualquiera puede auditar.",
+        "La validación oculta el 30% de los costos conocidos en 5 semillas y compara MAE y RMSE en dólares con los baselines media, mediana, k-NN y MICE. Artículo y diapositivas en LaTeX."
+      ],
       "keywords": [
         "Python",
         "Fuzzy C-Means",
         "XAI",
         "LaTeX"
       ],
-      "url": "https://github.com/mateusememe/fuzzymeans-ai"
+      "startDate": "2026",
+      "url": "https://github.com/mateusememe/fuzzymeans-ai",
+      "type": "application"
     },
     {
       "name": "lime.stability.imputation",
       "description": "Investigación experimental de maestría sobre la estabilidad del método LIME con técnicas de imputación de datos en modelos RandomForest y GradientBoosting.",
+      "highlights": [
+        "Mide cuánto cambian las explicaciones de LIME cuando los valores ausentes se completan con técnicas de imputación distintas, en modelos RandomForest y GradientBoosting.",
+        "Parte de la investigación de maestría en la UNESP. El repositorio es privado."
+      ],
       "keywords": [
         "Python",
         "Machine Learning",
         "XAI",
         "LIME",
         "Research"
-      ]
+      ],
+      "startDate": "2025",
+      "url": "https://mateusememe.github.io/whoami/es/projects/lime-stability/",
+      "type": "application"
     },
     {
       "name": "git-github-in-action",
       "description": "Ejemplos de código y recursos del taller 'Git y GitHub en Acción' en la 35ª Infoeste, cubriendo control de versiones y flujos colaborativos.",
+      "highlights": [
+        "Minicurso de la 35ª Infoeste sobre control de versiones con Git y desarrollo colaborativo en GitHub.",
+        "El repositorio tiene las diapositivas del primer día, el programa en C usado en los ejercicios y una lista de lecturas sobre convenciones de commit, gitmoji y el juego Oh My Git!."
+      ],
       "keywords": [
         "Git",
         "GitHub",
         "Workflows",
         "C++"
       ],
-      "url": "https://github.com/mateusememe/git-github-in-action"
+      "startDate": "2023",
+      "url": "https://github.com/mateusememe/git-github-in-action",
+      "type": "application"
     },
     {
       "name": "AlgorithmForest",
       "description": "Implementación de estructuras de datos y algoritmos de árboles en Java, incluyendo Árboles Binarios de Búsqueda (BST) y balanceo AVL.",
+      "highlights": [
+        "Árbol binario de búsqueda y árbol AVL en Java, con las rotaciones que mantienen el AVL balanceado.",
+        "Un estudio de estructuras de árbol de 2021, de la licenciatura en Ciencias de la Computación."
+      ],
       "keywords": [
         "Java",
         "Data Structures",
         "BST",
         "AVL"
       ],
-      "url": "https://github.com/mateusememe/AlgorithmForest"
+      "startDate": "2021",
+      "url": "https://github.com/mateusememe/AlgorithmForest",
+      "type": "application"
     },
     {
       "name": "zhang-suen-thinning",
       "description": "Implementación en Python del algoritmo morfológico de adelgazamiento y esqueletización de Zhang-Suen para imágenes binarias.",
+      "highlights": [
+        "Cada iteración ejecuta dos subpasadas que borran píxeles de borde según su vecindad, hasta que la forma tiene un píxel de ancho y sigue conectada.",
+        "Escrito en Python en 2021, para imágenes binarias."
+      ],
       "keywords": [
         "Python",
         "Computer Vision",
         "Algorithms",
         "Image Processing"
       ],
-      "url": "https://github.com/mateusememe/zhang-suen-thinning"
+      "startDate": "2021",
+      "url": "https://github.com/mateusememe/zhang-suen-thinning",
+      "type": "application"
     },
     {
       "name": "ai-autopsy-devfest-2025",
@@ -385,7 +462,9 @@
         "LIME",
         "SHAP"
       ],
-      "url": "https://github.com/mateusememe/ai-autopsy-devfest-2025"
+      "startDate": "2025",
+      "url": "https://github.com/mateusememe/ai-autopsy-devfest-2025",
+      "type": "application"
     },
     {
       "name": "llm-edu-cards",
@@ -396,7 +475,9 @@
         "Llama 3",
         "Hugging Face"
       ],
-      "url": "https://github.com/mateusememe/llm-edu-cards"
+      "startDate": "2025",
+      "url": "https://github.com/mateusememe/llm-edu-cards",
+      "type": "application"
     },
     {
       "name": "iron.ledger",
@@ -407,7 +488,9 @@
         "CLI",
         "Idempotency"
       ],
-      "url": "https://github.com/mateusememe/iron.ledger"
+      "startDate": "2026",
+      "url": "https://github.com/mateusememe/iron.ledger",
+      "type": "application"
     },
     {
       "name": "search.it",
@@ -418,7 +501,9 @@
         "Inverted Index",
         "Maven"
       ],
-      "url": "https://github.com/mateusememe/search.it"
+      "startDate": "2024",
+      "url": "https://github.com/mateusememe/search.it",
+      "type": "application"
     },
     {
       "name": "kruskal-algorithm",
@@ -428,7 +513,9 @@
         "Graphs",
         "Greedy"
       ],
-      "url": "https://github.com/mateusememe/kruskal-algorithm"
+      "startDate": "2021",
+      "url": "https://github.com/mateusememe/kruskal-algorithm",
+      "type": "application"
     },
     {
       "name": "whoami",
@@ -439,12 +526,14 @@
         "three.js",
         "GLSL"
       ],
-      "url": "https://github.com/mateusememe/whoami"
+      "startDate": "2026",
+      "url": "https://github.com/mateusememe/whoami",
+      "type": "application"
     }
   ],
   "meta": {
     "canonical": "https://mateusememe.github.io/whoami/resume.es.json",
     "version": "v1.0.0",
-    "lastModified": "2026-11-13T00:00:00Z"
+    "lastModified": "2026-11-16T00:00:00Z"
   }
 }

@@ -1,0 +1,220 @@
+import type { CSSProperties } from "react";
+import { Link, useParams } from "react-router-dom";
+import { ArrowLeft, ArrowRight, ArrowUpRight, ExternalLink, Github, Lock, Star } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { Reveal, TagList } from "@/components/ds";
+import { ProjectCover } from "@/components/covers/ProjectCover";
+import { Magnetic } from "@/components/motion/Magnetic";
+import { profile, socialLinks } from "@/data/portfolio";
+import { projectPages } from "@/data/projectPages";
+import { useSiteNavigation } from "@/hooks/useSiteNavigation";
+import { PROJECT_PAGE_IDS, pagePath } from "@/i18n/routes";
+import { withCode } from "@/lib/text";
+import { projectById } from "@/seo/meta";
+import NotFound from "./NotFound";
+
+const mail = socialLinks.find((link) => link.href.startsWith("mailto:"));
+
+/**
+ * One featured project: the live cover at full width, the facts, the
+ * details and links to the neighbouring projects. Prerendered per language
+ * at /projects/<id>/ (and /pt/, /es/). The page keeps the projects
+ * section's particle formation (the tunnel), so arriving from the gallery
+ * feels like moving deeper into it.
+ */
+const ProjectPage = () => {
+  const { id = "" } = useParams();
+  const { language, t } = useLanguage();
+  const { sectionHref, onSectionClick, homePath } = useSiteNavigation();
+  const project = projectById(id);
+  const content = projectPages[id];
+  const position = PROJECT_PAGE_IDS.indexOf(id);
+
+  if (!project || !content || position === -1) return <NotFound />;
+
+  const total = PROJECT_PAGE_IDS.length;
+  const prev = projectById(PROJECT_PAGE_IDS[(position - 1 + total) % total]);
+  const next = projectById(PROJECT_PAGE_IDS[(position + 1) % total]);
+  const index = String(position + 1).padStart(2, "0");
+
+  const facts: Array<[string, string]> = [
+    [t("project.year"), String(project.year)],
+    ...(project.language ? [[t("project.language"), project.language] as [string, string]] : []),
+    ...(typeof project.stars === "number" && project.stars > 0
+      ? [[t("project.stars"), String(project.stars)] as [string, string]]
+      : []),
+    ...(project.license ? [[t("project.license"), project.license] as [string, string]] : []),
+    ...(project.coAuthors?.length ? [[t("project.coAuthors"), project.coAuthors.join(", ")] as [string, string]] : []),
+  ];
+
+  return (
+    <main data-scene="4" className="relative z-10">
+      <article aria-labelledby="project-title" className="shell pb-16 pt-28 sm:pt-32 lg:pt-36">
+        <nav aria-label={t("a11y.breadcrumb")} className="page-fade label flex flex-wrap items-center gap-x-2 gap-y-1">
+          <Link to={homePath} className="link-underline inline-block py-1.5 hover:text-foreground">
+            ~/whoami
+          </Link>
+          <span aria-hidden="true">/</span>
+          <a href={sectionHref("projects")} onClick={onSectionClick("projects")} className="link-underline inline-block py-1.5 hover:text-foreground">
+            {t("nav.projects")}
+          </a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page" className="text-foreground">
+            {project.id}
+          </span>
+        </nav>
+
+        <header className="mt-8 grid gap-x-10 gap-y-8 lg:mt-12 lg:grid-cols-12 lg:items-end">
+          <div className="lg:col-span-8">
+            <p className="page-fade font-mono text-sm tabular-nums text-muted-foreground" style={{ "--i": 1 } as CSSProperties}>
+              <span className="text-signal">{index}</span> / {String(total).padStart(2, "0")}
+            </p>
+            <Reveal variant="mask">
+              <h1
+                id="project-title"
+                className="mt-3 font-display text-display-xl font-semibold text-foreground [overflow-wrap:anywhere]"
+              >
+                {project.name}
+              </h1>
+            </Reveal>
+          </div>
+          <dl
+            className="page-fade grid grid-cols-2 gap-x-6 gap-y-4 border-t border-border/60 pt-5 lg:col-span-4"
+            style={{ "--i": 2 } as CSSProperties}
+          >
+            {facts.map(([label, value]) => (
+              <div key={label} className="min-w-0">
+                <dt className="label">{label}</dt>
+                <dd className="mt-1 flex items-center gap-1.5 font-mono text-sm text-foreground">
+                  {label === t("project.stars") && <Star size={12} aria-hidden="true" className="fill-signal text-signal" />}
+                  <span className="min-w-0 [overflow-wrap:anywhere]">{value}</span>
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </header>
+
+        <figure className="page-fade mt-10 lg:mt-14" style={{ "--i": 3 } as CSSProperties}>
+          <div
+            className="glass-card relative aspect-[4/3] overflow-hidden rounded-[1.75rem] sm:aspect-[16/9] lg:aspect-[21/9] lg:rounded-[2.25rem]"
+            style={{ viewTransitionName: "project-cover" } as CSSProperties}
+          >
+            <ProjectCover id={project.id} className="absolute inset-0 h-full w-full" />
+          </div>
+          <figcaption className="mt-3 max-w-[70ch] font-mono text-[11px] leading-relaxed text-muted-foreground sm:text-xs">
+            <span className="text-signal">
+              {t("project.figure")} {index}
+            </span>{" "}
+            — {withCode(content.cover[language])}
+          </figcaption>
+        </figure>
+
+        <div className="mt-14 grid gap-x-10 gap-y-10 lg:mt-20 lg:grid-cols-12">
+          <Reveal as="p" className="text-display-sm text-foreground text-pretty lg:col-span-7">
+            {withCode(project.desc[language])}
+          </Reveal>
+
+          <div className="flex flex-col items-start gap-3 lg:col-span-4 lg:col-start-9">
+            {project.githubUrl ? (
+              <Magnetic>
+                <a
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex h-12 items-center gap-2.5 rounded-full bg-foreground px-6 font-mono text-xs uppercase tracking-[0.12em] text-background transition-opacity duration-base hover:opacity-85"
+                >
+                  <Github size={15} aria-hidden="true" />
+                  {t("project.repo")}
+                  <ArrowUpRight size={15} aria-hidden="true" />
+                </a>
+              </Magnetic>
+            ) : (
+              <span className="label inline-flex h-12 items-center gap-2 normal-case tracking-normal">
+                <Lock size={13} aria-hidden="true" />
+                {t("projects.private")}
+              </span>
+            )}
+            {project.liveUrl && (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glass-card inline-flex h-11 items-center gap-2.5 rounded-full px-5 font-mono text-xs text-foreground transition-colors duration-base hover:text-signal"
+              >
+                <ExternalLink size={14} aria-hidden="true" />
+                {t("project.live")}
+              </a>
+            )}
+          </div>
+        </div>
+
+        <section aria-labelledby="project-details" className="mt-16 lg:mt-24">
+          <h2 id="project-details" className="label">
+            {t("project.details")}
+          </h2>
+          <Reveal as="ol" variant="stagger" className="mt-5 grid gap-x-10 border-t border-border/60 md:grid-cols-2">
+            {content.highlights[language].map((text, i) => (
+              <li key={i} className="flex gap-5 border-b border-border/60 py-6">
+                <span aria-hidden="true" className="font-serif text-2xl italic leading-none text-signal">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <p className="text-body-lg text-muted-foreground text-pretty">{withCode(text)}</p>
+              </li>
+            ))}
+          </Reveal>
+        </section>
+
+        {project.tech && project.tech.length > 0 && (
+          <section aria-labelledby="project-stack" className="mt-12">
+            <h2 id="project-stack" className="label mb-4">
+              {t("project.stack")}
+            </h2>
+            <TagList items={project.tech} label={t("a11y.projectTech")} tone="outline" />
+          </section>
+        )}
+      </article>
+
+      <nav aria-label={t("a11y.projectNav")} className="shell grid gap-px pb-16 md:grid-cols-2">
+        {[
+          { item: prev, label: t("project.prev"), Icon: ArrowLeft, align: "start" as const },
+          { item: next, label: t("project.next"), Icon: ArrowRight, align: "end" as const },
+        ].map(({ item, label, Icon, align }) =>
+          item ? (
+            <Link
+              key={align}
+              to={pagePath(language, { kind: "project", id: item.id })}
+              className={`row-link group flex flex-col gap-2 border-t border-border/60 py-8 ${align === "end" ? "md:items-end md:text-right" : ""}`}
+            >
+              <span className="label inline-flex items-center gap-2">
+                {align === "start" && <Icon size={13} aria-hidden="true" />}
+                {label}
+                {align === "end" && <Icon size={13} aria-hidden="true" />}
+              </span>
+              <span className="font-display text-display-sm font-semibold text-foreground transition-colors duration-base group-hover:text-signal [overflow-wrap:anywhere]">
+                {item.name}
+              </span>
+            </Link>
+          ) : null,
+        )}
+      </nav>
+
+      <footer className="shell flex flex-wrap items-center justify-between gap-4 border-t border-border/60 py-8 font-mono text-xs text-muted-foreground">
+        <span>
+          © {profile.updatedAt.slice(0, 4)} {profile.name}
+        </span>
+        <span className="flex flex-wrap items-center gap-x-6 gap-y-2">
+          {mail && (
+            <a href={mail.href} className="link-underline inline-block py-1.5 hover:text-foreground">
+              {mail.displayText}
+            </a>
+          )}
+          <a href={sectionHref("projects")} onClick={onSectionClick("projects")} className="link-underline inline-block py-1.5 hover:text-foreground">
+            ← {t("project.back")}
+          </a>
+        </span>
+      </footer>
+    </main>
+  );
+};
+
+export default ProjectPage;

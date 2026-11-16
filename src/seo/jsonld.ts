@@ -1,7 +1,8 @@
 /**
- * schema.org graph for a language version of the home page: the site, the
- * page (a ProfilePage), the person and the project list. Built from the same
- * data as the page, so structured data cannot drift from what is shown.
+ * schema.org graph per page and language. The home page describes the site,
+ * the page (a ProfilePage), the person and the project list; a project page describes the project as SoftwareSourceCode
+ * with a breadcrumb. Built from the same data as the page, so structured
+ * data cannot drift from what is shown.
  */
 import {
   certifications,
@@ -14,21 +15,18 @@ import {
   techStack,
   topSkills,
 } from "@/data/portfolio";
-import { HTML_LANG, LANGUAGE_PATHS, LANGUAGES } from "@/i18n/routes";
+import { HOME, HTML_LANG, LANGUAGE_PATHS, LANGUAGES, PROJECT_PAGE_IDS, pagePath, type Page } from "@/i18n/routes";
 import { translations, type Language } from "@/i18n/translations";
+import { projectPages } from "@/data/projectPages";
+import { currentRole, pageMeta, projectById, seoDescription, tr } from "@/seo/meta";
 import { parsePeriod, siteHref } from "@/seo/site";
 
-const tr = (language: Language, key: string) => translations[key]?.[language] ?? key;
+export { currentRole, seoDescription };
 
-export function currentRole() {
-  return experiences.find((experience) => experience.period.en.endsWith("Present"));
-}
+const SPDX = (id: string) => `https://spdx.org/licenses/${id}.html`;
 
-export function seoDescription(language: Language): string {
-  return tr(language, "seo.description").replace("{company}", currentRole()?.company ?? "");
-}
-
-export function buildJsonLd(language: Language, siteUrl: string): Record<string, unknown> {
+export function buildJsonLd(language: Language, siteUrl: string, target: Page = HOME): Record<string, unknown> {
+  if (target.kind === "project") return buildProjectJsonLd(language, siteUrl, target.id);
   const home = siteHref(siteUrl);
   const page = siteHref(siteUrl, LANGUAGE_PATHS[language]);
   const personId = `${home}#person`;
@@ -61,7 +59,12 @@ export function buildJsonLd(language: Language, siteUrl: string): Record<string,
         isPartOf: { "@id": websiteId },
         mainEntity: { "@id": personId },
         dateModified: profile.updatedAt,
-        primaryImageOfPage: { "@type": "ImageObject", url: siteHref(siteUrl, "og-image.png"), width: 1200, height: 630 },
+        primaryImageOfPage: {
+          "@type": "ImageObject",
+          url: siteHref(siteUrl, "og-image.png"),
+          width: 1200,
+          height: 630,
+        },
       },
       {
         "@type": "Person",
@@ -137,11 +140,77 @@ export function buildJsonLd(language: Language, siteUrl: string): Record<string,
             description: project.desc[language],
             ...(project.language ? { programmingLanguage: project.language } : {}),
             ...(project.githubUrl ? { codeRepository: project.githubUrl } : {}),
-            ...(project.liveUrl || project.githubUrl ? { url: project.liveUrl ?? project.githubUrl } : {}),
+            ...(PROJECT_PAGE_IDS.includes(project.id)
+              ? { url: siteHref(siteUrl, pagePath(language, { kind: "project", id: project.id })) }
+              : project.liveUrl || project.githubUrl
+                ? { url: project.liveUrl ?? project.githubUrl }
+                : {}),
+            dateCreated: String(project.year),
             ...(project.tech?.length ? { keywords: project.tech.join(", ") } : {}),
             author: { "@id": personId },
           },
         })),
+      },
+    ],
+  };
+}
+
+function buildProjectJsonLd(language: Language, siteUrl: string, id: string): Record<string, unknown> {
+  const project = projectById(id);
+  if (!project) throw new Error(`Unknown project: ${id}`);
+  const home = siteHref(siteUrl);
+  const meta = pageMeta({ kind: "project", id }, language);
+  const url = siteHref(siteUrl, meta.path);
+  const personId = `${home}#person`;
+  const websiteId = `${home}#website`;
+  const codeId = `${url}#code`;
+  const homeUrl = siteHref(siteUrl, LANGUAGE_PATHS[language]);
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      { "@type": "WebSite", "@id": websiteId, url: home, name: profile.name, publisher: { "@id": personId } },
+      { "@type": "Person", "@id": personId, name: profile.name, url: home },
+      {
+        "@type": "WebPage",
+        "@id": `${url}#webpage`,
+        url,
+        name: meta.title,
+        description: meta.description,
+        inLanguage: HTML_LANG[language],
+        isPartOf: { "@id": websiteId },
+        mainEntity: { "@id": codeId },
+        breadcrumb: { "@id": `${url}#breadcrumb` },
+        dateModified: profile.updatedAt,
+        primaryImageOfPage: {
+          "@type": "ImageObject",
+          url: siteHref(siteUrl, "og-image.png"),
+          width: 1200,
+          height: 630,
+        },
+      },
+      {
+        "@type": "SoftwareSourceCode",
+        "@id": codeId,
+        name: project.name,
+        description: project.desc[language],
+        url,
+        ...(project.githubUrl ? { codeRepository: project.githubUrl } : {}),
+        ...(project.language ? { programmingLanguage: project.language } : {}),
+        ...(project.license ? { license: SPDX(project.license) } : {}),
+        ...(project.tech?.length ? { keywords: project.tech.join(", ") } : {}),
+        dateCreated: String(project.year),
+        author: [{ "@id": personId }, ...(project.coAuthors ?? []).map((name) => ({ "@type": "Person", name }))],
+        ...(projectPages[id] ? { abstract: projectPages[id].highlights[language].join(" ").replace(/`/g, "") } : {}),
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${url}#breadcrumb`,
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: profile.name, item: homeUrl },
+          { "@type": "ListItem", position: 2, name: tr(language, "projects.title"), item: `${homeUrl}#projects` },
+          { "@type": "ListItem", position: 3, name: project.name, item: url },
+        ],
       },
     ],
   };

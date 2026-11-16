@@ -2,6 +2,7 @@ import { readFileSync } from "fs";
 import { resolve } from "path";
 import { describe, it, expect } from "vitest";
 import { contributions, education, experiences, profile, projects, socialLinks } from "@/data/portfolio";
+import { PROJECT_PAGE_IDS, pagePath } from "@/i18n/routes";
 import {
   PROFILE_FILES,
   RESUME_FILES,
@@ -60,7 +61,7 @@ describe("llms.txt", () => {
     for (const href of links(text)) expect(href).toMatch(/^(https?:|mailto:)/);
   });
 
-  it("links every profile file, public project, contribution and contact channel", () => {
+  it("links every profile file, project page, public repository, contribution and contact channel", () => {
     const hrefs = links(text);
     for (const file of [...Object.values(PROFILE_FILES), ...Object.values(RESUME_FILES)]) {
       expect(hrefs).toContain(siteHref(SITE, file));
@@ -68,8 +69,13 @@ describe("llms.txt", () => {
     for (const project of projects) {
       const url = project.githubUrl ?? project.liveUrl;
       if (url) expect(hrefs).toContain(url);
-      else expect(text).not.toContain(`[${project.name}]`);
+      if (PROJECT_PAGE_IDS.includes(project.id)) {
+        expect(hrefs).toContain(siteHref(SITE, pagePath("en", { kind: "project", id: project.id })));
+      }
     }
+    // The private project is listed through its page only.
+    const privateProject = projects.find((project) => !project.githubUrl && !project.liveUrl);
+    expect(privateProject && text).toContain(`[${privateProject?.name}](${SITE}/projects/`);
     for (const item of contributions) expect(hrefs).toContain(item.url);
     for (const link of socialLinks) expect(hrefs).toContain(link.href);
   });

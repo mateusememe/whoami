@@ -1,3 +1,4 @@
+import { renderWithProviders } from "@/test/render";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import React from "react";
@@ -14,11 +15,7 @@ import { contributions, projects } from "@/data/portfolio";
 
 describe("Portfolio Sections", () => {
   it("renders HeroSection with name, title, and profile carousel", () => {
-    render(
-      <LanguageProvider defaultLanguage="pt">
-        <HeroSection />
-      </LanguageProvider>
-    );
+    renderWithProviders(<HeroSection />, "pt");
 
     expect(screen.getByText("Mateus Mendonça Monteiro")).toBeInTheDocument();
     expect(screen.getByText("Backend Software Engineer")).toBeInTheDocument();
@@ -26,11 +23,7 @@ describe("Portfolio Sections", () => {
   });
 
   it("renders ProfileCarousel and cycles through photos with buttons", () => {
-    render(
-      <LanguageProvider defaultLanguage="pt">
-        <ProfileCarousel />
-      </LanguageProvider>
-    );
+    renderWithProviders(<ProfileCarousel />, "pt");
 
     expect(screen.getByText("Perfil")).toBeInTheDocument();
 
@@ -41,21 +34,13 @@ describe("Portfolio Sections", () => {
   });
 
   it("renders AboutSection", () => {
-    render(
-      <LanguageProvider defaultLanguage="pt">
-        <AboutSection />
-      </LanguageProvider>
-    );
+    renderWithProviders(<AboutSection />, "pt");
 
     expect(screen.getByText("Sobre Mim")).toBeInTheDocument();
   });
 
   it("renders ExperienceSection with company names", () => {
-    render(
-      <LanguageProvider defaultLanguage="pt">
-        <ExperienceSection />
-      </LanguageProvider>
-    );
+    renderWithProviders(<ExperienceSection />, "pt");
 
     expect(screen.getByText("Itaú Unibanco")).toBeInTheDocument();
     expect(screen.getByText("LuizaLabs")).toBeInTheDocument();
@@ -63,22 +48,14 @@ describe("Portfolio Sections", () => {
   });
 
   it("renders EducationSection with institutions", () => {
-    render(
-      <LanguageProvider defaultLanguage="pt">
-        <EducationSection />
-      </LanguageProvider>
-    );
+    renderWithProviders(<EducationSection />, "pt");
 
     expect(screen.getByText("UNESP")).toBeInTheDocument();
     expect(screen.getByText("Universidade do Oeste Paulista")).toBeInTheDocument();
   });
 
   it("renders SkillsSection with ProUni scholarship and tech stack", () => {
-    render(
-      <LanguageProvider defaultLanguage="pt">
-        <SkillsSection />
-      </LanguageProvider>
-    );
+    renderWithProviders(<SkillsSection />, "pt");
 
     expect(screen.getByText("Conquistas & Skills")).toBeInTheDocument();
     expect(screen.getByText("Bolsista 100% ProUni")).toBeInTheDocument();
@@ -88,11 +65,7 @@ describe("Portfolio Sections", () => {
   });
 
   it("renders ProjectsSection as fluid carousel with projects and auto-scroll", () => {
-    render(
-      <LanguageProvider defaultLanguage="pt">
-        <ProjectsSection />
-      </LanguageProvider>
-    );
+    renderWithProviders(<ProjectsSection />, "pt");
 
     expect(screen.getByText("Projetos")).toBeInTheDocument();
     for (const project of projects) expect(screen.getByText(project.name)).toBeInTheDocument();
@@ -103,11 +76,7 @@ describe("Portfolio Sections", () => {
   });
 
   it("lists merged contributions and renders backtick spans as code", () => {
-    const { container } = render(
-      <LanguageProvider defaultLanguage="en">
-        <ProjectsSection />
-      </LanguageProvider>
-    );
+    const { container } = renderWithProviders(<ProjectsSection />, "en");
 
     for (const item of contributions) {
       expect(screen.getByText(item.repo).closest("a")).toHaveAttribute("href", item.url);
@@ -117,11 +86,7 @@ describe("Portfolio Sections", () => {
   });
 
   it("renders ProjectsSection accessibility labels in English", () => {
-    render(
-      <LanguageProvider defaultLanguage="en">
-        <ProjectsSection />
-      </LanguageProvider>
-    );
+    renderWithProviders(<ProjectsSection />, "en");
 
     expect(screen.getByRole("region", { name: /project carousel/i })).toBeInTheDocument();
     expect(screen.getByLabelText("Next project")).toBeInTheDocument();
@@ -132,11 +97,7 @@ describe("Portfolio Sections", () => {
   });
 
   it("renders ProfileCarousel accessibility labels in Spanish", () => {
-    render(
-      <LanguageProvider defaultLanguage="es">
-        <ProfileCarousel />
-      </LanguageProvider>
-    );
+    renderWithProviders(<ProfileCarousel />, "es");
 
     expect(screen.getByRole("region", { name: /carrusel de fotos/i })).toBeInTheDocument();
     expect(screen.getByLabelText("Siguiente foto")).toBeInTheDocument();
@@ -144,11 +105,7 @@ describe("Portfolio Sections", () => {
   });
 
   it("renders ContactFooter with contact options and copyright", () => {
-    render(
-      <LanguageProvider defaultLanguage="pt">
-        <ContactFooter />
-      </LanguageProvider>
-    );
+    renderWithProviders(<ContactFooter />, "pt");
 
     expect(screen.getByText("Contato")).toBeInTheDocument();
     expect(screen.getByText("matt.mendon@gmail.com")).toBeInTheDocument();

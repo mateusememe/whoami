@@ -3,10 +3,12 @@ import { act } from "@testing-library/react";
 import React from "react";
 import { hydrateRoot, type Root } from "react-dom/client";
 import App from "@/App";
-import { render } from "@/entry-server";
+import { prepare, render } from "@/entry-server";
 
 // Rendered once with empty storage, like the build. Each test then hydrates
 // it under different client state; the first client render must match.
+// prepare() loads the lazily split project page, as the prerender script does.
+await prepare();
 const serverHtml = render("/");
 
 describe("hydration", () => {
@@ -59,6 +61,17 @@ describe("hydration", () => {
     localStorage.setItem("portfolio_lang", "es");
     hydrate();
     expect(window.location.pathname).toBe("/es/");
+  });
+
+  it("hydrates a project page in Spanish without mismatches", () => {
+    window.history.replaceState(null, "", "/es/projects/8-puzzle/");
+
+    const { container, recoverable, mismatches } = hydrate(render("/es/projects/8-puzzle/"));
+    expect(recoverable).not.toHaveBeenCalled();
+    expect(mismatches).toEqual([]);
+    expect(container.querySelector("h1")?.textContent).toBe("8-puzzle");
+    expect(container.textContent).toContain("Detalles");
+    expect(window.location.pathname).toBe("/es/projects/8-puzzle/");
   });
 
   it("hydrates the Portuguese page at /pt/, and the URL wins over a saved language", () => {

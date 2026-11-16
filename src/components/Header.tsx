@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
 import { flushSync } from "react-dom";
 import { Menu, Moon, Sun, X } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useLanguage, type Language } from "@/contexts/LanguageContext";
 import { IconButton } from "@/components/ds";
 import { Magnetic } from "@/components/motion/Magnetic";
@@ -9,6 +10,7 @@ import ScrollProgress from "@/components/ScrollProgress";
 import { NAV_ITEMS } from "@/data/navigation";
 import { socialLinks } from "@/data/portfolio";
 import { useActiveSection } from "@/hooks/useActiveSection";
+import { useSiteNavigation } from "@/hooks/useSiteNavigation";
 import { useTheme } from "@/hooks/useTheme";
 import { scrollState, setScrollLocked } from "@/motion/scroll";
 import { addTick, TICK } from "@/motion/ticker";
@@ -21,7 +23,9 @@ const langNames: Record<Language, string> = { pt: "Português", en: "English", e
 const Header = () => {
   const { language, setLanguage, t } = useLanguage();
   const { dark, toggle } = useTheme();
-  const activeSection = useActiveSection(NAV_ITEMS);
+  const { onHome, homePath, sectionHref, onSectionClick } = useSiteNavigation();
+  const sectionInView = useActiveSection(NAV_ITEMS);
+  const activeSection = onHome ? sectionInView : null;
   const [menu, setMenu] = useState<"closed" | "open" | "closing">("closed");
 
   const headerRef = useRef<HTMLElement>(null);
@@ -99,13 +103,23 @@ const Header = () => {
         <ScrollProgress />
         <div className="shell flex items-center justify-between gap-3 pt-3 sm:pt-4">
           <Magnetic>
-            <a
-              href="#top"
-              aria-label={t("a11y.monogram")}
-              className="glass-card flex h-11 w-11 items-center justify-center rounded-full font-mono text-sm font-semibold tracking-wider text-foreground"
-            >
-              MM
-            </a>
+            {onHome ? (
+              <a
+                href="#top"
+                aria-label={t("a11y.monogram")}
+                className="glass-card flex h-11 w-11 items-center justify-center rounded-full font-mono text-sm font-semibold tracking-wider text-foreground"
+              >
+                MM
+              </a>
+            ) : (
+              <Link
+                to={homePath}
+                aria-label={t("a11y.monogram")}
+                className="glass-card flex h-11 w-11 items-center justify-center rounded-full font-mono text-sm font-semibold tracking-wider text-foreground"
+              >
+                MM
+              </Link>
+            )}
           </Magnetic>
 
           <nav ref={navRef} aria-label={t("a11y.mainNav")} className="nav-pill glass-card hidden lg:flex">
@@ -115,7 +129,8 @@ const Header = () => {
               return (
                 <a
                   key={item}
-                  href={`#${item}`}
+                  href={sectionHref(item)}
+                  onClick={onSectionClick(item)}
                   data-nav={item}
                   aria-current={isActive ? "true" : undefined}
                   className={cn(
@@ -191,8 +206,11 @@ const Header = () => {
             {NAV_ITEMS.map((item, index) => (
               <li key={item} className="menu-item" style={{ "--i": index } as CSSProperties}>
                 <a
-                  href={`#${item}`}
-                  onClick={closeMenu}
+                  href={sectionHref(item)}
+                  onClick={(event) => {
+                    onSectionClick(item)(event);
+                    closeMenu();
+                  }}
                   className="group flex items-baseline gap-4 border-b border-border/60 py-4 font-display text-4xl font-semibold tracking-tight text-foreground"
                 >
                   <span className="font-mono text-xs font-medium text-signal">{String(index + 1).padStart(2, "0")}</span>

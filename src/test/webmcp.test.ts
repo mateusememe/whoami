@@ -2,6 +2,7 @@ import { describe, it, expect, vi, afterEach } from "vitest";
 import { createAgentTools, registerAgentTools } from "@/agents/webmcp";
 import { NAV_ITEMS } from "@/data/navigation";
 import { contributions, projects } from "@/data/portfolio";
+import { PROJECT_PAGE_IDS } from "@/i18n/routes";
 
 const options = { language: "en" as const, siteUrl: "https://example.test/whoami", goToSection: vi.fn() };
 const run = async (name: string, input: Record<string, unknown> = {}) => {
@@ -38,6 +39,12 @@ describe("WebMCP tools", () => {
     expect(data.projects).toHaveLength(projects.length);
     expect(data.contributions).toHaveLength(contributions.length);
     expect(data.projects.find((project: { name: string }) => project.name === "lime.stability.imputation").repository).toBeNull();
+    const withPage = data.projects.filter((project: { page: string | null }) => project.page);
+    expect(withPage).toHaveLength(PROJECT_PAGE_IDS.length);
+    expect(withPage[0].page).toBe(`https://example.test/whoami/projects/${PROJECT_PAGE_IDS[0]}/`);
+    expect(withPage[0].details.length).toBeGreaterThan(0);
+    const inPortuguese = JSON.parse(await run("list_projects", { language: "pt" }));
+    expect(inPortuguese.projects.find((project: { page: string | null }) => project.page).page).toContain("/pt/projects/");
   });
 
   it("get_contact gives the email and no phone number", async () => {

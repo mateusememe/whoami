@@ -13,7 +13,8 @@ import {
   spokenLanguages,
   techGroups,
 } from "@/data/portfolio";
-import { LANGUAGE_PATHS } from "@/i18n/routes";
+import { projectPages } from "@/data/projectPages";
+import { LANGUAGE_PATHS, PROJECT_PAGE_IDS, pagePath } from "@/i18n/routes";
 import { translations, type Language } from "@/i18n/translations";
 import { RESUME_FILES } from "@/seo/files";
 import { parsePeriod, siteHref } from "@/seo/site";
@@ -70,12 +71,25 @@ export function buildResume(language: Language, siteUrl: string): Record<string,
     })),
     skills: techGroups.map((group) => ({ name: tr(language, group.labelKey), keywords: group.items })),
     languages: spokenLanguages.map((item) => ({ language: item.name[language], fluency: item.level[language] })),
-    projects: projects.map((project) => ({
-      name: project.name,
-      description: project.desc[language],
-      keywords: project.tech ?? [],
-      ...(project.githubUrl || project.liveUrl ? { url: project.githubUrl ?? project.liveUrl } : {}),
-    })),
+    projects: [
+      ...projects.map((project) => {
+        const page = PROJECT_PAGE_IDS.includes(project.id)
+          ? siteHref(siteUrl, pagePath(language, { kind: "project", id: project.id }))
+          : undefined;
+        const url = project.githubUrl ?? project.liveUrl ?? page;
+        return {
+          name: project.name,
+          description: project.desc[language],
+          ...(projectPages[project.id]
+            ? { highlights: projectPages[project.id].highlights[language].map((text) => text.replace(/`/g, "")) }
+            : {}),
+          keywords: project.tech ?? [],
+          startDate: String(project.year),
+          ...(url ? { url } : {}),
+          type: "application",
+        };
+      }),
+    ],
     meta: {
       canonical: siteHref(siteUrl, RESUME_FILES[language]),
       version: "v1.0.0",

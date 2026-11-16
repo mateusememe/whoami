@@ -1,3 +1,4 @@
+import { renderWithProviders } from "@/test/render";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, beforeEach } from "vitest";
 import React from "react";
@@ -11,11 +12,7 @@ describe("Header component", () => {
   });
 
   it("renders brand logo and navigation links in Portuguese", () => {
-    render(
-      <LanguageProvider defaultLanguage="pt">
-        <Header />
-      </LanguageProvider>
-    );
+    renderWithProviders(<Header />, "pt");
 
     expect(screen.getByText("MM")).toBeInTheDocument();
     expect(screen.getByText("Sobre")).toBeInTheDocument();
@@ -25,11 +22,7 @@ describe("Header component", () => {
   });
 
   it("switches language when clicking flag buttons", () => {
-    render(
-      <LanguageProvider defaultLanguage="pt">
-        <Header />
-      </LanguageProvider>
-    );
+    renderWithProviders(<Header />, "pt");
 
     const usFlagBtn = screen.getByLabelText("EN, mudar para English");
     fireEvent.click(usFlagBtn);
@@ -40,11 +33,7 @@ describe("Header component", () => {
   });
 
   it("localizes accessibility labels after switching to English", () => {
-    render(
-      <LanguageProvider defaultLanguage="pt">
-        <Header />
-      </LanguageProvider>
-    );
+    renderWithProviders(<Header />, "pt");
 
     expect(screen.getByRole("navigation", { name: "Navegação principal" })).toBeInTheDocument();
 
@@ -59,11 +48,7 @@ describe("Header component", () => {
   });
 
   it("toggles theme when clicking theme button", () => {
-    render(
-      <LanguageProvider defaultLanguage="pt">
-        <Header />
-      </LanguageProvider>
-    );
+    renderWithProviders(<Header />, "pt");
 
     // Initial state is dark
     expect(document.documentElement.classList.contains("dark")).toBe(true);

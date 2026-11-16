@@ -1,9 +1,11 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { LanguageProvider, useLanguage, type Language } from "@/contexts/LanguageContext";
-import { LANGUAGE_PATHS, isHomePath, languageFromPath, stripBase } from "@/i18n/routes";
+import { languageFromPath, pagePath, parseRoute, stripBase } from "@/i18n/routes";
+import SiteLayout from "@/components/SiteLayout";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import { ProjectPageRoute } from "./pages/lazyPages";
 
 interface AppProvidersProps {
   children: ReactNode;
@@ -20,8 +22,9 @@ const sameUrl = (a: string, b: string) => a.replace(/\/+$/, "") === b.replace(/\
 
 /**
  * Keeps the URL and the language in step. Switching language in the header
- * moves to that language's URL (replacing the history entry, keeping the
- * hash and the scroll position), so every URL always shows its own language.
+ * moves to the same page in that language (replacing the history entry,
+ * keeping the hash and the scroll position), so every URL always shows its
+ * own language.
  */
 const LanguageRouteSync = () => {
   const { language } = useLanguage();
@@ -29,8 +32,9 @@ const LanguageRouteSync = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isHomePath(location.pathname)) return;
-    const target = LANGUAGE_PATHS[language];
+    const { page } = parseRoute(location.pathname);
+    if (!page) return;
+    const target = pagePath(language, page);
     if (!sameUrl(location.pathname, target)) {
       navigate({ pathname: target, hash: location.hash }, { replace: true });
     }
@@ -40,19 +44,22 @@ const LanguageRouteSync = () => {
 };
 
 /**
- * The home page answers at `/`, `/pt/` and `/es/`; the language comes from
- * the path. The sync component is part of this tree on purpose: the server
- * and the browser must render the same component tree, or `useId` values
- * differ and hydration fails.
+ * Pages answer in three languages (src/i18n/routes.ts); the language comes
+ * from the path. The sync component is part of this tree on purpose: the
+ * server and the browser must render the same component tree, or `useId`
+ * values differ and hydration fails.
  */
 export const AppRoutes = () => (
   <>
     <LanguageRouteSync />
     <Routes>
-      <Route path="/" element={<Index />} />
-      <Route path="/pt" element={<Index />} />
-      <Route path="/es" element={<Index />} />
-      <Route path="*" element={<NotFound />} />
+      <Route element={<SiteLayout />}>
+        {["", "/pt", "/es"].map((prefix) => [
+          <Route key={`${prefix}/`} path={prefix || "/"} element={<Index />} />,
+          <Route key={`${prefix}/projects`} path={`${prefix}/projects/:id`} element={<ProjectPageRoute />} />,
+        ])}
+        <Route path="*" element={<NotFound />} />
+      </Route>
     </Routes>
   </>
 );

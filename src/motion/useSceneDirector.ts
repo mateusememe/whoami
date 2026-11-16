@@ -10,11 +10,18 @@ import { addTick, TICK } from "@/motion/ticker";
  *
  * Section offsets are cached and re-read only when the layout changes.
  */
+let stale = true;
+
+/** Marks the cached section offsets as out of date (for example after a route change). */
+export function invalidateSceneLayout(): void {
+  stale = true;
+}
+
 export function useSceneDirector(): void {
   useEffect(() => {
     let sections: SceneSection[] = [];
     let stage: HTMLElement | null = null;
-    let stale = true;
+    stale = true;
 
     const read = () => {
       stale = false;

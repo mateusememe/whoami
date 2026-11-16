@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, it, expect } from "vitest";
-import { render } from "@/entry-server";
+import { prepare, render } from "@/entry-server";
 import { experiences, projects } from "@/data/portfolio";
 
 // Runs without window/document/localStorage, like the build-time prerender.
@@ -21,6 +21,14 @@ describe("prerender (entry-server, Node)", () => {
   it("leaves the browser-only background out of the static HTML", () => {
     expect(html).not.toContain("<canvas");
     expect(html).not.toContain("webgl-background");
+  });
+
+  it("renders a project page with its details and no client-only markup", async () => {
+    await prepare();
+    const html = render("/pt/projects/rinha-backend-2026-c/");
+    expect(html).toContain("rinha-backend-2026-c");
+    expect(html).toContain("Detalhes");
+    expect(html).not.toContain("<canvas");
   });
 
   it("renders each language at its own path", () => {

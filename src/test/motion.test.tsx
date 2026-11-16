@@ -1,3 +1,5 @@
+import { renderWithProviders } from "@/test/render";
+import { NAV_ITEMS } from "@/data/navigation";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import { describe, it, expect, vi, afterEach } from "vitest";
 import React from "react";
@@ -15,7 +17,7 @@ import { measureProgress } from "@/motion/progress";
 import { computeMorph } from "@/motion/sceneState";
 
 const withLanguage = (ui: React.ReactNode, language: "pt" | "en" | "es" = "pt") =>
-  render(<LanguageProvider defaultLanguage={language}>{ui}</LanguageProvider>);
+  renderWithProviders(ui, language);
 
 describe("scroll progress", () => {
   const viewport = 800;
@@ -135,7 +137,7 @@ describe("Header mobile menu", () => {
     fireEvent.click(screen.getByLabelText("Abrir menu"));
 
     const dialog = screen.getByRole("dialog", { name: "Navegação principal" });
-    expect(dialog.querySelectorAll("a[href^='#']")).toHaveLength(6);
+    expect(dialog.querySelectorAll("a[href^='#']")).toHaveLength(NAV_ITEMS.length);
     expect(screen.getByLabelText("Fechar menu")).toHaveAttribute("aria-expanded", "true");
 
     fireEvent.keyDown(window, { key: "Escape" });
@@ -162,6 +164,13 @@ describe("Projects", () => {
     withLanguage(<ProjectsSection />, "en");
     expect(screen.getAllByRole("article")).toHaveLength(featured.length);
     expect(screen.getAllByRole("tab")).toHaveLength(featured.length);
+    // Each card opens its own page; its GitHub icon links the repository.
+    for (const project of featured) {
+      expect(screen.getByRole("link", { name: `Open the ${project.name} page` })).toHaveAttribute(
+        "href",
+        `/projects/${project.id}/`,
+      );
+    }
     // Rows are named by their visible text (WCAG 2.5.3), which starts with the project name.
     for (const project of others) {
       const row = screen.getByRole("link", { name: new RegExp(`^${project.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`) });

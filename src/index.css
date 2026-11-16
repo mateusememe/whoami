@@ -514,6 +514,12 @@
     from { clip-path: inset(18% 12% 18% 12% round 2rem); transform: scale(1.12); }
     to { clip-path: inset(0 0 0 0 round 2rem); transform: scale(1); }
   }
+  /* Entrance for the project page header and figure. */
+  .page-fade {
+    animation: hero-fade 0.9s var(--ease-expo) both;
+    animation-delay: calc(80ms + var(--i, 0) * 80ms);
+  }
+
   /* Scroll-out: the hero recedes as the page scrolls. --progress is set by JS. */
   .hero-parallax {
     transform: translate3d(0, calc(var(--progress, 0) * var(--shift, -80px)), 0);
@@ -708,7 +714,8 @@ html[data-vt="reveal"]::view-transition-new(root) {
   .hero-char,
   .hero-fade,
   .hero-rule,
-  .hero-photo {
+  .hero-photo,
+  .page-fade {
     animation: none;
   }
 }

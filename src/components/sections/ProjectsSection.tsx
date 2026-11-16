@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import React, { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { ArrowUpRight, ChevronLeft, ChevronRight, ExternalLink, Github, GitPullRequest, Lock, Star } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { IconButton, PaginationDots, Reveal, TagList } from "@/components/ds";
@@ -12,6 +12,8 @@ import { prefersReducedMotion } from "@/motion/env";
 import { trackProgress } from "@/motion/progress";
 import { scrollState, scrollToTarget } from "@/motion/scroll";
 import { addTick, TICK } from "@/motion/ticker";
+import { formatMonth, withCode } from "@/lib/text";
+import { isModifiedClick, useSiteNavigation } from "@/hooks/useSiteNavigation";
 import { cn } from "@/lib/utils";
 
 const PINNED_QUERY = "(min-width: 1024px) and (hover: hover) and (pointer: fine)";
@@ -19,18 +21,6 @@ const PINNED_QUERY = "(min-width: 1024px) and (hover: hover) and (pointer: fine)
 /** Gallery cards (with covers) and the plain list under them. */
 const featured = projects.filter((project) => project.featured);
 const others = projects.filter((project) => !project.featured);
-
-const MONTHS: Record<string, string[]> = {
-  en: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-  pt: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
-  es: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
-};
-
-/** `2026-10` → `Oct 2026`. A fixed table, so server and browser always agree. */
-function formatMonth(month: string, language: string): string {
-  const [year, index] = month.split("-").map(Number);
-  return `${(MONTHS[language] ?? MONTHS.en)[index - 1]} ${year}`;
-}
 
 /**
  * Selected work as a gallery. Two modes share one markup:
@@ -44,20 +34,9 @@ function formatMonth(month: string, language: string): string {
  * The server and the first client render use native mode; the pinned mode
  * is switched on after mount.
  */
-/** Renders `code` spans written with backticks in the data as <code>. */
-const withCode = (text: string): ReactNode =>
-  text.split("`").map((part, index) =>
-    index % 2 === 1 ? (
-      <code key={index} className="font-mono text-[0.92em] text-foreground">
-        {part}
-      </code>
-    ) : (
-      part
-    ),
-  );
-
 const ProjectsSection = () => {
   const { language, t } = useLanguage();
+  const { projectHref, openProject } = useSiteNavigation();
   const pinRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -169,6 +148,14 @@ const ProjectsSection = () => {
     [pinned, distance, cardStep],
   );
 
+  /** Opens a project page; the card's cover morphs into the page's cover. */
+  const openFromCard = (event: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    if (isModifiedClick(event)) return;
+    event.preventDefault();
+    const cover = event.currentTarget.closest(".project-card")?.querySelector<HTMLElement>("[data-cover]");
+    openProject(id, cover);
+  };
+
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "ArrowRight") goTo(activeIndex + 1);
     if (event.key === "ArrowLeft") goTo(activeIndex - 1);
@@ -253,16 +240,16 @@ const ProjectsSection = () => {
                     <div data-cover className="absolute inset-0 scale-[1.08] will-change-transform">
                       <ProjectCover id={project.id} className="h-full w-full" />
                     </div>
-                    {project.githubUrl ? (
-                      <a
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={t("a11y.viewRepo", { name: project.name })}
-                        data-cursor-label={t("projects.open")}
-                        className="absolute inset-0 z-20"
-                      />
-                    ) : (
+                    {/* Pointer target for the whole cover; keyboard users get the title link below. */}
+                    <a
+                      href={projectHref(project.id)}
+                      tabIndex={-1}
+                      aria-hidden="true"
+                      data-cursor-label={t("projects.open")}
+                      onClick={(event) => openFromCard(event, project.id)}
+                      className="absolute inset-0 z-20"
+                    />
+                    {!project.githubUrl && (
                       <span className="label absolute bottom-3 left-4 z-10 inline-flex items-center gap-1.5 normal-case tracking-normal">
                         <Lock size={11} aria-hidden="true" />
                         {t("projects.private")}
@@ -277,7 +264,14 @@ const ProjectsSection = () => {
                           {String(index + 1).padStart(2, "0")}
                         </span>
                         <h3 className="truncate font-mono text-base font-semibold tracking-tight text-foreground transition-colors duration-base group-hover/card:text-signal sm:text-lg">
-                          {project.name}
+                          <a
+                            href={projectHref(project.id)}
+                            onClick={(event) => openFromCard(event, project.id)}
+                            aria-label={t("a11y.openProject", { name: project.name })}
+                            className="inline-block py-0.5 after:absolute after:inset-0 after:content-['']"
+                          >
+                            {project.name}
+                          </a>
                         </h3>
                       </div>
                       <div className="flex shrink-0 items-center gap-2.5 text-muted-foreground">
@@ -296,17 +290,21 @@ const ProjectsSection = () => {
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label={t("a11y.viewDemo", { name: project.name })}
-                            className="transition-colors duration-base hover:text-foreground"
+                            className="relative z-30 transition-colors duration-base hover:text-foreground"
                           >
                             <ExternalLink size={16} />
                           </a>
                         )}
                         {project.githubUrl && (
-                          <ArrowUpRight
-                            aria-hidden="true"
-                            size={18}
-                            className="transition-transform duration-slow ease-expo group-hover/card:-translate-y-0.5 group-hover/card:translate-x-0.5 group-hover/card:text-signal"
-                          />
+                          <a
+                            href={project.githubUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={t("a11y.viewRepo", { name: project.name })}
+                            className="relative z-30 -m-2 flex h-10 w-10 items-center justify-center rounded-full transition-colors duration-base hover:text-signal"
+                          >
+                            <Github size={16} aria-hidden="true" />
+                          </a>
                         )}
                       </div>
                     </div>
