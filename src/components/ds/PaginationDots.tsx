@@ -12,11 +12,14 @@ interface PaginationDotsProps {
 }
 
 const TONES = {
-  default: { on: "bg-signal", off: "bg-muted-foreground/30 hover:bg-muted-foreground/60" },
-  inverse: { on: "bg-white shadow-sm", off: "bg-white/40 hover:bg-white/70" },
+  default: { on: "bg-signal", off: "bg-muted-foreground/30 group-hover:bg-muted-foreground/60" },
+  inverse: { on: "bg-white shadow-sm", off: "bg-white/40 group-hover:bg-white/70" },
 };
 
-/** Carousel position dots. The hit area extends past the 6px dot. */
+/**
+ * Carousel position dots. Each button is a 24px target (WCAG 2.5.8) around a
+ * 6px dot; the active one stretches into a bar.
+ */
 export const PaginationDots = ({
   count,
   active,
@@ -26,7 +29,7 @@ export const PaginationDots = ({
   tone = "default",
   className,
 }: PaginationDotsProps) => (
-  <div role="tablist" aria-label={label} className={cn("flex items-center gap-1.5", className)}>
+  <div role="tablist" aria-label={label} className={cn("flex items-center", className)}>
     {Array.from({ length: count }, (_, index) => {
       const selected = index === active;
       return (
@@ -38,10 +41,18 @@ export const PaginationDots = ({
           aria-label={getItemLabel(index)}
           onClick={() => onSelect(index)}
           className={cn(
-            "relative h-1.5 rounded-full transition-all duration-base ease-expo before:absolute before:-inset-x-1 before:-inset-y-2.5",
-            selected ? cn("w-6", TONES[tone].on) : cn("w-1.5", TONES[tone].off),
+            "group flex h-6 items-center justify-center transition-[width] duration-base ease-expo",
+            selected ? "w-8" : "w-6",
           )}
-        />
+        >
+          <span
+            aria-hidden="true"
+            className={cn(
+              "block h-1.5 rounded-full transition-all duration-base ease-expo",
+              selected ? cn("w-6", TONES[tone].on) : cn("w-1.5", TONES[tone].off),
+            )}
+          />
+        </button>
       );
     })}
   </div>

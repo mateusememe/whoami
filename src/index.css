@@ -61,6 +61,7 @@
     --glass-highlight: 0 0% 100% / 0.7;
     --surface-blur: 16px;
     --grain-opacity: 0.055;
+    --scrub-floor: 0.68;
 
     /* Layout */
     --shell-max: 1480px;
@@ -115,6 +116,7 @@
     --glass-border: 0 0% 25% / 0.3;
     --glass-highlight: 0 0% 100% / 0.09;
     --grain-opacity: 0.075;
+    --scrub-floor: 0.56;
   }
 }
 
@@ -310,8 +312,10 @@
   /* ---------- Scroll-scrubbed text ----------
      An ancestor sets --scrub (0..1). Words light up in order. Without JS the
      fallback is 1, so the text is fully lit. */
+  /* The floor keeps unlit words at 4.5:1 contrast (WCAG AA): --scrub-floor
+     is 0.56 on the dark theme and 0.68 on the light one. */
   .scrub-word {
-    opacity: clamp(0.14, calc((var(--scrub, 1) * (var(--n) + 5) - var(--i)) / 5), 1);
+    opacity: clamp(var(--scrub-floor), calc((var(--scrub, 1) * (var(--n) + 5) - var(--i)) / 5), 1);
   }
 
   /* The About scene pins for a while; its words light up across the middle of that scroll. */
@@ -319,9 +323,17 @@
     --scrub: clamp(0, calc((var(--progress, 1) - 0.1) / 0.62), 1);
   }
 
-  /* Items dim unless they sit near the middle of the viewport. --focus is set by JS. */
+  /* The item near the middle of the viewport is in focus (--focus 0..1, set by
+     JS). Focus never dims text, so contrast holds in every state: the company
+     name takes the signal color, the top rule lights up, the block settles. */
   .focus-item {
-    opacity: calc(0.34 + 0.66 * var(--focus, 1));
+    border-top-color: color-mix(in srgb, hsl(var(--signal)) calc(var(--focus, 0) * 65%), hsl(var(--border)));
+  }
+  .focus-item h3 {
+    color: color-mix(in srgb, hsl(var(--signal)) calc(var(--focus, 0) * 100%), hsl(var(--foreground)));
+  }
+  .focus-item > article {
+    transform: translate3d(calc((1 - var(--focus, 1)) * 0.75rem), 0, 0);
   }
 
   /* ---------- Tilt (3D card) ---------- */
@@ -671,9 +683,11 @@ html[data-vt="reveal"]::view-transition-new(root) {
 
 /* Scroll-linked decoration is off when the user asks for less motion. */
 @media (prefers-reduced-motion: reduce) {
-  .scrub-word,
-  .focus-item {
+  .scrub-word {
     opacity: 1;
+  }
+  .focus-item > article {
+    transform: none;
   }
   .hero-parallax {
     transform: none;

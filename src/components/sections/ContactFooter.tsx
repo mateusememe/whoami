@@ -73,7 +73,6 @@ const ContactFooter = () => {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={link.label}
                 className="row-link grid grid-cols-[auto_1fr_auto] items-center gap-x-5 border-b border-border/60 py-5 sm:grid-cols-[auto_1fr_1fr_auto] sm:py-6"
               >
                 <span className="flex h-10 w-10 items-center justify-center rounded-full border border-border/70 text-foreground">

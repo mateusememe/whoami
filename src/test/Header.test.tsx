@@ -31,7 +31,7 @@ describe("Header component", () => {
       </LanguageProvider>
     );
 
-    const usFlagBtn = screen.getByLabelText("Mudar para English");
+    const usFlagBtn = screen.getByLabelText("EN, mudar para English");
     fireEvent.click(usFlagBtn);
 
     expect(screen.getByText("About")).toBeInTheDocument();
@@ -48,13 +48,13 @@ describe("Header component", () => {
 
     expect(screen.getByRole("navigation", { name: "Navegação principal" })).toBeInTheDocument();
 
-    fireEvent.click(screen.getByLabelText("Mudar para English"));
+    fireEvent.click(screen.getByLabelText("EN, mudar para English"));
 
     expect(screen.getByRole("navigation", { name: "Main navigation" })).toBeInTheDocument();
     expect(screen.getByRole("group", { name: "Language selection" })).toBeInTheDocument();
-    expect(screen.getByLabelText("Switch to Português")).toBeInTheDocument();
+    expect(screen.getByLabelText("PT, switch to Português")).toBeInTheDocument();
     expect(screen.getByLabelText("Switch to light mode")).toBeInTheDocument();
-    expect(screen.getByLabelText("Go to top")).toBeInTheDocument();
+    expect(screen.getByLabelText("MM, home page")).toBeInTheDocument();
     expect(screen.queryByLabelText("Ativar modo claro")).not.toBeInTheDocument();
   });
 

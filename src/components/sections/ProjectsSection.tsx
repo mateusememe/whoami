@@ -356,7 +356,6 @@ const ProjectsSection = () => {
                 href={project.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={t("a11y.viewRepo", { name: project.name })}
                 className="row-link grid items-baseline gap-x-8 gap-y-2 border-b border-border/60 py-6 md:grid-cols-12"
               >
                 <span className="flex items-baseline gap-3 md:col-span-4">

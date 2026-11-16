@@ -187,9 +187,10 @@ export const translations: Translations = {
 
   // Accessibility labels (aria-label). Tokens like {name} are filled by t(key, params).
   "a11y.backToTop": { pt: "Ir para o topo", en: "Go to top", es: "Ir arriba" },
+  "a11y.monogram": { pt: "MM, página inicial", en: "MM, home page", es: "MM, página de inicio" },
   "a11y.mainNav": { pt: "Navegação principal", en: "Main navigation", es: "Navegación principal" },
   "a11y.languageSelect": { pt: "Seleção de idioma", en: "Language selection", es: "Selección de idioma" },
-  "a11y.switchLanguage": { pt: "Mudar para {lang}", en: "Switch to {lang}", es: "Cambiar a {lang}" },
+  "a11y.switchLanguage": { pt: "{code}, mudar para {lang}", en: "{code}, switch to {lang}", es: "{code}, cambiar a {lang}" },
   "a11y.enableLightMode": { pt: "Ativar modo claro", en: "Switch to light mode", es: "Activar modo claro" },
   "a11y.enableDarkMode": { pt: "Ativar modo escuro", en: "Switch to dark mode", es: "Activar modo oscuro" },
   "a11y.openMenu": { pt: "Abrir menu", en: "Open menu", es: "Abrir menú" },

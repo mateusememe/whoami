@@ -12,7 +12,7 @@ const tagVariants = cva("inline-flex items-center whitespace-nowrap font-medium"
     },
     size: {
       /** Mono, for technologies. */
-      xs: "font-mono text-[10px] sm:text-[11px] px-2.5 py-0.5",
+      xs: "font-mono text-[11px] px-2.5 py-0.5",
       /** Sans, for skills and labels. */
       sm: "text-xs px-2.5 sm:px-3 py-1",
     },

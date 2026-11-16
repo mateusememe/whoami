@@ -58,7 +58,7 @@ describe("LanguageContext", () => {
       result.current.setLanguage("pt");
     });
 
-    expect(result.current.t("a11y.switchLanguage", { lang: "English" })).toBe("Mudar para English");
+    expect(result.current.t("a11y.switchLanguage", { code: "EN", lang: "English" })).toBe("EN, mudar para English");
   });
 
   it("leaves tokens without a matching param untouched", () => {

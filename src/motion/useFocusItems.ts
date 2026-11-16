@@ -5,7 +5,7 @@ import { trackProgress } from "@/motion/progress";
 /**
  * Reading focus for a list: each direct child gets a `--focus` variable that
  * is 1 while the item sits near the middle of the viewport and falls toward
- * 0 as it moves away. CSS (`.focus-item`) turns it into opacity.
+ * 0 as it moves away. CSS (`.focus-item`) turns it into color and position.
  */
 export function useFocusItems(ref: RefObject<HTMLElement>): void {
   useEffect(() => {

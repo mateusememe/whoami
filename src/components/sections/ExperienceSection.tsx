@@ -15,8 +15,9 @@ const YEARS = Array.from(
 /**
  * Trajectory. The heading and a year scale stay pinned on the left while the
  * roles scroll past on the right; the role nearest the middle of the screen
- * is in focus and the rest dim. A signal marker travels down the scale with
- * the scroll.
+ * is in focus: its company name takes the signal color, its top rule lights
+ * up and the block settles into place. Text keeps full contrast in every
+ * state. A signal marker travels down the scale with the scroll.
  */
 const ExperienceSection = () => {
   const { language, t } = useLanguage();
@@ -72,14 +73,14 @@ const ExperienceSection = () => {
             return (
               <li
                 key={`${exp.company}-${i}`}
-                className="focus-item border-t border-border/60 py-10 transition-opacity duration-base ease-out sm:py-14"
+                className="focus-item border-t py-10 sm:py-14"
               >
                 <article>
                   <div className="mb-4 flex flex-wrap items-center gap-x-5 gap-y-2">
                     <p className={cn("font-mono text-xs", isCurrent ? "text-signal" : "text-muted-foreground")}>
                       {exp.period[language]}
                     </p>
-                    <p className="font-mono text-xs text-muted-foreground/80">{exp.location}</p>
+                    <p className="font-mono text-xs text-muted-foreground">{exp.location}</p>
                     {isCurrent && (
                       <p className="label inline-flex items-center gap-2 text-signal">
                         <span aria-hidden="true" className="h-2 w-2 rounded-full bg-signal animate-signal-pulse" />

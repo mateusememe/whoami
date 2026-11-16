@@ -162,11 +162,10 @@ describe("Projects", () => {
     withLanguage(<ProjectsSection />, "en");
     expect(screen.getAllByRole("article")).toHaveLength(featured.length);
     expect(screen.getAllByRole("tab")).toHaveLength(featured.length);
+    // Rows are named by their visible text (WCAG 2.5.3), which starts with the project name.
     for (const project of others) {
-      expect(screen.getByRole("link", { name: `View ${project.name} repository on GitHub` })).toHaveAttribute(
-        "href",
-        project.githubUrl,
-      );
+      const row = screen.getByRole("link", { name: new RegExp(`^${project.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`) });
+      expect(row).toHaveAttribute("href", project.githubUrl);
     }
   });
 

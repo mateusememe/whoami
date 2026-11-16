@@ -101,7 +101,7 @@ const Header = () => {
           <Magnetic>
             <a
               href="#top"
-              aria-label={t("a11y.backToTop")}
+              aria-label={t("a11y.monogram")}
               className="glass-card flex h-11 w-11 items-center justify-center rounded-full font-mono text-sm font-semibold tracking-wider text-foreground"
             >
               MM
@@ -140,7 +140,7 @@ const Header = () => {
                   key={lang}
                   type="button"
                   onClick={() => switchLanguage(lang)}
-                  aria-label={t("a11y.switchLanguage", { lang: langNames[lang] })}
+                  aria-label={t("a11y.switchLanguage", { code: lang.toUpperCase(), lang: langNames[lang] })}
                   aria-pressed={language === lang}
                   className={cn(
                     "h-9 min-w-9 rounded-full px-2 font-mono text-[11px] uppercase tracking-wider transition-colors duration-base",
