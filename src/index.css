@@ -480,6 +480,7 @@
   }
   .hero-line {
     display: block;
+    white-space: nowrap;
     overflow: clip;
     overflow-clip-margin: 0.14em;
     padding-bottom: 0.1em;
@@ -659,6 +660,14 @@
   }
   .text-pretty {
     text-wrap: pretty;
+  }
+  /* Hero name: the display size, capped so the longest word ("Mendonça",
+     about 4.7em) fits the column. The column is the size container. */
+  .hero-name-box {
+    container-type: inline-size;
+  }
+  h1.hero-name {
+    font-size: min(clamp(3.1rem, min(12vw, 16.5svh), 13rem), 20.5cqi);
   }
 }
 

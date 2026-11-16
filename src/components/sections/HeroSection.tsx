@@ -47,13 +47,13 @@ const HeroSection = () => {
         </div>
 
         <div className="grid flex-1 items-center gap-x-10 gap-y-8 py-6 lg:grid-cols-12 lg:py-8">
-          <div className="hero-parallax lg:col-span-8" style={{ "--shift": "-140px", "--fade": 1.5 } as CSSProperties}>
+          <div className="hero-parallax hero-name-box lg:col-span-8" style={{ "--shift": "-140px", "--fade": 1.5 } as CSSProperties}>
             <p aria-hidden="true" className="hero-fade mb-3 font-mono text-sm text-signal sm:mb-5 sm:text-base">
               <span className="text-muted-foreground/70">$</span> whoami
               <span className="ml-1.5 inline-block h-[1.05em] w-[0.55em] translate-y-[0.18em] bg-signal/80 animate-caret-blink" />
             </p>
 
-            <h1 className="font-display text-display-2xl font-semibold text-foreground">
+            <h1 className="hero-name font-display text-display-2xl font-semibold text-foreground">
               <span className="sr-only">{NAME}</span>
               <span aria-hidden="true">
                 {NAME_LINES.map((line, lineIndex) => (
