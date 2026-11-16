@@ -21,21 +21,25 @@
 ## ✨ Features
 
 - 🌐 **Trilingual Localization (i18n)**: Instant switching between **Português (PT-BR)**, **English (EN)**, and **Español (ES)**. Each language has its own prerendered URL (`/`, `/pt/`, `/es/`), and the choice persists in `localStorage`.
-- 🎬 **A presentation in scenes**: the page answers `whoami` scene by scene (name, statement, trajectory, degrees, stack, work, contact), each with its own layout and its own 3D formation.
-- 🛰️ **WebGL layer (three.js, custom GLSL)**: a service mesh with message packets, plus a particle field that morphs with the scroll between six formations: haze, a dot-matrix portrait sampled from the profile photo, terrain, globe, tunnel and galaxy. A thin-lens model turns out-of-focus points into bokeh. Lazy-loaded, with quality tiers, adaptive resolution, a reduced-motion still frame and a 2D canvas fallback.
-- 🧮 **Project covers that run the code**: each of the 11 gallery cards plays its own algorithm on a canvas (A* on the 8-puzzle, AVL rotations, Zhang-Suen thinning, Fuzzy C-Means, a nearest-neighbour search...). The other repositories and the merged open-source pull requests follow as rows.
+- 🎬 **A presentation in scenes**: the page answers `whoami` scene by scene (name, statement, trajectory, degrees, stack, work, talks, contact), each with its own layout and its own 3D formation.
+- 📄 **A page per project**: each of the 12 featured projects has its own prerendered URL in three languages (`/projects/<id>/`, `/pt/…`, `/es/…`) with the live cover at full width, facts, details and links. Opening a card morphs its cover into the page's cover (View Transitions), and the WebGL layer stays mounted across pages.
+- 🎤 **Talks & workshops**: a timeline of the nine workshops given at Infoeste and DevFest Presidente Prudente (2022 to 2026), with links to the code, slides or event page.
+- ⌨️ **Command palette (⌘K / Ctrl+K or `/`)**: jump to a section, a project page or a talk, copy the email, switch theme or language, open the profiles.
+- 🛰️ **WebGL layer (three.js, custom GLSL)**: a service mesh with message packets, plus a particle field that morphs with the scroll between seven formations: haze, a dot-matrix portrait sampled from the profile photo, terrain, globe, tunnel, a sound wave and galaxy. A thin-lens model turns out-of-focus points into bokeh. Lazy-loaded, with quality tiers, adaptive resolution, a reduced-motion still frame and a 2D canvas fallback.
+- 🧮 **Project covers that run the code**: each of the 12 gallery cards plays its own algorithm on a canvas (A* on the 8-puzzle, AVL rotations, Zhang-Suen thinning, Fuzzy C-Means, a nearest-neighbour search...). The other repositories and the merged open-source pull requests follow as rows.
 - 🌊 **Motion layer**: Lenis smooth scrolling, scroll-linked CSS variables from one rAF loop, pinned scenes with `position: sticky`, word-by-word text, magnetic buttons, 3D tilt, a cursor ring, marquees and View Transitions for theme and language. Everything renders visible first and stops under `prefers-reduced-motion`.
 - 🎨 **Design System**: fluid display type scale, one signal accent, glass surfaces, film grain, and typed primitives. See [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md).
 - 🌓 **Dark & Light Mode**: Modern glassmorphism UI with theme toggle and preference persistence.
-- 📱 **100% Responsive Design**: Fluid layout tailored for mobile, tablet, and desktop viewports.
+- 📱 **Responsive and accessible**: checked on 20 viewports from 320×568 to 2560×1440, phones in both orientations included. Lighthouse (mobile): performance 93–94, accessibility, best practices and SEO 100.
+- ⚡ **Performance**: hydration in a React transition, WebGL started on idle, the project page and the palette as lazy chunks, AVIF/WebP photos.
 - 🔍 **SEO**:
-  - One static page per language, prerendered at build time and hydrated, each with its own title, description, canonical URL and `hreflang` links.
-  - JSON-LD graph: `WebSite`, `ProfilePage`, `Person` and an `ItemList` of `SoftwareSourceCode`.
-  - `sitemap.xml` with language alternates, Open Graph / Twitter card image (1200x630), `rel="me"` links, web manifest.
+  - 39 static pages (home and 12 project pages, in three languages), prerendered at build time and hydrated, each with its own title, description, canonical URL and `hreflang` links. The tab title follows client-side navigation.
+  - JSON-LD: `WebSite`, `ProfilePage`, `Person` (talks as `Event`s) and an `ItemList` of `SoftwareSourceCode` on the home page; `SoftwareSourceCode` and `BreadcrumbList` on project pages.
+  - `sitemap.xml` with language alternates, a share card per language (1200x630), `rel="me"` links, web manifest.
 - 🤖 **Agent-ready (AXO / ARO)**:
-  - `llms.txt` (llmstxt.org) with a key-facts list, `llms-full.txt` and Markdown profiles in PT/EN/ES.
-  - JSON Resume (`resume.json`, `resume.pt.json`, `resume.es.json`).
-  - WebMCP tools on the page (`get_profile`, `list_projects`, `get_contact`, `go_to_section`) for browser agents that support `document.modelContext`.
+  - `llms.txt` (llmstxt.org) with a key-facts list and links to the project pages and talks, `llms-full.txt` and Markdown profiles in PT/EN/ES.
+  - JSON Resume (`resume.json`, `resume.pt.json`, `resume.es.json`), with project highlights and talks.
+  - WebMCP tools on every page (`get_profile`, `list_projects`, `list_talks`, `get_contact`, `go_to_section`) for browser agents that support `document.modelContext`.
   - Every one of these files is generated from the portfolio data, and the tests fail when they drift.
 - 🧪 **Automated Testing**: Vitest + Testing Library suites for context state, internationalization, navigation, section rendering, design-system primitives, WebGL scene generation, hydration, SEO metadata and agent files.
 - 🚀 **Full CI/CD Automation**:
@@ -83,7 +87,8 @@ whoami/
 │   ├── generate-head.ts         # Rewrites the SEO block of index.html
 │   ├── generate-sitemap.ts      # Writes public/sitemap.xml
 │   ├── generate-llms.ts         # Writes the agent files to public/
-│   └── prerender.ts             # Renders /, /pt/ and /es/ after the build
+│   ├── render-og-image.ts       # Renders the share card per language (npm run og:image)
+│   └── prerender.ts             # Renders all 39 pages after the build
 ├── src/
 │   ├── agents/                      # WebMCP tools for browser agents
 │   ├── components/
@@ -100,7 +105,10 @@ whoami/
 │   │   │   ├── EducationSection.tsx # Academic degrees
 │   │   │   ├── SkillsSection.tsx    # Core competencies & tech stack
 │   │   │   ├── ProjectsSection.tsx  # Gallery, more projects, open-source contributions
+│   │   │   ├── TalksSection.tsx     # Talks & workshops timeline
 │   │   │   └── ContactFooter.tsx    # Contact channels & footer
+│   │   ├── CommandPalette.tsx       # ⌘K listener (the panel is a lazy chunk)
+│   │   ├── SiteLayout.tsx           # Shell shared by every page
 │   │   ├── BinaryBackground.tsx     # 2D canvas fallback background
 │   │   ├── ScrollProgress.tsx       # Header reading-progress bar
 │   │   └── Header.tsx               # Nav with scroll spy, theme/lang switchers
@@ -108,18 +116,20 @@ whoami/
 │   │   └── LanguageContext.tsx      # i18n context provider & state
 │   ├── data/
 │   │   ├── navigation.ts            # Section order (nav + heading indexes)
-│   │   └── portfolio.ts             # Typed resume data (jobs, skills, socials)
+│   │   ├── portfolio.ts             # Typed data (jobs, projects, talks, skills, socials)
+│   │   └── projectPages.ts          # Project page content (lazy)
 │   ├── hooks/
 │   │   └── useLanguage.ts           # useLanguage consumer hook
 │   ├── i18n/
-│   │   ├── routes.ts                # Language ↔ URL (/, /pt/, /es/)
+│   │   ├── routes.ts                # Pages and URLs (/, /pt/, /es/, /projects/<id>/)
 │   │   └── translations.ts          # PT / EN / ES dictionary
 │   ├── motion/                      # rAF ticker, scroll store, progress, scene director
 │   ├── lib/
 │   │   ├── motion.ts                # damp, scroll progress (DOM + WebGL)
 │   │   └── utils.ts                 # ClassName merging utilities (cn)
 │   ├── pages/
-│   │   ├── Index.tsx                # Main single-page portfolio view
+│   │   ├── Index.tsx                # Home page (the scenes)
+│   │   ├── ProjectPage.tsx          # One featured project (lazy chunk)
 │   │   └── NotFound.tsx             # 404 error page
 │   ├── seo/                         # Head block, JSON-LD, sitemap, llms.txt, JSON Resume
 │   ├── test/
@@ -183,6 +193,7 @@ Open [http://localhost:8080](http://localhost:8080) in your browser.
 | `npm run dev` | Regenerates the head block, sitemap and agent files, then starts the Vite development server on port 8080. |
 | `npm run build` | Regenerates the same files, builds the client and server bundles into `/dist` and prerenders `/`, `/pt/` and `/es/`. |
 | `npm run generate` | Rewrites the SEO block of `index.html`, `public/sitemap.xml` and the agent files from the portfolio data. |
+| `npm run og:image` | Renders the share cards (`og-image.png`, `.pt.png`, `.es.png`) in headless Chrome. Run it when the name, role or photo changes. |
 | `npm run preview` | Locally serves the production build from `/dist`. |
 | `npm test` | Runs the Vitest test suite once. |
 | `npm run test:watch`| Runs the Vitest test suite in interactive watch mode. |

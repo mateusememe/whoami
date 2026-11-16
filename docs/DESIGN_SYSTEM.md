@@ -121,7 +121,7 @@ Motion by what drives it:
 | Pointer | pointer position, damped | Cursor ring, magnetic buttons, 3D tilt and glare, particle push |
 | Ambient | time | Marquee bands, seal rotation, grain, project covers, the 3D scene |
 
-Under `prefers-reduced-motion: reduce`: animations and transitions take 0.01 ms, smooth scrolling and Lenis are off, the cursor ring, magnets and tilt do nothing, scrubbed text and focus dimming are fully lit, carousels and marquees stand still, the project gallery becomes a plain scroll strip, covers draw one frame, and the WebGL engine renders one dimmed still.
+Under `prefers-reduced-motion: reduce`: animations and transitions take 0.01 ms, smooth scrolling and Lenis are off, the cursor ring, magnets and tilt do nothing, scrubbed text is fully lit and focused roles do not shift, carousels and marquees stand still, the project gallery becomes a plain scroll strip, covers draw one frame, and the WebGL engine renders one dimmed still.
 
 ## 3. Primitives
 
@@ -213,7 +213,7 @@ Use `interactive` on cards that respond to hover. Leave it off on plain containe
 />
 ```
 
-`tone="inverse"` for dots over photos. The hit area extends 10 px above and below the 6 px dot.
+`tone="inverse"` for dots over photos. Each button is a 24 × 24 px target (WCAG 2.5.8) around the 6 px dot; the active one is 32 px wide around a 24 px bar. A row of 11 dots is about 270 px, so on phones it takes its own line.
 
 ### `Reveal`
 
@@ -256,20 +256,22 @@ Each section sets `data-scene` to the formation the particle field should hold w
 
 | # | Section | DOM composition | Particle formation |
 | :--- | :--- | :--- | :--- |
-| 0 | Hero | Name in three lines of `display-2xl`, tilting photo card, rule with the scroll cue, role, summary, social links | Sparse haze of bokeh points around the service mesh |
+| 0 | Hero | Name in three lines of `display-2xl`, capped at 20.5 % of its column (a container query) so "Mendonça" never breaks; tilting photo card, rule with the scroll cue, role, summary, social links | Sparse haze of bokeh points around the service mesh |
 | 1 | About | Pinned for 230 svh: the statement lights up word by word beside the portrait stage; four counters follow | Dot-matrix portrait sampled from the profile photo |
-| 2 | Experience | Sticky heading and year scale on the left; roles scroll on the right, the one near mid-screen in focus | Rows of dots rolling like terrain under a horizon |
-| 3 | Education, Skills | Full-width degree rows, then languages and certifications as two definition lists; award card with a rotating seal; two skill bands; stack as a spec sheet | Globe of latitude rings and meridians, rising from the lower right (from the bottom edge on phones) so the text above stays clear |
+| 2 | Experience | Sticky heading and year scale on the left; roles scroll on the right. The one near mid-screen is in focus: its company name turns signal, its top rule lights up, the others sit 0.75 rem to the right. Focus never dims text | Rows of dots rolling like terrain under a horizon |
+| 3 | Education, Skills | Full-width degree rows, then languages and certifications as two definition lists, then publications (year and kind, title, summary, the ABNT reference with the proceedings address as a link, buttons for the project page and the proceedings PDF); award card with a rotating seal; two skill bands; stack as a spec sheet | Globe of latitude rings and meridians, rising from the lower right (from the bottom edge on phones) so the text above stays clear |
 | 4 | Projects | Pinned gallery of the featured projects: vertical scroll moves the cards sideways; each cover runs its algorithm. Below it, the other repositories and the merged pull requests as rows | Tunnel around the screen edges that the scroll travels through |
-| 5 | Contact | Email as the headline, channels as rows, the name as an outlined band | Spiral disc lying under the content; the service mesh returns |
+| 5 | Talks | A timeline: year in display type and month as a label on the left; kind, event, title, summary, organizer and co-speakers in the middle; code, slides, notebook, event page and project links as chips on the right | A bundle of seven sine waves low in the frame, swelling in bursts like a voice, at 17 % so it never competes with the text |
+| 6 | Contact | Email as the headline, channels as rows, the name as an outlined band | Spiral disc lying under the content; the service mesh returns |
+| 4 | Project page | Breadcrumb, `NN / 12` index, the name in `display-xl`, facts as a `<dl>`; the live cover at full width (21:9 on desktop) with a `fig.` caption; summary, repository button, the talk it was built for; numbered details; stack; previous and next projects | The projects tunnel, so the field holds still when a card opens |
 
 **Service mesh** (hero and contact): gateways are services (signal dots with a pulsing ring), pods are instances, backbone links connect gateways, packets are messages in flight. Binary digits fall behind every scene.
 
 **Portrait.** The engine samples the profile photo into one dot per particle (132 × 132 on the high tier). Dot size and opacity follow brightness on dark and darkness on light, so both themes show a positive image. It sits wherever the `[data-portrait-stage]` element is. Without WebGL, or with reduced motion, that element shows the photo through a CSS dot mask (`.halftone`).
 
-**Lens.** Points at the focal plane are small and sharp. Points in front of or behind it grow into flat discs with a brighter rim and lose brightness in proportion. Formations behind reading text are drawn at 20 to 55% so text stays the brightest thing on screen.
+**Lens.** Points at the focal plane are small and sharp. Points in front of or behind it grow into flat discs with a brighter rim and lose brightness in proportion. Formations behind reading text are drawn at 17 to 55% so text stays the brightest thing on screen.
 
-**Project covers.** Each gallery card (`featured: true` in the data) has a canvas sketch of the project's own algorithm, drawn in foreground gray with signal for the moving part. A private repository gets a lock label on its cover where the others have the link:
+**Project covers.** Each gallery card (`featured: true` in the data) has a canvas sketch of the project's own algorithm, drawn in foreground gray with signal for the moving part. The whole card opens the project page (the title is the keyboard target, the cover the pointer target); the GitHub icon on the card links the repository. Opening a card runs a View Transition in which the card's cover grows into the page's cover (`view-transition-name: project-cover`). A private repository gets a lock label on its cover:
 
 | Project | Cover |
 | :--- | :--- |
@@ -284,12 +286,17 @@ Each section sets `data-scene` to the formation the particle field should hold w
 | zhang-suen-thinning | A shape eroding pass by pass to a one-pixel skeleton |
 | transaction.ledger | Events crossing API, table, stream and queue; duplicates rejected with 409 |
 | lime.stability.imputation | A local linear surrogate re-fitted over resampled perturbations |
+| find-the-fight | Two pose skeletons close in and fight; the dashed line is the distance between their centroids, a strip of 10 frames feeds the classifier, a bar shows the sigmoid output against 0.5 |
 
 **Rows.** Repositories outside the gallery and open-source contributions use the `row-link` pattern from Education and Contact: name on the left, one description in the middle, stack and arrow on the right, stacked on phones. On hover the row gets a signal wash and the arrow slides into place; on touch screens the arrow sits in place from the start. Text between backticks in a description renders as `<code>` in the mono font.
 
+**Command palette.** ⌘K / Ctrl+K or `/` opens it, as does the `⌘` button in the header (sm and up) and the last item of the mobile menu. A glass panel at 12 svh from the top over a blurred backdrop: a `$` prompt field, then groups (sections, projects, talks, actions, links) with an icon, a label and a mono hint per row. The active row has a soft foreground wash, a signal icon and a return-key glyph. The panel enters with a short drop and scale (`palette-in`); confirmations such as "Email copied" appear as a pill at the bottom of the screen.
+
 ## 6. Accessibility checklist
 
-- [ ] Text meets 4.5 : 1 against its background (see §2.1).
+- [ ] Text meets 4.5 : 1 against its background (see §2.1). Effects that change text contrast have a floor: unlit About words never go below `--scrub-floor` (0.56 opacity on dark, 0.68 on light); focus effects change color and position, never opacity. Lighthouse accessibility is 100 on the home and project pages.
+- [ ] Touch targets are at least 24 × 24 px (pagination dots, breadcrumb and footer links included); text is at least 11 px.
+- [ ] A control whose name differs from its visible text includes that text (WCAG 2.5.3): `PT, switch to Português`, `MM, home page`, the palette button with its shortcut. Brand marks are SVG, not letters.
 - [ ] Icon-only controls have `aria-label` (`IconButton` requires it).
 - [ ] Focus is visible: global `:focus-visible` uses a 2 px signal outline.
 - [ ] Decorative elements (split hero letters, `$ whoami`, the closing band, canvases, the cursor ring) are `aria-hidden`; the hero keeps the full name in a visually hidden span.
@@ -297,6 +304,8 @@ Each section sets `data-scene` to the formation the particle field should hold w
 - [ ] Lists of things are real lists (`TagList`, social links, channels, stack as `<dl>`).
 - [ ] The pinned gallery follows keyboard focus and has previous/next buttons and tabs.
 - [ ] The mobile menu is a dialog, closes on Escape and locks page scroll while open.
+- [ ] The command palette is a modal dialog with a combobox and a listbox (`aria-activedescendant`), works with arrows, Home, End, Enter and Escape, keeps focus in the field and returns it on close.
+- [ ] Every page has a breadcrumb or a heading structure that starts at `h1`; project pages label their navigation landmarks (breadcrumb, other projects).
 
 ## 7. Do and don't
 
