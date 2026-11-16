@@ -520,6 +520,22 @@
     animation-delay: calc(80ms + var(--i, 0) * 80ms);
   }
 
+  /* ---------- Command palette ---------- */
+  .palette-backdrop {
+    animation: palette-fade 0.24s linear both;
+  }
+  .palette-panel {
+    animation: palette-in 0.42s var(--ease-expo) both;
+  }
+  .palette-toast {
+    animation: palette-in 0.42s var(--ease-expo) both;
+  }
+  @keyframes palette-fade {
+    from { opacity: 0; }
+  }
+  @keyframes palette-in {
+    from { opacity: 0; transform: translate3d(0, -0.75rem, 0) scale(0.97); }
+  }
   /* Scroll-out: the hero recedes as the page scrolls. --progress is set by JS. */
   .hero-parallax {
     transform: translate3d(0, calc(var(--progress, 0) * var(--shift, -80px)), 0);
@@ -715,7 +731,10 @@ html[data-vt="reveal"]::view-transition-new(root) {
   .hero-fade,
   .hero-rule,
   .hero-photo,
-  .page-fade {
+  .page-fade,
+  .palette-backdrop,
+  .palette-panel,
+  .palette-toast {
     animation: none;
   }
 }

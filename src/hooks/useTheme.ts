@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import { flushSync } from "react-dom";
 import { runViewTransition } from "@/motion/viewTransition";
 
@@ -28,10 +28,19 @@ function applyTheme(dark: boolean): void {
   }
 }
 
+/** Theme shared by every component that calls useTheme (header, command palette). */
+let current: boolean | null = null;
+const listeners = new Set<() => void>();
+
+function setShared(next: boolean): void {
+  current = next;
+  listeners.forEach((listener) => listener());
+}
+
 /**
  * Dark/light theme. Dark is the default.
  *
- * The preference is null until mounted: the first render matches the
+ * The preference is unknown until mounted: the first render matches the
  * prerendered HTML (dark), then the saved choice is read. index.html sets
  * the class before first paint, so there is no flash.
  *
@@ -39,25 +48,30 @@ function applyTheme(dark: boolean): void {
  * `origin` (the button), where the browser supports it.
  */
 export function useTheme(): { dark: boolean; toggle: (origin?: { x: number; y: number }) => void } {
-  const [preference, setPreference] = useState<boolean | null>(null);
-  const dark = preference ?? true;
+  const [mounted, setMounted] = useState(false);
+  const [, rerender] = useReducer((count: number) => count + 1, 0);
+  const dark = mounted ? (current ?? true) : true;
 
   useEffect(() => {
-    const saved = readSavedTheme();
-    applyTheme(saved);
-    setPreference(saved);
+    // The first instance to mount reads the saved choice; later ones share it.
+    if (listeners.size === 0) {
+      current = readSavedTheme();
+      applyTheme(current);
+    }
+    listeners.add(rerender);
+    setMounted(true);
+    return () => {
+      listeners.delete(rerender);
+    };
   }, []);
 
-  const toggle = useCallback(
-    (origin?: { x: number; y: number }) => {
-      const next = !dark;
-      runViewTransition(() => {
-        applyTheme(next);
-        flushSync(() => setPreference(next));
-      }, origin);
-    },
-    [dark],
-  );
+  const toggle = useCallback((origin?: { x: number; y: number }) => {
+    const next = !(current ?? true);
+    runViewTransition(() => {
+      applyTheme(next);
+      flushSync(() => setShared(next));
+    }, origin);
+  }, []);
 
   return { dark, toggle };
 }

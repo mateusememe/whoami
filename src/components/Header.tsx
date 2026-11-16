@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
 import { flushSync } from "react-dom";
-import { Menu, Moon, Sun, X } from "lucide-react";
+import { Command, Menu, Moon, Sun, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage, type Language } from "@/contexts/LanguageContext";
 import { IconButton } from "@/components/ds";
 import { Magnetic } from "@/components/motion/Magnetic";
 import { Scramble } from "@/components/motion/Scramble";
 import ScrollProgress from "@/components/ScrollProgress";
+import { openCommandPalette } from "@/lib/commands";
+import { loadCommandPalette } from "@/lib/lazy";
 import { NAV_ITEMS } from "@/data/navigation";
 import { socialLinks } from "@/data/portfolio";
 import { useActiveSection } from "@/hooks/useActiveSection";
@@ -27,6 +29,11 @@ const Header = () => {
   const sectionInView = useActiveSection(NAV_ITEMS);
   const activeSection = onHome ? sectionInView : null;
   const [menu, setMenu] = useState<"closed" | "open" | "closing">("closed");
+  const [shortcut, setShortcut] = useState("Ctrl K");
+
+  useEffect(() => {
+    if (/Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent)) setShortcut("⌘K");
+  }, []);
 
   const headerRef = useRef<HTMLElement>(null);
   const navRef = useRef<HTMLElement>(null);
@@ -169,6 +176,22 @@ const Header = () => {
               ))}
             </div>
 
+            <button
+              type="button"
+              onClick={openCommandPalette}
+              onPointerEnter={() => void loadCommandPalette()}
+              onFocus={() => void loadCommandPalette()}
+              // The visible shortcut is part of the name (WCAG 2.5.3).
+              aria-label={`${t("palette.open")} ${shortcut}`}
+              aria-keyshortcuts="Meta+K Control+K"
+              className="glass-card hidden h-11 items-center gap-2 min-w-11 justify-center rounded-full px-3 text-muted-foreground transition-colors duration-base hover:text-foreground sm:inline-flex"
+            >
+              <Command size={15} aria-hidden="true" className="xl:hidden" />
+              <kbd aria-hidden="true" className="hidden font-mono text-[11px] tracking-wider xl:inline">
+                {shortcut}
+              </kbd>
+            </button>
+
             <IconButton
               tone="ghost"
               onClick={toggleTheme}
@@ -219,7 +242,20 @@ const Header = () => {
               </li>
             ))}
           </ul>
-          <ul className="shell menu-item flex flex-wrap gap-x-5 gap-y-2 pb-10 pt-8" style={{ "--i": 7 } as CSSProperties}>
+          <div className="shell menu-item pt-6" style={{ "--i": NAV_ITEMS.length } as CSSProperties}>
+            <button
+              type="button"
+              onClick={() => {
+                closeMenu();
+                window.setTimeout(openCommandPalette, 300);
+              }}
+              className="glass-card inline-flex h-11 items-center gap-2.5 rounded-full px-5 font-mono text-xs text-foreground"
+            >
+              <Command size={14} aria-hidden="true" />
+              {t("palette.title")}
+            </button>
+          </div>
+          <ul className="shell menu-item flex flex-wrap gap-x-5 gap-y-2 pb-10 pt-8" style={{ "--i": NAV_ITEMS.length + 1 } as CSSProperties}>
             {socialLinks.slice(0, 4).map((link) => (
               <li key={link.label}>
                 <a

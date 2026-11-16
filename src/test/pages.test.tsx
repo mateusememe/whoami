@@ -1,10 +1,12 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { screen, within } from "@testing-library/react";
+import { act, fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { Route, Routes } from "react-router-dom";
+import CommandPalette from "@/components/CommandPalette";
 import ProjectPage from "@/pages/ProjectPage";
 import { projects } from "@/data/portfolio";
 import { projectPages } from "@/data/projectPages";
 import { PROJECT_PAGE_IDS } from "@/i18n/routes";
+import { filterCommands } from "@/lib/commands";
 import { renderWithProviders } from "@/test/render";
 
 const renderProject = (id: string, language: "en" | "pt" = "en") =>
@@ -49,5 +51,64 @@ describe("Project page", () => {
     renderProject("kruskal-algorithm");
     expect(screen.getByText("404")).toBeInTheDocument();
     vi.restoreAllMocks();
+  });
+});
+
+describe("Command palette", () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  it("filters without accents and ranks label prefixes first", () => {
+    const items = [{ label: "Experiência" }, { label: "Educação" }, { label: "Projetos", keywords: "educacao" }];
+    expect(filterCommands(items, "educacao").map((item) => item.label)).toEqual(["Educação", "Projetos"]);
+    expect(filterCommands(items, "")).toHaveLength(3);
+    expect(filterCommands(items, "zzz")).toEqual([]);
+  });
+
+  it("opens with Ctrl+K, runs the active command with Enter and closes with Escape", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.assign(navigator, { clipboard: { writeText } });
+    renderWithProviders(<CommandPalette />, "en");
+
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    fireEvent.keyDown(window, { key: "k", ctrlKey: true });
+    // The panel is a lazy chunk: it appears once loaded.
+    const dialog = await screen.findByRole("dialog", { name: "Command palette" });
+    const input = within(dialog).getByRole("combobox");
+    // Focus moves in an effect after the panel mounts.
+    await waitFor(() => expect(document.activeElement).toBe(input));
+
+    fireEvent.change(input, { target: { value: "copy email" } });
+    const options = within(dialog).getAllByRole("option");
+    expect(options).toHaveLength(1);
+    expect(options[0]).toHaveAttribute("aria-selected", "true");
+    expect(input).toHaveAttribute("aria-activedescendant", options[0].id);
+
+    await act(async () => {
+      fireEvent.keyDown(input, { key: "Enter" });
+    });
+    expect(writeText).toHaveBeenCalledWith("matt.mendon@gmail.com");
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent("Email copied");
+
+    fireEvent.keyDown(window, { key: "/" });
+    expect(await screen.findByRole("dialog")).toBeInTheDocument();
+    fireEvent.keyDown(screen.getByRole("combobox"), { key: "Escape" });
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  it("lists sections, project pages, actions and links, with arrow-key navigation", async () => {
+    renderWithProviders(<CommandPalette />, "pt");
+    fireEvent.keyDown(window, { key: "k", metaKey: true });
+    const dialog = await screen.findByRole("dialog", { name: "Paleta de comandos" });
+    for (const group of ["Seções", "Projetos", "Ações", "Links"]) {
+      expect(within(dialog).getByRole("group", { name: group })).toBeInTheDocument();
+    }
+    const input = within(dialog).getByRole("combobox");
+    fireEvent.keyDown(input, { key: "ArrowDown" });
+    const options = within(dialog).getAllByRole("option");
+    expect(options[1]).toHaveAttribute("aria-selected", "true");
+    fireEvent.keyDown(input, { key: "ArrowUp" });
+    fireEvent.keyDown(input, { key: "ArrowUp" });
+    expect(options.at(-1)).toHaveAttribute("aria-selected", "true");
   });
 });

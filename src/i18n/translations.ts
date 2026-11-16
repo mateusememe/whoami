@@ -187,6 +187,55 @@ export const translations: Translations = {
   "project.next": { pt: "Próximo", en: "Next", es: "Siguiente" },
   "project.page": { pt: "Página do projeto", en: "Project page", es: "Página del proyecto" },
 
+  // Command palette
+  "palette.title": { pt: "Paleta de comandos", en: "Command palette", es: "Paleta de comandos" },
+  "palette.open": {
+    pt: "Abrir a paleta de comandos",
+    en: "Open the command palette",
+    es: "Abrir la paleta de comandos",
+  },
+  "palette.placeholder": {
+    pt: "Digite um comando ou busque…",
+    en: "Type a command or search…",
+    es: "Escribe un comando o busca…",
+  },
+  "palette.empty": {
+    pt: "Nada encontrado para “{query}”.",
+    en: "No results for “{query}”.",
+    es: "Sin resultados para “{query}”.",
+  },
+  "palette.hint": {
+    pt: "↑↓ navegar · ↵ abrir · esc fechar",
+    en: "↑↓ move · ↵ open · esc close",
+    es: "↑↓ moverse · ↵ abrir · esc cerrar",
+  },
+  "palette.groupSections": { pt: "Seções", en: "Sections", es: "Secciones" },
+  "palette.groupProjects": { pt: "Projetos", en: "Projects", es: "Proyectos" },
+  "palette.groupTalks": { pt: "Palestras", en: "Talks", es: "Charlas" },
+  "palette.groupActions": { pt: "Ações", en: "Actions", es: "Acciones" },
+  "palette.groupLinks": { pt: "Links", en: "Links", es: "Enlaces" },
+  "palette.copyEmail": { pt: "Copiar o email", en: "Copy the email address", es: "Copiar el email" },
+  "palette.copied": { pt: "Email copiado", en: "Email copied", es: "Email copiado" },
+  "palette.theme": { pt: "Alternar tema claro/escuro", en: "Toggle light/dark theme", es: "Cambiar tema claro/oscuro" },
+  "palette.language": { pt: "Ler em {lang}", en: "Read in {lang}", es: "Leer en {lang}" },
+  "palette.resume": {
+    pt: "Currículo em JSON (JSON Resume)",
+    en: "Résumé as JSON (JSON Resume)",
+    es: "Currículum en JSON (JSON Resume)",
+  },
+  "palette.llms": {
+    pt: "llms.txt para agentes de IA",
+    en: "llms.txt for AI agents",
+    es: "llms.txt para agentes de IA",
+  },
+  "palette.source": {
+    pt: "Código-fonte deste site",
+    en: "Source code of this site",
+    es: "Código fuente de este sitio",
+  },
+  "palette.top": { pt: "Voltar ao início", en: "Back to the top", es: "Volver al inicio" },
+  "palette.kbd": { pt: "Atalho: {keys}", en: "Shortcut: {keys}", es: "Atajo: {keys}" },
+
   // Contact
   "contact.title": { pt: "Contato", en: "Contact", es: "Contacto" },
   "contact.cta": {
