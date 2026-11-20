@@ -255,6 +255,8 @@ const CommandPalettePanel = ({ onClose, onToast }: CommandPalettePanelProps) => 
   const runCommand = (command: Command) => {
     // External links keep the page where it was, so focus goes back to the opener.
     onClose(!!command.external);
+    // Unlock before running: restarting Lenis later (on unmount) would cancel a scroll already under way.
+    setScrollLocked(false);
     command.run();
   };
 
