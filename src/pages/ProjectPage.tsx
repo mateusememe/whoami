@@ -13,7 +13,60 @@ import { PROJECT_PAGE_IDS, pagePath } from "@/i18n/routes";
 import { formatMonth, withCode } from "@/lib/text";
 import { projectById } from "@/seo/meta";
 import { PageFooter } from "@/components/PageFooter";
+import { usePageText } from "@/i18n/pageText";
+import { githubRepos } from "@/data/github-repos";
 import NotFound from "./NotFound";
+
+interface RepoDetails {
+  pushedAt: string;
+  languages: Record<string, number>;
+}
+
+/** Last push and languages of a public repository, from the GitHub snapshot (scripts/sync-github.ts). */
+function repoDetails(url: string | undefined): RepoDetails | undefined {
+  const repo = url?.match(/^https:\/\/github\.com\/([^/]+\/[^/?#]+)/)?.[1];
+  return repo ? githubRepos[repo] : undefined;
+}
+
+/** Share of each language in the repository, as GitHub counts it: the top four and the rest. */
+const LanguageBar = ({ languages }: { languages: Record<string, number> }) => {
+  const t = usePageText();
+  const total = Object.values(languages).reduce((sum, bytes) => sum + bytes, 0);
+  if (total === 0) return null;
+  const sorted = Object.entries(languages).sort((a, b) => b[1] - a[1]);
+  const top = sorted.slice(0, 4);
+  const rest = sorted.slice(4).reduce((sum, [, bytes]) => sum + bytes, 0);
+  const parts = [...top, ...(rest > 0 ? [[t("project.otherLanguages"), rest] as [string, number]] : [])].map(([name, bytes]) => ({
+    name,
+    share: (bytes / total) * 100,
+  }));
+  const shades = [1, 0.62, 0.42, 0.28, 0.18];
+
+  return (
+    <section aria-labelledby="project-languages" className="mt-12">
+      <h2 id="project-languages" className="label mb-4">
+        {t("project.languages")}
+      </h2>
+      <div aria-hidden="true" className="flex h-2.5 w-full overflow-hidden rounded-full bg-border/40">
+        {parts.map((part, index) => (
+          <span
+            key={part.name}
+            className={index === 0 ? "bg-signal" : "bg-foreground"}
+            style={{ width: `${part.share}%`, opacity: index === 0 ? 1 : shades[index] }}
+          />
+        ))}
+      </div>
+      <dl className="mt-3 flex flex-wrap gap-x-6 gap-y-1.5 font-mono text-xs">
+        {parts.map((part) => (
+          <div key={part.name} className="flex gap-1.5">
+            <dt className="text-foreground">{part.name}</dt>
+            <dd className="tabular-nums text-muted-foreground">{part.share < 0.1 ? "<0.1" : part.share.toFixed(1)}%</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  );
+};
 
 /**
  * The live cover with its controls and caption. Keyed by project, so moving
@@ -51,6 +104,7 @@ const CoverFigure = ({ id, index, caption }: { id: string; index: string; captio
 const ProjectPage = () => {
   const { id = "" } = useParams();
   const { language, t } = useLanguage();
+  const pageT = usePageText();
   const { sectionHref, onSectionClick, homePath } = useSiteNavigation();
   const project = projectById(id);
   const content = projectPages[id];
@@ -64,6 +118,7 @@ const ProjectPage = () => {
   const talk = project.talkId ? talks.find((item) => item.id === project.talkId) : undefined;
   const publication = publications.find((item) => item.projectId === project.id);
   const index = String(position + 1).padStart(2, "0");
+  const repo = repoDetails(project.githubUrl);
 
   const facts: Array<[string, string]> = [
     [t("project.year"), String(project.year)],
@@ -71,6 +126,7 @@ const ProjectPage = () => {
     ...(typeof project.stars === "number" && project.stars > 0
       ? [[t("project.stars"), String(project.stars)] as [string, string]]
       : []),
+    ...(repo ? [[pageT("project.pushed"), formatMonth(repo.pushedAt, language)] as [string, string]] : []),
     ...(project.license ? [[t("project.license"), project.license] as [string, string]] : []),
     ...(project.coAuthors?.length ? [[t("project.coAuthors"), project.coAuthors.join(", ")] as [string, string]] : []),
   ];
@@ -214,6 +270,8 @@ const ProjectPage = () => {
             ))}
           </Reveal>
         </section>
+
+        {repo && <LanguageBar languages={repo.languages} />}
 
         {project.tech && project.tech.length > 0 && (
           <section aria-labelledby="project-stack" className="mt-12">

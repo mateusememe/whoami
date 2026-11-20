@@ -3,6 +3,8 @@ import * as portfolio from "@/data/portfolio";
 import { projectPages } from "@/data/projectPages";
 import { translations } from "@/i18n/translations";
 import { pageTranslations } from "@/i18n/pageText";
+import { githubStars } from "@/data/github-stars";
+import { githubRepos } from "@/data/github-repos";
 
 /** Every `es` string (or list of strings) under a value, with its path. */
 function spanishStrings(value: unknown, path: string, out: Array<[string, string]> = []): Array<[string, string]> {
@@ -59,5 +61,23 @@ describe("Page strings", () => {
       expect(translations[key], key).toBeUndefined();
       expect(Object.keys(pageTranslations[key]).sort(), key).toEqual(["en", "es", "pt"]);
     }
+  });
+});
+
+describe("GitHub snapshot", () => {
+  const stars = githubStars;
+  const repos = githubRepos;
+  const repoOf = (url?: string) => url?.match(/^https:\/\/github\.com\/([^/]+\/[^/?#]+)/)?.[1];
+
+  it("covers every public repository the site links, and fills the star counts", () => {
+    for (const project of portfolio.projects) {
+      const repo = repoOf(project.githubUrl);
+      if (!repo) continue;
+      expect(stars, repo).toHaveProperty([repo]);
+      expect(project.stars).toBe(stars[repo] || undefined);
+      expect(repos[repo].pushedAt, repo).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    }
+    for (const item of portfolio.contributions) expect(item.stars).toBe(stars[item.repo] || undefined);
+    expect(portfolio.portfolioStats.stars).toBe(portfolio.projects.reduce((sum, project) => sum + (project.stars ?? 0), 0));
   });
 });

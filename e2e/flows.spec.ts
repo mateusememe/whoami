@@ -141,3 +141,10 @@ test("a project cover can be paused, stepped and scrubbed", async ({ page }) => 
   await page.getByRole("button", { name: "Restart" }).click();
   await expect(time).toHaveText("00.0 s");
 });
+
+test("a project page shows the repository's languages and last push from the snapshot", async ({ page }) => {
+  await page.goto("/projects/rinha-backend-2026-c/");
+  await expect(page.getByRole("heading", { name: "Languages in the repository" })).toBeVisible();
+  await expect(page.getByText("Last push")).toBeVisible();
+  await expect(page.locator("#project-languages + div + dl dt").first()).toHaveText("C");
+});

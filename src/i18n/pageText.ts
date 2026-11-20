@@ -10,6 +10,9 @@ import type { Language } from "@/i18n/translations";
 type Params = Record<string, string | number>;
 
 export const pageTranslations: Record<string, Record<Language, string>> = {
+  "project.pushed": { pt: "Último push", en: "Last push", es: "Último push" },
+  "project.languages": { pt: "Linguagens no repositório", en: "Languages in the repository", es: "Lenguajes en el repositorio" },
+  "project.otherLanguages": { pt: "Outras", en: "Other", es: "Otros" },
   "cover.play": { pt: "Reproduzir a animação", en: "Play the animation", es: "Reproducir la animación" },
   "cover.pause": { pt: "Pausar a animação", en: "Pause the animation", es: "Pausar la animación" },
   "cover.back": { pt: "Voltar {step} s", en: "Back {step} s", es: "Retroceder {step} s" },

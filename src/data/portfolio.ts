@@ -1,3 +1,5 @@
+import { githubStars } from "@/data/github-stars";
+
 export interface SocialLink {
   iconName: "Instagram" | "X" | "Discord" | "Linkedin" | "Mail" | "Github" | "Orcid" | "Lattes";
   href: string;
@@ -52,6 +54,7 @@ export interface ProjectItem {
   id: string;
   name: string;
   desc: LocalizedString;
+  /** GitHub stars, filled from the snapshot (src/data/github-stars.ts). */
   stars?: number;
   tech?: string[];
   /** Main programming language, for structured data. */
@@ -82,6 +85,7 @@ export interface ContributionItem {
   url: string;
   /** Month of the merge, `YYYY-MM`. */
   merged: string;
+  /** GitHub stars, filled from the snapshot (src/data/github-stars.ts). */
   stars?: number;
   desc: LocalizedString;
   tech: string[];
@@ -591,7 +595,6 @@ export const projects: ProjectItem[] = [
   {
     id: "rinha-backend-2026-c",
     name: "rinha-backend-2026-c",
-    stars: 1,
     featured: true,
     language: "C",
     year: 2026,
@@ -607,7 +610,6 @@ export const projects: ProjectItem[] = [
   {
     id: "megabrain-context-protocol",
     name: "megabrain-context-protocol",
-    stars: 3,
     featured: true,
     language: "Python",
     year: 2026,
@@ -653,7 +655,6 @@ export const projects: ProjectItem[] = [
   {
     id: "codecash",
     name: "codecash",
-    stars: 4,
     featured: true,
     language: "Java",
     year: 2025,
@@ -670,7 +671,6 @@ export const projects: ProjectItem[] = [
   {
     id: "8-puzzle",
     name: "8-puzzle",
-    stars: 17,
     featured: true,
     language: "Python",
     year: 2021,
@@ -730,7 +730,6 @@ export const projects: ProjectItem[] = [
   {
     id: "git-github-in-action",
     name: "git-github-in-action",
-    stars: 5,
     featured: true,
     language: "C++",
     year: 2023,
@@ -747,7 +746,6 @@ export const projects: ProjectItem[] = [
   {
     id: "algorithm-forest",
     name: "AlgorithmForest",
-    stars: 2,
     featured: true,
     language: "Java",
     year: 2021,
@@ -763,7 +761,6 @@ export const projects: ProjectItem[] = [
   {
     id: "zhang-suen-thinning",
     name: "zhang-suen-thinning",
-    stars: 2,
     featured: true,
     language: "Python",
     year: 2021,
@@ -779,7 +776,6 @@ export const projects: ProjectItem[] = [
   {
     id: "ai-autopsy-devfest-2025",
     name: "ai-autopsy-devfest-2025",
-    stars: 1,
     language: "Python",
     year: 2025,
     license: "MIT",
@@ -873,7 +869,6 @@ export const contributions: ContributionItem[] = [
     repo: "dmux/go-quality-gate",
     url: "https://github.com/dmux/go-quality-gate/pull/32",
     merged: "2026-10",
-    stars: 5,
     desc: {
       pt: "Detecção do runtime e das ferramentas que o projeto precisa, com dicas de instalação por sistema operacional. Comando `doctor` estendido, opção `tools_policy: recommend` e a tool MCP `check_environment` para agentes de IA. 25 arquivos, 1.353 linhas adicionadas.",
       en: "Detection of the runtime and tools a project needs, with install hints per operating system. Extended `doctor` command, a `tools_policy: recommend` setting and the `check_environment` MCP tool for AI agents. 25 files, 1,353 lines added.",
@@ -886,7 +881,6 @@ export const contributions: ContributionItem[] = [
     repo: "leeozaka/Merkle",
     url: "https://github.com/leeozaka/Merkle/pulls?q=is%3Apr+author%3Amateusememe+is%3Amerged",
     merged: "2026-08",
-    stars: 1,
     desc: {
       pt: "Dois adaptadores de linguagem para o Protocol 1.0 do Merkle, um para Java e Spring Boot e outro para Python. Cada um roda fora do processo e faz detecção de linguagem, indexação determinística de AST e mapeamento de impacto em testes.",
       en: "Two language adapters for Merkle's Protocol 1.0, one for Java and Spring Boot and one for Python. Each runs out of process and does language detection, deterministic AST indexing and test impact mapping.",
@@ -899,7 +893,6 @@ export const contributions: ContributionItem[] = [
     repo: "zanfranceschi/rinha-de-backend-2026",
     url: "https://github.com/zanfranceschi/rinha-de-backend-2026/pull/7621",
     merged: "2026-05",
-    stars: 785,
     desc: {
       pt: "Submissão aceita na quarta edição da Rinha de Backend: detecção de fraude com busca vetorial, limitada a 1 vCPU e 350 MB. O código é o projeto rinha-backend-2026-c.",
       en: "Submission accepted in the fourth Rinha de Backend: fraud detection with vector search, limited to 1 vCPU and 350 MB. The code is the rinha-backend-2026-c project.",
@@ -1157,6 +1150,18 @@ export const publications: Publication[] = [
 /** The link that best represents a talk: the slides, else the code, else the event page. */
 export function talkUrl(talk: TalkItem): string | undefined {
   return talk.links.slides ?? talk.links.repo ?? talk.links.event;
+}
+
+// Star counts come from the GitHub snapshot (src/data/github-stars.ts), not
+// from this file, so they never go stale. Zero stays undefined: no badge.
+for (const project of projects) {
+  const repo = project.githubUrl?.match(/^https:\/\/github\.com\/([^/]+\/[^/?#]+)/)?.[1];
+  const count = repo ? githubStars[repo] : undefined;
+  project.stars = count ? count : undefined;
+}
+for (const item of contributions) {
+  const count = githubStars[item.repo];
+  item.stars = count ? count : undefined;
 }
 
 /**

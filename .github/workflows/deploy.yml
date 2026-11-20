@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # Weekly rebuild, so the GitHub numbers (stars, last push, languages) stay current.
+  schedule:
+    - cron: "0 9 * * 1"
 
 permissions:
   contents: read
@@ -34,6 +37,12 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      # Refreshes src/data/github-*.ts for this build only; keeps the committed snapshot on failure.
+      - name: Sync GitHub stars, pushes and languages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run github:sync
 
       - name: Build production bundle
         env:
