@@ -147,7 +147,7 @@ export const profile = {
   countryCode: "BR",
   githubUser: "mateusememe",
   /** ISO date of the last content update. Feeds sitemap lastmod, JSON-LD dateModified and llms.txt. */
-  updatedAt: "2026-11-16",
+  updatedAt: "2026-11-20",
 } as const;
 
 export const socialLinks: SocialLink[] = [
@@ -369,7 +369,7 @@ export const experiences: Experience[] = [
     role: {
       pt: "Estagiário de Desenvolvimento de Software",
       en: "Software Development Intern",
-      es: "Pasante de Desenvolvimento de Software",
+      es: "Pasante de Desarrollo de Software",
     },
     period: {
       pt: "Abr 2022 – Set 2022",
@@ -379,7 +379,7 @@ export const experiences: Experience[] = [
     desc: {
       pt: "Desenvolvimento de funcionalidades para plataforma SaaS de gestão e planejamento de obras civis, atendendo mais de 200 empresas e 1.000 usuários em 2.600 canteiros. Atuação com React, Node.js e Docker no time de User Insights.",
       en: "Built features for a construction planning SaaS platform used by 200+ companies and 1,000+ users across 2,600 job sites. Worked with React, Node.js, and Docker in the User Insights team.",
-      es: "Desarrollo de funciones para plataforma SaaS de planificación de obras civiles, atendiendo a más de 200 empresas y 1.000 usuarios en 2.600 obras. Trabajo com React, Node.js e Docker no time de User Insights.",
+      es: "Desarrollo de funciones para plataforma SaaS de planificación de obras civiles, atendiendo a más de 200 empresas y 1.000 usuarios en 2.600 obras. Trabajo con React, Node.js y Docker en el equipo de User Insights.",
     },
     tech: ["JavaScript", "React", "Node.js", "Docker"],
   },
@@ -389,7 +389,7 @@ export const experiences: Experience[] = [
     role: {
       pt: "Estagiário de Desenvolvimento de Software",
       en: "Software Development Intern",
-      es: "Pasante de Desenvolvimento de Software",
+      es: "Pasante de Desarrollo de Software",
     },
     period: {
       pt: "Fev 2021 – Mar 2022",
@@ -399,7 +399,7 @@ export const experiences: Experience[] = [
     desc: {
       pt: "Construção de sistema web para controle de espaços de coworking, reservas de salas e gestão de eventos com check-in. Stack com PHP, MySQL, JavaScript e jQuery, com containerização em Docker e testes com Robot Framework.",
       en: "Created a web system for coworking space management, room booking, and event check-in. Stack: PHP, MySQL, JavaScript, and jQuery, containerized with Docker and tested using Robot Framework.",
-      es: "Creación de sistema web para gestión de espaços de coworking, reserva de salas y eventos con check-in. Stack con PHP, MySQL, JavaScript y jQuery, con Docker y pruebas en Robot Framework.",
+      es: "Creación de sistema web para gestión de espacios de coworking, reserva de salas y eventos con check-in. Stack con PHP, MySQL, JavaScript y jQuery, con Docker y pruebas en Robot Framework.",
     },
     tech: ["HTML", "CSS", "JavaScript", "PHP", "jQuery", "MySQL", "Docker", "Robot Framework"],
   },

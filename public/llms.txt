@@ -12,7 +12,7 @@ Portfolio and résumé of a backend software engineer: experience, education, sk
 - Publications: Detecção de agressão física humana em vídeos de vigilância utilizando deep learning (ENEPE 2022)
 - Talks: 9 workshops (MCP: MegaBrain Context Protocol, DevFest Presidente Prudente 2026; O Incrível mundo mágico da web, 37th Infoeste · DevFest Presidente Prudente 2025; AI Autopsy, DevFest Presidente Prudente 2025; API Hero, DevFest Presidente Prudente 2025; Do Caos à Previsão: Domando Estruturas Temporais com Machine Learning, 36th Infoeste · DevFest Presidente Prudente 2024; Git e GitHub em Ação, 35th Infoeste; O Essencial de GIT e GitHub, 34th Infoeste; Intensivo ReactJS e Typescript, 34th Infoeste; Node.JS com testes unitários e PrismaORM, 34th Infoeste)
 - Contact: matt.mendon@gmail.com
-- Last updated: 2026-11-16
+- Last updated: 2026-11-20
 
 ## Profile
 

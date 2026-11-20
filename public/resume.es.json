@@ -107,22 +107,22 @@
     },
     {
       "name": "Prevision",
-      "position": "Pasante de Desenvolvimento de Software",
+      "position": "Pasante de Desarrollo de Software",
       "location": "Florianópolis, SC",
       "startDate": "2022-04",
       "endDate": "2022-09",
-      "summary": "Desarrollo de funciones para plataforma SaaS de planificación de obras civiles, atendiendo a más de 200 empresas y 1.000 usuarios en 2.600 obras. Trabajo com React, Node.js e Docker no time de User Insights.",
+      "summary": "Desarrollo de funciones para plataforma SaaS de planificación de obras civiles, atendiendo a más de 200 empresas y 1.000 usuarios en 2.600 obras. Trabajo con React, Node.js y Docker en el equipo de User Insights.",
       "highlights": [
         "JavaScript, React, Node.js, Docker"
       ]
     },
     {
       "name": "Inova Prudente",
-      "position": "Pasante de Desenvolvimento de Software",
+      "position": "Pasante de Desarrollo de Software",
       "location": "Presidente Prudente, SP",
       "startDate": "2021-02",
       "endDate": "2022-03",
-      "summary": "Creación de sistema web para gestión de espaços de coworking, reserva de salas y eventos con check-in. Stack con PHP, MySQL, JavaScript y jQuery, con Docker y pruebas en Robot Framework.",
+      "summary": "Creación de sistema web para gestión de espacios de coworking, reserva de salas y eventos con check-in. Stack con PHP, MySQL, JavaScript y jQuery, con Docker y pruebas en Robot Framework.",
       "highlights": [
         "HTML, CSS, JavaScript, PHP, jQuery, MySQL, Docker, Robot Framework"
       ]
@@ -710,6 +710,6 @@
   "meta": {
     "canonical": "https://mateusememe.github.io/whoami/resume.es.json",
     "version": "v1.0.0",
-    "lastModified": "2026-11-16T00:00:00Z"
+    "lastModified": "2026-11-20T00:00:00Z"
   }
 }

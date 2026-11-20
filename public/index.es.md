@@ -8,7 +8,7 @@ Python, Java, Go, Kubernetes | Microservicios • Mensajería • Cloud | Invest
 - Sitio: https://mateusememe.github.io/whoami/es/
 - Otros idiomas: [English](https://mateusememe.github.io/whoami/index.md) · [Português](https://mateusememe.github.io/whoami/index.pt.md)
 - Datos estructurados (JSON Resume): https://mateusememe.github.io/whoami/resume.es.json
-- Actualizado el: 2026-11-16
+- Actualizado el: 2026-11-20
 
 ## Sobre Mí
 
@@ -56,19 +56,19 @@ Mantenimiento y evolución del SRE (Sistema de Registro de Ofertas) de la CVM. F
 
 Stack: Java EE, VRaptor, Quartz, Jacoco, Liquibase, EJB, Angular.js, jQuery, HTML5, CSS3, JavaScript, SQL Server
 
-### Pasante de Desenvolvimento de Software — Prevision
+### Pasante de Desarrollo de Software — Prevision
 
 Abr 2022 – Sep 2022 · Florianópolis, SC
 
-Desarrollo de funciones para plataforma SaaS de planificación de obras civiles, atendiendo a más de 200 empresas y 1.000 usuarios en 2.600 obras. Trabajo com React, Node.js e Docker no time de User Insights.
+Desarrollo de funciones para plataforma SaaS de planificación de obras civiles, atendiendo a más de 200 empresas y 1.000 usuarios en 2.600 obras. Trabajo con React, Node.js y Docker en el equipo de User Insights.
 
 Stack: JavaScript, React, Node.js, Docker
 
-### Pasante de Desenvolvimento de Software — Inova Prudente
+### Pasante de Desarrollo de Software — Inova Prudente
 
 Feb 2021 – Mar 2022 · Presidente Prudente, SP
 
-Creación de sistema web para gestión de espaços de coworking, reserva de salas y eventos con check-in. Stack con PHP, MySQL, JavaScript y jQuery, con Docker y pruebas en Robot Framework.
+Creación de sistema web para gestión de espacios de coworking, reserva de salas y eventos con check-in. Stack con PHP, MySQL, JavaScript y jQuery, con Docker y pruebas en Robot Framework.
 
 Stack: HTML, CSS, JavaScript, PHP, jQuery, MySQL, Docker, Robot Framework
 
