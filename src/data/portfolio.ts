@@ -136,6 +136,31 @@ export interface Publication {
   accessed?: string;
 }
 
+/**
+ * A recommendation from someone who worked with Mateus, published with
+ * their permission (usually a LinkedIn recommendation). The quote stays in
+ * the words and language it was written in; translations are marked as such.
+ */
+export interface Testimonial {
+  id: string;
+  name: string;
+  /** Their role at the time. */
+  role: LocalizedString;
+  company: string;
+  /** How they worked together ("managed Mateus at LuizaLabs"). */
+  relation: LocalizedString;
+  /** The quote as written. */
+  quote: string;
+  /** Language of the quote. */
+  quoteLanguage: "pt" | "en" | "es";
+  /** Translations of the quote into the other languages, shown with a "translated" mark. */
+  translations?: Partial<LocalizedString>;
+  /** Where the recommendation is public. */
+  url?: string;
+  /** `YYYY-MM`. */
+  date: string;
+}
+
 export interface SpokenLanguage {
   /** BCP 47 tag. */
   code: string;
@@ -1133,6 +1158,12 @@ export const publications: Publication[] = [
 export function talkUrl(talk: TalkItem): string | undefined {
   return talk.links.slides ?? talk.links.repo ?? talk.links.event;
 }
+
+/**
+ * Recommendations, newest first. Add one only with the author's permission;
+ * the Experience section shows them once the list has any.
+ */
+export const testimonials: Testimonial[] = [];
 
 /** Facts derived from the lists above, so headline numbers never go stale. */
 export const portfolioStats = (() => {

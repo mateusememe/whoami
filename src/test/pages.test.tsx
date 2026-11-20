@@ -7,8 +7,9 @@ import ProjectPage from "@/pages/ProjectPage";
 import TalkPage from "@/pages/TalkPage";
 import NowPage from "@/pages/NowPage";
 import UsesPage from "@/pages/UsesPage";
-import { contributions, experiences, projects, publications, talkUrl, talks } from "@/data/portfolio";
+import { contributions, experiences, projects, publications, talkUrl, talks, testimonials } from "@/data/portfolio";
 import EducationSection from "@/components/sections/EducationSection";
+import { Testimonials } from "@/components/Testimonials";
 import { projectPages } from "@/data/projectPages";
 import { talkPages } from "@/data/talkPages";
 import { uses } from "@/data/uses";
@@ -277,5 +278,42 @@ describe("Command palette", () => {
     fireEvent.keyDown(input, { key: "ArrowUp" });
     fireEvent.keyDown(input, { key: "ArrowUp" });
     expect(options.at(-1)).toHaveAttribute("aria-selected", "true");
+  });
+});
+
+describe("Testimonials", () => {
+  const fixture = [
+    {
+      id: "manager",
+      name: "Ana Souza",
+      role: { pt: "Gerente de Engenharia", en: "Engineering Manager", es: "Gerente de Ingeniería" },
+      company: "LuizaLabs",
+      relation: { pt: "Gerenciou Mateus", en: "Managed Mateus", es: "Gestionó a Mateus" },
+      quote: "Entrega com cuidado e explica as decisões.",
+      quoteLanguage: "pt" as const,
+      translations: { en: "Delivers with care and explains the decisions." },
+      url: "https://www.linkedin.com/in/example/details/recommendations/",
+      date: "2026-03",
+    },
+  ];
+
+  it("render nothing while the list is empty, which is the case today", () => {
+    const { container } = renderWithProviders(<Testimonials items={[]} />, "en");
+    expect(container).toBeEmptyDOMElement();
+    expect(testimonials).toEqual([]);
+  });
+
+  it("show a translation marked as such, with its language, and the source", () => {
+    renderWithProviders(<Testimonials items={fixture} />, "en");
+    const quote = screen.getByText(/Delivers with care/);
+    expect(quote).toHaveAttribute("lang", "en");
+    expect(screen.getByText("Translated")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /View on LinkedIn/ })).toHaveAttribute("href", fixture[0].url);
+  });
+
+  it("fall back to the original words and language when there is no translation", () => {
+    renderWithProviders(<Testimonials items={fixture} />, "es");
+    expect(screen.getByText(/Entrega com cuidado/)).toHaveAttribute("lang", "pt-BR");
+    expect(screen.queryByText("Traducción")).not.toBeInTheDocument();
   });
 });

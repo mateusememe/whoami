@@ -123,6 +123,9 @@ export const translations: Translations = {
     es: "{roles} cargos en {companies} empresas, de {from} a hoy.",
   },
   "exp.current": { pt: "Atual", en: "Current", es: "Actual" },
+  "testimonials.title": { pt: "Recomendações", en: "Recommendations", es: "Recomendaciones" },
+  "testimonials.translated": { pt: "Tradução", en: "Translated", es: "Traducción" },
+  "testimonials.source": { pt: "Ver no LinkedIn", en: "View on LinkedIn", es: "Ver en LinkedIn" },
   "exp.results": { pt: "Resultados", en: "Results", es: "Resultados" },
 
   // Education

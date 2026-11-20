@@ -6,6 +6,7 @@ import { sectionIndex } from "@/data/navigation";
 import { useFocusItems } from "@/motion/useFocusItems";
 import { useProgress } from "@/motion/useProgress";
 import { cn } from "@/lib/utils";
+import { Testimonials } from "@/components/Testimonials";
 
 const YEARS = Array.from(
   { length: portfolioStats.lastYear - portfolioStats.firstYear + 1 },
@@ -115,6 +116,7 @@ const ExperienceSection = () => {
             );
           })}
         </ol>
+        <Testimonials />
       </div>
     </section>
   );
