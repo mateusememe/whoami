@@ -5,10 +5,14 @@ import CommandPalette from "@/components/CommandPalette";
 import TalksSection from "@/components/sections/TalksSection";
 import ProjectPage from "@/pages/ProjectPage";
 import TalkPage from "@/pages/TalkPage";
-import { projects, publications, talkUrl, talks } from "@/data/portfolio";
+import NowPage from "@/pages/NowPage";
+import UsesPage from "@/pages/UsesPage";
+import { contributions, experiences, projects, publications, talkUrl, talks } from "@/data/portfolio";
 import EducationSection from "@/components/sections/EducationSection";
 import { projectPages } from "@/data/projectPages";
 import { talkPages } from "@/data/talkPages";
+import { uses } from "@/data/uses";
+import { MSC_PROJECT_ID } from "@/data/now";
 import { PROJECT_PAGE_IDS, TALK_PAGE_IDS } from "@/i18n/routes";
 import { buildJsonLd } from "@/seo/jsonld";
 import { filterCommands } from "@/lib/commands";
@@ -133,6 +137,34 @@ describe("Talk page", () => {
     const page = graph.find((node) => node["@type"] === "WebPage")!;
     expect(page.mainEntity?.["@id"]).toBe(event["@id"]);
     expect(graph.find((node) => node["@type"] === "BreadcrumbList")!.itemListElement).toHaveLength(3);
+  });
+});
+
+describe("Now page", () => {
+  it("is built from the data: role, degree and research, newest projects, latest talk and contribution", () => {
+    renderWithProviders(<NowPage />, "en", "/now/");
+    expect(screen.getByRole("heading", { level: 1, name: "Now" })).toBeInTheDocument();
+    const role = experiences.find((item) => item.period.en.endsWith("Present"))!;
+    expect(screen.getByRole("heading", { level: 2, name: `${role.role.en} · ${role.company}` })).toBeInTheDocument();
+    expect(screen.getByText(`since ${role.period.en.split(" – ")[0]}`)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: projects.find((p) => p.id === MSC_PROJECT_ID)!.name })).toHaveAttribute(
+      "href",
+      `/projects/${MSC_PROJECT_ID}/`,
+    );
+    expect(screen.getByRole("link", { name: talks[0].title })).toHaveAttribute("href", `/talks/${talks[0].id}/`);
+    const latest = [...contributions].sort((a, b) => b.merged.localeCompare(a.merged))[0];
+    expect(screen.getByRole("link", { name: latest.repo })).toHaveAttribute("href", latest.url);
+  });
+});
+
+describe("Uses page", () => {
+  it("lists every tool by group, in the page language", () => {
+    renderWithProviders(<UsesPage />, "es", "/es/uses/");
+    expect(screen.getByRole("heading", { level: 1, name: "Herramientas" })).toBeInTheDocument();
+    for (const group of uses) {
+      expect(screen.getByRole("heading", { level: 2, name: group.title.es })).toBeInTheDocument();
+      for (const item of group.items) expect(screen.getByText(item.note.es)).toBeInTheDocument();
+    }
   });
 });
 

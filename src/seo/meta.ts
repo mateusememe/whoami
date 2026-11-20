@@ -66,5 +66,14 @@ export function pageMeta(page: Page, language: Language): PageMeta {
       };
     }
   }
+  if (page.kind === "now") {
+    const role = currentRole();
+    return {
+      title: tr(language, "seo.nowTitle"),
+      description: tr(language, "seo.nowDescription", { role: role?.role[language] ?? "", company: role?.company ?? "" }),
+      path,
+    };
+  }
+  if (page.kind === "uses") return { title: tr(language, "seo.usesTitle"), description: tr(language, "seo.usesDescription"), path };
   return { title: tr(language, "seo.title"), description: seoDescription(language), path };
 }

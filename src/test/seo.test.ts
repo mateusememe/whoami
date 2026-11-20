@@ -71,7 +71,10 @@ describe("language routes", () => {
     expect(isPrerenderedPath("/projects/kruskal-algorithm/")).toBe(false);
     expect(isPrerenderedPath("/projects/nope/")).toBe(false);
     expect(isPrerenderedPath("/en/")).toBe(false);
-    expect(PAGES).toHaveLength(1 + PROJECT_PAGE_IDS.length + TALK_PAGE_IDS.length);
+    // Home, one page per featured project and per talk, /now and /uses.
+    expect(PAGES).toHaveLength(1 + PROJECT_PAGE_IDS.length + TALK_PAGE_IDS.length + 2);
+    expect(isPrerenderedPath("/pt/now/")).toBe(true);
+    expect(isPrerenderedPath("/uses")).toBe(true);
     expect(isPrerenderedPath("/es/talks/git-infoeste-2022/")).toBe(true);
     expect(isPrerenderedPath("/talks/nope/")).toBe(false);
   });

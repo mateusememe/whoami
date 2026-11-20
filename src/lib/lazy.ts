@@ -8,6 +8,8 @@ export type LazyPageKind = Exclude<PageKind, "home">;
 const PAGE_MODULES: Record<LazyPageKind, () => Promise<{ default: ComponentType }>> = {
   project: () => import("@/pages/ProjectPage"),
   talk: () => import("@/pages/TalkPage"),
+  now: () => import("@/pages/NowPage"),
+  uses: () => import("@/pages/UsesPage"),
 };
 
 /**

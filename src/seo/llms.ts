@@ -277,6 +277,8 @@ export function renderLlmsTxt(siteUrl: string): string {
     `- [JSON Resume](${siteHref(siteUrl, RESUME_FILES.en)}): The profile as structured data (jsonresume.org schema), with ISO dates`,
     `- [Résumé (PDF)](${siteHref(siteUrl, CV_FILES.en)}): Two-page résumé laid out for applicant tracking systems; also in [Portuguese](${siteHref(siteUrl, CV_FILES.pt)}) and [Spanish](${siteHref(siteUrl, CV_FILES.es)})`,
     `- [Full context](${siteHref(siteUrl, "llms-full.txt")}): All three profiles in one file`,
+    `- [Now](${siteHref(siteUrl, pagePath("en", { kind: "now" }))}): What Mateus is doing at the moment: role, degree, newest projects, latest talk and contribution`,
+    `- [Uses](${siteHref(siteUrl, pagePath("en", { kind: "uses" }))}): The machine and the tools he uses every day`,
     "",
     "## Projects",
     "",

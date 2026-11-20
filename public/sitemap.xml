@@ -660,4 +660,64 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://mateusememe.github.io/whoami/es/talks/node-infoeste-2022/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mateusememe.github.io/whoami/talks/node-infoeste-2022/" />
   </url>
+  <url>
+    <loc>https://mateusememe.github.io/whoami/now/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mateusememe.github.io/whoami/now/" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://mateusememe.github.io/whoami/pt/now/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://mateusememe.github.io/whoami/es/now/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mateusememe.github.io/whoami/now/" />
+  </url>
+  <url>
+    <loc>https://mateusememe.github.io/whoami/pt/now/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mateusememe.github.io/whoami/now/" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://mateusememe.github.io/whoami/pt/now/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://mateusememe.github.io/whoami/es/now/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mateusememe.github.io/whoami/now/" />
+  </url>
+  <url>
+    <loc>https://mateusememe.github.io/whoami/es/now/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mateusememe.github.io/whoami/now/" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://mateusememe.github.io/whoami/pt/now/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://mateusememe.github.io/whoami/es/now/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mateusememe.github.io/whoami/now/" />
+  </url>
+  <url>
+    <loc>https://mateusememe.github.io/whoami/uses/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mateusememe.github.io/whoami/uses/" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://mateusememe.github.io/whoami/pt/uses/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://mateusememe.github.io/whoami/es/uses/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mateusememe.github.io/whoami/uses/" />
+  </url>
+  <url>
+    <loc>https://mateusememe.github.io/whoami/pt/uses/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mateusememe.github.io/whoami/uses/" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://mateusememe.github.io/whoami/pt/uses/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://mateusememe.github.io/whoami/es/uses/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mateusememe.github.io/whoami/uses/" />
+  </url>
+  <url>
+    <loc>https://mateusememe.github.io/whoami/es/uses/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mateusememe.github.io/whoami/uses/" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://mateusememe.github.io/whoami/pt/uses/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://mateusememe.github.io/whoami/es/uses/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mateusememe.github.io/whoami/uses/" />
+  </url>
 </urlset>

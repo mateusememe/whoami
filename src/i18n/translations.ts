@@ -42,6 +42,19 @@ export const translations: Translations = {
     es: "{title} — {kind} de Mateus Mendonça",
   },
 
+  "seo.nowTitle": { pt: "Agora — Mateus Mendonça", en: "Now — Mateus Mendonça", es: "Ahora — Mateus Mendonça" },
+  "seo.nowDescription": {
+    pt: "O que Mateus faz agora: {role} no {company}, mestrado em Ciência da Computação na UNESP e os projetos e palestras mais recentes.",
+    en: "What Mateus is doing now: {role} at {company}, an MSc in Computer Science at UNESP, and his newest projects and talks.",
+    es: "Qué hace Mateus ahora: {role} en {company}, maestría en Ciencias de la Computación en la UNESP y sus proyectos y charlas más recientes.",
+  },
+  "seo.usesTitle": { pt: "Ferramentas — Mateus Mendonça", en: "Uses — Mateus Mendonça", es: "Herramientas — Mateus Mendonça" },
+  "seo.usesDescription": {
+    pt: "A máquina e as ferramentas que Mateus usa no dia a dia: editor e terminal, IA, containers, APIs e dados, pesquisa e escrita.",
+    en: "The machine and the tools Mateus uses every day: editor and terminal, AI, containers, APIs and data, research and writing.",
+    es: "La máquina y las herramientas que Mateus usa a diario: editor y terminal, IA, contenedores, APIs y datos, investigación y escritura.",
+  },
+
   // Hero
   "hero.title": {
     pt: "Backend Software Engineer",
@@ -200,18 +213,10 @@ export const translations: Translations = {
   "talks.online": { pt: "Online", en: "Online", es: "En línea" },
   "talks.event": { pt: "Página do evento", en: "Event page", es: "Página del evento" },
   "talks.project": { pt: "Projeto", en: "Project", es: "Proyecto" },
-  "talk.date": { pt: "Data", en: "Date", es: "Fecha" },
-  "talk.place": { pt: "Local", en: "Place", es: "Lugar" },
-  "talk.length": { pt: "Duração", en: "Length", es: "Duración" },
-  "talk.hours": { pt: "{hours} horas", en: "{hours} hours", es: "{hours} horas" },
-  "talk.organizer": { pt: "Organização", en: "Organizer", es: "Organización" },
-  "talk.coSpeakers": { pt: "Com", en: "With", es: "Con" },
-  "talk.topics": { pt: "O que foi visto", en: "What it covered", es: "Qué se vio" },
-  "talk.prerequisites": { pt: "Pré-requisitos", en: "Prerequisites", es: "Requisitos previos" },
-  "talk.material": { pt: "Material", en: "Material", es: "Material" },
-  "talk.video": { pt: "Gravação", en: "Recording", es: "Grabación" },
+  "pages.now": { pt: "Agora", en: "Now", es: "Ahora" },
+  "pages.uses": { pt: "Ferramentas", en: "Uses", es: "Herramientas" },
+  "pages.more": { pt: "Mais páginas", en: "More pages", es: "Más páginas" },
   "talk.page": { pt: "Página da palestra", en: "Talk page", es: "Página de la charla" },
-  "talk.back": { pt: "Todas as palestras", en: "All talks", es: "Todas las charlas" },
 
   // Project pages
   "project.back": { pt: "Todos os projetos", en: "All projects", es: "Todos los proyectos" },
@@ -255,6 +260,7 @@ export const translations: Translations = {
   "palette.groupSections": { pt: "Seções", en: "Sections", es: "Secciones" },
   "palette.groupProjects": { pt: "Projetos", en: "Projects", es: "Proyectos" },
   "palette.groupTalks": { pt: "Palestras", en: "Talks", es: "Charlas" },
+  "palette.groupPages": { pt: "Páginas", en: "Pages", es: "Páginas" },
   "palette.groupActions": { pt: "Ações", en: "Actions", es: "Acciones" },
   "palette.groupLinks": { pt: "Links", en: "Links", es: "Enlaces" },
   "palette.copyEmail": { pt: "Copiar o email", en: "Copy the email address", es: "Copiar el email" },
@@ -371,7 +377,5 @@ export const translations: Translations = {
   "a11y.openProject": { pt: "Abrir a página de {name}", en: "Open the {name} page", es: "Abrir la página de {name}" },
   "a11y.talkLinks": { pt: "Material de {title}", en: "Material for {title}", es: "Material de {title}" },
   "a11y.projectNav": { pt: "Outros projetos", en: "Other projects", es: "Otros proyectos" },
-  "a11y.talkTech": { pt: "Tecnologias de {title}", en: "Technologies in {title}", es: "Tecnologías de {title}" },
-  "a11y.talkNav": { pt: "Outras palestras", en: "Other talks", es: "Otras charlas" },
   "a11y.breadcrumb": { pt: "Você está em", en: "You are here", es: "Estás en" },
 };

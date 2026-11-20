@@ -58,6 +58,8 @@ export const AppRoutes = () => (
           <Route key={`${prefix}/`} path={prefix || "/"} element={<Index />} />,
           <Route key={`${prefix}/projects`} path={`${prefix}/projects/:id`} element={<LazyPage kind="project" />} />,
           <Route key={`${prefix}/talks`} path={`${prefix}/talks/:id`} element={<LazyPage kind="talk" />} />,
+          <Route key={`${prefix}/now`} path={`${prefix}/now`} element={<LazyPage kind="now" />} />,
+          <Route key={`${prefix}/uses`} path={`${prefix}/uses`} element={<LazyPage kind="uses" />} />,
         ])}
         <Route path="*" element={<NotFound />} />
       </Route>

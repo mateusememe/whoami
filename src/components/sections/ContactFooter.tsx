@@ -8,6 +8,7 @@ import { Marquee } from "@/components/motion/Marquee";
 import { renderSocialIcon } from "@/components/SocialIcons";
 import { socialLinks } from "@/data/portfolio";
 import { sectionIndex } from "@/data/navigation";
+import { SiteLinks } from "@/components/PageFooter";
 import { CV_FILES } from "@/seo/files";
 
 const mail = socialLinks.find((link) => link.href.startsWith("mailto:"));
@@ -116,6 +117,9 @@ const ContactFooter = () => {
           © <span suppressHydrationWarning>{new Date().getFullYear()}</span> Mateus Mendonça Monteiro — Crafted with React,
           Vite, Tailwind & Three.js
         </p>
+        <nav aria-label={t("pages.more")} className="flex flex-wrap items-center gap-x-6 gap-y-1 font-mono text-xs text-muted-foreground">
+          <SiteLinks />
+        </nav>
         <p className="label flex items-center gap-3">
           <span>{t("footer.localTime")}</span>
           <LocalClock className="text-foreground" />

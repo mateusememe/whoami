@@ -22,6 +22,8 @@ Portfolio and résumé of a backend software engineer: experience, education, sk
 - [JSON Resume](https://mateusememe.github.io/whoami/resume.json): The profile as structured data (jsonresume.org schema), with ISO dates
 - [Résumé (PDF)](https://mateusememe.github.io/whoami/cv/mateus-mendonca-monteiro-resume-en.pdf): Two-page résumé laid out for applicant tracking systems; also in [Portuguese](https://mateusememe.github.io/whoami/cv/mateus-mendonca-monteiro-curriculo-pt.pdf) and [Spanish](https://mateusememe.github.io/whoami/cv/mateus-mendonca-monteiro-curriculum-es.pdf)
 - [Full context](https://mateusememe.github.io/whoami/llms-full.txt): All three profiles in one file
+- [Now](https://mateusememe.github.io/whoami/now/): What Mateus is doing at the moment: role, degree, newest projects, latest talk and contribution
+- [Uses](https://mateusememe.github.io/whoami/uses/): The machine and the tools he uses every day
 
 ## Projects
 

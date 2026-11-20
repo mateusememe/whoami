@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight, ArrowUpRight, FolderGit2, Github, PlayCircle } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { usePageText } from "@/i18n/pageText";
 import { Reveal, TagList } from "@/components/ds";
 import { Magnetic } from "@/components/motion/Magnetic";
 import { PageFooter } from "@/components/PageFooter";
@@ -23,7 +24,8 @@ const chip =
  */
 const TalkPage = () => {
   const { id = "" } = useParams();
-  const { language, t } = useLanguage();
+  const { language } = useLanguage();
+  const t = usePageText();
   const { sectionHref, onSectionClick, homePath } = useSiteNavigation();
   const talk = talkById(id);
   const content = talkPages[id];

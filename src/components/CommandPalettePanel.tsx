@@ -13,7 +13,9 @@ import {
   ArrowUp,
   ArrowUpRight,
   Braces,
+  Clock,
   FileDown,
+  Wrench,
   Bot,
   Code2,
   Copy,
@@ -39,12 +41,13 @@ import { runViewTransition } from "@/motion/viewTransition";
 import { filterCommands } from "@/lib/commands";
 import { cn } from "@/lib/utils";
 
-type Group = "sections" | "projects" | "talks" | "actions" | "links";
+type Group = "sections" | "projects" | "talks" | "pages" | "actions" | "links";
 
 const GROUPS: Array<{ id: Group; key: string }> = [
   { id: "sections", key: "palette.groupSections" },
   { id: "projects", key: "palette.groupProjects" },
   { id: "talks", key: "palette.groupTalks" },
+  { id: "pages", key: "palette.groupPages" },
   { id: "actions", key: "palette.groupActions" },
   { id: "links", key: "palette.groupLinks" },
 ];
@@ -153,6 +156,17 @@ const CommandPalettePanel = ({ onClose, onToast }: CommandPalettePanelProps) => 
           keywords: `${talk.tech.join(" ")} ${t(`talks.${talk.kind}`)}`,
           icon: Presentation,
           run: () => navigate(pagePath(language, { kind: "talk", id: talk.id })),
+        }),
+      ),
+      ...(["now", "uses"] as const).map(
+        (kind): Command => ({
+          id: `page-${kind}`,
+          group: "pages",
+          label: t(`pages.${kind}`),
+          hint: `/${kind}`,
+          keywords: kind === "now" ? "now agora ahora" : "uses ferramentas herramientas setup tools",
+          icon: kind === "now" ? Clock : Wrench,
+          run: () => navigate(pagePath(language, { kind })),
         }),
       ),
       ...(mail

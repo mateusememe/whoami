@@ -97,6 +97,7 @@ function article(item: (typeof publications)[number], personId: string, about?: 
 export function buildJsonLd(language: Language, siteUrl: string, target: Page = HOME): Record<string, unknown> {
   if (target.kind === "project") return buildProjectJsonLd(language, siteUrl, target.id);
   if (target.kind === "talk") return buildTalkJsonLd(language, siteUrl, target.id);
+  if (target.kind === "now" || target.kind === "uses") return buildSinglePageJsonLd(language, siteUrl, target);
   const home = siteHref(siteUrl);
   const page = siteHref(siteUrl, LANGUAGE_PATHS[language]);
   const personId = `${home}#person`;
@@ -334,6 +335,44 @@ function buildTalkJsonLd(language: Language, siteUrl: string, id: string): Recor
           { "@type": "ListItem", position: 1, name: profile.name, item: homeUrl },
           { "@type": "ListItem", position: 2, name: tr(language, "talks.title"), item: `${homeUrl}#talks` },
           { "@type": "ListItem", position: 3, name: talk.title, item: url },
+        ],
+      },
+    ],
+  };
+}
+
+/** /now and /uses: a WebPage about the person, with a breadcrumb. */
+function buildSinglePageJsonLd(language: Language, siteUrl: string, target: Page): Record<string, unknown> {
+  const home = siteHref(siteUrl);
+  const meta = pageMeta(target, language);
+  const url = siteHref(siteUrl, meta.path);
+  const personId = `${home}#person`;
+  const websiteId = `${home}#website`;
+  const homeUrl = siteHref(siteUrl, LANGUAGE_PATHS[language]);
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      { "@type": "WebSite", "@id": websiteId, url: home, name: profile.name, publisher: { "@id": personId } },
+      { "@type": "Person", "@id": personId, name: profile.name, url: home },
+      {
+        "@type": "WebPage",
+        "@id": `${url}#webpage`,
+        url,
+        name: meta.title,
+        description: meta.description,
+        inLanguage: HTML_LANG[language],
+        isPartOf: { "@id": websiteId },
+        about: { "@id": personId },
+        breadcrumb: { "@id": `${url}#breadcrumb` },
+        dateModified: profile.updatedAt,
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${url}#breadcrumb`,
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: profile.name, item: homeUrl },
+          { "@type": "ListItem", position: 2, name: tr(language, `pages.${target.kind}`), item: url },
         ],
       },
     ],

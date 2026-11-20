@@ -9,6 +9,8 @@ import type { Language } from "@/i18n/translations";
  *   home      /            /pt/            /es/
  *   project   /projects/x/ /pt/projects/x/ /es/projects/x/
  *   talk      /talks/x/    /pt/talks/x/    /es/talks/x/
+ *   now       /now/        /pt/now/        /es/now/
+ *   uses      /uses/       /pt/uses/       /es/uses/
  *
  * A new kind of page is a member of `Page`, an entry in ID_PAGES or
  * SINGLE_PAGES, a loader in src/lib/lazy.ts and a route in App.tsx.
@@ -27,7 +29,12 @@ export const LANGUAGES: Language[] = ["en", "pt", "es"];
  * per item (one per featured project, one per talk); the others once per
  * language.
  */
-export type Page = { kind: "home" } | { kind: "project"; id: string } | { kind: "talk"; id: string };
+export type Page =
+  | { kind: "home" }
+  | { kind: "project"; id: string }
+  | { kind: "talk"; id: string }
+  | { kind: "now" }
+  | { kind: "uses" };
 
 export type PageKind = Page["kind"];
 type IdPage = Extract<Page, { id: string }>;
@@ -48,7 +55,7 @@ const ID_PAGES: { [K in IdPage["kind"]]: { segment: string; ids: string[] } } = 
 };
 
 /** Pages without an id: their URL segment. */
-const SINGLE_PAGES: { [K in SinglePage["kind"]]: string } = {};
+const SINGLE_PAGES: { [K in SinglePage["kind"]]: string } = { now: "now", uses: "uses" };
 
 const idKinds = Object.keys(ID_PAGES) as IdPage["kind"][];
 const singleKinds = Object.keys(SINGLE_PAGES) as SinglePage["kind"][];
@@ -67,7 +74,7 @@ export function pagePath(language: Language, page: Page): string {
   const prefix = LANGUAGE_PATHS[language];
   if (page.kind === "home") return prefix;
   if ("id" in page) return `${prefix}${ID_PAGES[page.kind].segment}/${page.id}/`;
-  return `${prefix}${SINGLE_PAGES[(page as { kind: SinglePage["kind"] }).kind]}/`;
+  return `${prefix}${SINGLE_PAGES[page.kind]}/`;
 }
 
 export interface Route {

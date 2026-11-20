@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import * as portfolio from "@/data/portfolio";
 import { projectPages } from "@/data/projectPages";
 import { translations } from "@/i18n/translations";
+import { pageTranslations } from "@/i18n/pageText";
 
 /** Every `es` string (or list of strings) under a value, with its path. */
 function spanishStrings(value: unknown, path: string, out: Array<[string, string]> = []): Array<[string, string]> {
@@ -44,9 +45,19 @@ describe("Spanish copy", () => {
       ...spanishStrings(portfolio, "portfolio"),
       ...spanishStrings(projectPages, "projectPages"),
       ...spanishStrings(translations, "translations"),
+      ...spanishStrings(pageTranslations, "pageTranslations"),
     ];
     expect(strings.length).toBeGreaterThan(100);
     const leftovers = strings.filter(([, text]) => PORTUGUESE.test(text.replace(PROPER_NOUNS, "")));
     expect(leftovers.map(([path, text]) => `${path}: ${text.slice(0, 80)}`)).toEqual([]);
+  });
+});
+
+describe("Page strings", () => {
+  it("live in one dictionary only, with the three languages", () => {
+    for (const key of Object.keys(pageTranslations)) {
+      expect(translations[key], key).toBeUndefined();
+      expect(Object.keys(pageTranslations[key]).sort(), key).toEqual(["en", "es", "pt"]);
+    }
   });
 });
