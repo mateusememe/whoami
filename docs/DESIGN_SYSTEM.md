@@ -263,7 +263,9 @@ Each section sets `data-scene` to the formation the particle field should hold w
 | 4 | Projects | Pinned gallery of the featured projects: vertical scroll moves the cards sideways; each cover runs its algorithm. Below it, the other repositories and the merged pull requests as rows | Tunnel around the screen edges that the scroll travels through |
 | 5 | Talks | A timeline: year in display type and month as a label on the left; kind, event, title, summary, organizer and co-speakers in the middle; code, slides, notebook, event page and project links as chips on the right | A bundle of seven sine waves low in the frame, swelling in bursts like a voice, at 17 % so it never competes with the text |
 | 6 | Contact | Email as the headline, channels as rows, the name as an outlined band | Spiral disc lying under the content; the service mesh returns |
-| 4 | Project page | Breadcrumb, `NN / 12` index, the name in `display-xl`, facts as a `<dl>`; the live cover at full width (21:9 on desktop) with a `fig.` caption; summary, repository button, the talk it was built for; numbered details; stack; previous and next projects | The projects tunnel, so the field holds still when a card opens |
+| 4 | Project page | Breadcrumb, `NN / 12` index, the name in `display-xl`, facts as a `<dl>` (year, language, stars, last push, license, co-authors); the live cover at full width (21:9 on desktop) with its controls and a `fig.` caption; summary, repository button, the talk it was built for; numbered details; the repository's languages as a bar; stack; previous and next projects | The projects tunnel, so the field holds still when a card opens |
+| 5 | Talk page | Breadcrumb, `NN / 09 · kind · event`, the title in `display-lg` (with its `lang`), facts as a `<dl>` (date, place, organizer, length, co-speakers); summary, code button and material chips, the project page; numbered topics; prerequisites and stack; previous and next talks | The talks' sound wave |
+| 2, 0 | /now, /uses | `InnerPageHeader` (breadcrumb, `display-xl` title, lead); /now: one row per area (label in signal on the left, title, meta, one sentence, chips to the pages); /uses: groups as rows, tools as a two-column grid of name (linked) and note | Terrain for /now, haze for /uses and the notes |
 
 **Service mesh** (hero and contact): gateways are services (signal dots with a pulsing ring), pods are instances, backbone links connect gateways, packets are messages in flight. Binary digits fall behind every scene.
 
@@ -290,6 +292,22 @@ Each section sets `data-scene` to the formation the particle field should hold w
 
 **Rows.** Repositories outside the gallery and open-source contributions use the `row-link` pattern from Education and Contact: name on the left, one description in the middle, stack and arrow on the right, stacked on phones. On hover the row gets a signal wash and the arrow slides into place; on touch screens the arrow sits in place from the start. Text between backticks in a description renders as `<code>` in the mono font.
 
+**Results.** A role whose text states a figure shows it under the description as a `<dl>`: the figure in `display-sm` signal, its meaning in mono below. Only figures the text states; a test enforces it.
+
+**Inner pages.** `InnerPageHeader` and `PageFooter` frame every page but the home page. The footer carries the links to /now, /uses, the notes (once published) and the résumé PDF (`SiteLinks`, also in the contact section), the email and a back link to the section or page the page belongs to.
+
+**Résumé button.** A pill with a file icon, the label in the page language and a muted `PDF`: in the hero under the social links, and beside the email in the contact section. It downloads the PDF in the page language.
+
+**Cover controls.** Under a project page cover: round 40 px buttons for play/pause, half a second back and forward, restart, a speed pill (0.5×, 1×, 2×), a slider in the signal accent over 30 seconds and a mono time readout. Icons carry visually hidden labels; the slider has a label and `aria-valuetext`.
+
+**Language bar.** A 10 px rounded bar of the repository's languages: the first in signal, the next ones in foreground at falling opacity, the rest grouped as "Other"; the bar is decorative and the `<dl>` legend below carries the names and shares.
+
+**Notes body.** `.note-body` styles the Markdown: muted body text at 17 px with 1.75 line height, foreground headings in the display font, links underlined in signal, code in the mono font, blocks in a card with a border, tables that scroll sideways on phones. 70 ch measure.
+
+**Recommendations.** Glass cards under the roles: the quote in body-lg foreground with its `lang`, then the name, role, company and date, how they worked together, a "translated" mark when it applies and the link to the source. Hidden while there is none.
+
+**Terminal.** Ctrl+` or the palette opens it: a window (`max-w-3xl`, 70 vh) over the blurred backdrop on larger screens, the whole screen on phones, on the opaque card color. Title bar (`mateus@whoami: ~`, close), the output in 13 px mono (input lines muted, names in signal, errors in foreground with a `!`), and the prompt line with a 16 px input on phones so iOS does not zoom.
+
 **Command palette.** ⌘K / Ctrl+K or `/` opens it, as does the `⌘` button in the header (sm and up) and the last item of the mobile menu. A glass panel at 12 svh from the top over a blurred backdrop: a `$` prompt field, then groups (sections, projects, talks, actions, links) with an icon, a label and a mono hint per row. The active row has a soft foreground wash, a signal icon and a return-key glyph. The panel enters with a short drop and scale (`palette-in`); confirmations such as "Email copied" appear as a pill at the bottom of the screen.
 
 ## 6. Accessibility checklist
@@ -304,7 +322,10 @@ Each section sets `data-scene` to the formation the particle field should hold w
 - [ ] Lists of things are real lists (`TagList`, social links, channels, stack as `<dl>`).
 - [ ] The pinned gallery follows keyboard focus and has previous/next buttons and tabs.
 - [ ] The mobile menu is a dialog, closes on Escape and locks page scroll while open.
-- [ ] The command palette is a modal dialog with a combobox and a listbox (`aria-activedescendant`), works with arrows, Home, End, Enter and Escape, keeps focus in the field and returns it on close.
+- [ ] The command palette is a modal dialog with a combobox and a listbox (`aria-activedescendant`), works with arrows, Home, End, Enter and Escape, keeps focus in the field and returns it on close. Enter runs the best match.
+- [ ] The terminal is a modal dialog with a labelled input and its output in a polite `role="log"`; Escape closes it and returns focus.
+- [ ] Text in a language other than the page's carries `lang` (talk titles, quotes).
+- [ ] Every page kind passes the layout checker (`e2e/support.ts`) at nine widths, and the CI keeps Lighthouse accessibility at 100.
 - [ ] Every page has a breadcrumb or a heading structure that starts at `h1`; project pages label their navigation landmarks (breadcrumb, other projects).
 
 ## 7. Do and don't
@@ -317,4 +338,5 @@ Each section sets `data-scene` to the formation the particle field should hold w
 | Use the motion tokens (`duration-slow ease-expo`) | Use ad-hoc `duration-500` |
 | Render the final state first, then animate in an effect | Read `window` or `localStorage` during render |
 | Keep formations behind text dim | Let the 3D layer compete with reading content |
-| Add new copy to `translations.ts` in pt, en and es | Ship a string in one language |
+| Add new copy to `translations.ts` in pt, en and es (`pageText.ts` when only a lazy page uses it) | Ship a string in one language |
+| Use the foreground or signal for text in a panel | Use the `destructive` red for text: it falls below 4.5:1 on the card |

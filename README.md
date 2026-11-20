@@ -23,28 +23,35 @@
 - 🌐 **Trilingual Localization (i18n)**: Instant switching between **Português (PT-BR)**, **English (EN)**, and **Español (ES)**. Each language has its own prerendered URL (`/`, `/pt/`, `/es/`), and the choice persists in `localStorage`.
 - 🎬 **A presentation in scenes**: the page answers `whoami` scene by scene (name, statement, trajectory, degrees, stack, work, talks, contact), each with its own layout and its own 3D formation.
 - 📄 **A page per project**: each of the 12 featured projects has its own prerendered URL in three languages (`/projects/<id>/`, `/pt/…`, `/es/…`) with the live cover at full width, facts, details and links. Opening a card morphs its cover into the page's cover (View Transitions), and the WebGL layer stays mounted across pages.
-- 🎤 **Talks & workshops**: a timeline of the nine workshops given at Infoeste and DevFest Presidente Prudente (2022 to 2026), with links to the code, slides or event page.
-- ⌨️ **Command palette (⌘K / Ctrl+K or `/`)**: jump to a section, a project page or a talk, copy the email, switch theme or language, open the profiles.
+- 🎤 **Talks & workshops**: a timeline of the nine workshops given at Infoeste and DevFest Presidente Prudente (2022 to 2026), each with its own page: date, place, length, co-speakers, what it covered (from the event program and the repositories), prerequisites and the open material.
+- 📄 **Résumé PDF per language, ATS-ready**: printed at build time from the same data (one column of real text, standard section names, no tables, icons or ligatures, two A4 pages) and read back with pdf.js as an applicant tracking system would. Linked from the hero, the contact section, the palette, the terminal and `llms.txt`.
+- ⌨️ **Command palette (⌘K / Ctrl+K or `/`)**: jump to a section, a project, a talk or a page, download the résumé, copy the email, switch theme or language, open the profiles or the terminal.
+- 🖥️ **`whoami` terminal (Ctrl+`)**: `whoami`, `ls`, `cat`, `open`, `cv`, `email`, `theme`, `lang`, with history and Tab completion, in the page language.
+- ⏯️ **Covers you can step through**: on a project page, pause, step, speed up or scrub the algorithm that runs on its cover.
+- 📈 **Results and GitHub data**: each role shows the figures its description states; project pages show the repository's last push and languages, refreshed from the GitHub API at every deploy and once a week.
+- 🗒️ **/now and /uses**: what Mateus is doing now (derived from the data) and the tools he uses. Notes (a blog with Atom feeds) and recommendations are built and stay hidden until there is content.
 - 🛰️ **WebGL layer (three.js, custom GLSL)**: a service mesh with message packets, plus a particle field that morphs with the scroll between seven formations: haze, a dot-matrix portrait sampled from the profile photo, terrain, globe, tunnel, a sound wave and galaxy. A thin-lens model turns out-of-focus points into bokeh. Lazy-loaded, with quality tiers, adaptive resolution, a reduced-motion still frame and a 2D canvas fallback.
 - 🧮 **Project covers that run the code**: each of the 12 gallery cards plays its own algorithm on a canvas (A* on the 8-puzzle, AVL rotations, Zhang-Suen thinning, Fuzzy C-Means, a nearest-neighbour search...). The other repositories and the merged open-source pull requests follow as rows.
 - 🌊 **Motion layer**: Lenis smooth scrolling, scroll-linked CSS variables from one rAF loop, pinned scenes with `position: sticky`, word-by-word text, magnetic buttons, 3D tilt, a cursor ring, marquees and View Transitions for theme and language. Everything renders visible first and stops under `prefers-reduced-motion`.
 - 🎨 **Design System**: fluid display type scale, one signal accent, glass surfaces, film grain, and typed primitives. See [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md).
 - 🌓 **Dark & Light Mode**: Modern glassmorphism UI with theme toggle and preference persistence.
-- 📱 **Responsive and accessible**: checked on 20 viewports from 320×568 to 2560×1440, phones in both orientations included. Lighthouse (mobile): performance 93–94, accessibility, best practices and SEO 100.
-- ⚡ **Performance**: hydration in a React transition, WebGL started on idle, the project page and the palette as lazy chunks, AVIF/WebP photos.
+- 📱 **Responsive and accessible**: Playwright checks one page of each kind at nine widths (320 to 2560 px): no sideways scroll, no text cut at the edge, text 11 px and up, targets 24 px and up. Lighthouse (mobile, median of 3): performance 95–97, accessibility, best practices and SEO 100; CI fails below 100 in accessibility and SEO.
+- ⚡ **Performance**: hydration in a React transition, WebGL started on idle, every page but the home page, the palette and the terminal as lazy chunks, AVIF/WebP photos, and a 120 kB gzip budget on the JavaScript every page loads first.
+- 📊 **Analytics without cookies (optional)**: GoatCounter, off until the `GOATCOUNTER_URL` repository variable is set; Do Not Track and GPC are respected.
 - 🔍 **SEO**:
-  - 39 static pages (home and 12 project pages, in three languages), prerendered at build time and hydrated, each with its own title, description, canonical URL and `hreflang` links. The tab title follows client-side navigation.
-  - JSON-LD: `WebSite`, `ProfilePage`, `Person` (talks as `Event`s) and an `ItemList` of `SoftwareSourceCode` on the home page; `SoftwareSourceCode` and `BreadcrumbList` on project pages.
+  - 72 static pages (home, 12 projects, 9 talks, /now and /uses, in three languages), prerendered at build time and hydrated, each with its own title, description, canonical URL and `hreflang` links. The tab title follows client-side navigation.
+  - JSON-LD: `WebSite`, `ProfilePage`, `Person` (talks as `EducationEvent`s) and an `ItemList` of `SoftwareSourceCode` on the home page; `SoftwareSourceCode`, `EducationEvent`, `WebPage` and `BreadcrumbList` on the inner pages; `Blog` and `BlogPosting` once notes are published.
   - `sitemap.xml` with language alternates, a share card per language (1200x630), `rel="me"` links, web manifest.
 - 🤖 **Agent-ready (AXO / ARO)**:
   - `llms.txt` (llmstxt.org) with a key-facts list and links to the project pages and talks, `llms-full.txt` and Markdown profiles in PT/EN/ES.
   - JSON Resume (`resume.json`, `resume.pt.json`, `resume.es.json`), with project highlights and talks.
   - WebMCP tools on every page (`get_profile`, `list_projects`, `list_talks`, `get_contact`, `go_to_section`) for browser agents that support `document.modelContext`.
+  - A business card for the terminal: `npx mateusememe` ([`packages/card`](packages/card)).
   - Every one of these files is generated from the portfolio data, and the tests fail when they drift.
-- 🧪 **Automated Testing**: Vitest + Testing Library suites for context state, internationalization, navigation, section rendering, design-system primitives, WebGL scene generation, hydration, SEO metadata and agent files.
+- 🧪 **Automated Testing**: 217 Vitest + Testing Library tests (context state, internationalization, navigation, sections and pages, design-system primitives, WebGL scene generation, hydration, SEO metadata, agent files, the résumé, the terminal, analytics and the npx card), plus Playwright end-to-end checks on the production build.
 - 🚀 **Full CI/CD Automation**:
-  - **CI Workflow**: Automatic typechecking, linting, testing, and production build checks on pull requests and pushes.
-  - **Deploy Workflow**: Automated zero-config deployment to **GitHub Pages**.
+  - **CI Workflow**: typecheck, lint, unit tests, the production build with the résumé check, the bundle budget, Playwright and Lighthouse CI, with the reports (screenshots per width, traces, Lighthouse) as artifacts.
+  - **Deploy Workflow**: deployment to **GitHub Pages** on every push to `main` and every Monday (fresh GitHub numbers). A custom domain needs only repository variables: [`docs/CUSTOM_DOMAIN.md`](docs/CUSTOM_DOMAIN.md).
 
 ---
 
@@ -87,8 +94,12 @@ whoami/
 │   ├── generate-head.ts         # Rewrites the SEO block of index.html
 │   ├── generate-sitemap.ts      # Writes public/sitemap.xml
 │   ├── generate-llms.ts         # Writes the agent files to public/
+│   ├── generate-card.ts         # Writes packages/card/card.json
 │   ├── render-og-image.ts       # Renders the share card per language (npm run og:image)
-│   └── prerender.ts             # Renders all 39 pages after the build
+│   ├── prerender.ts             # Renders all 72 pages after the build
+│   ├── render-cv.ts, check-cv.ts # Prints the résumé PDFs, then reads them back as an ATS would
+│   ├── sync-github.ts           # Stars, last push and languages from the GitHub API
+│   └── check-bundle.ts          # Initial bundle budget
 ├── src/
 │   ├── agents/                      # WebMCP tools for browser agents
 │   ├── components/
@@ -191,9 +202,14 @@ Open [http://localhost:8080](http://localhost:8080) in your browser.
 | Command | Description |
 | :--- | :--- |
 | `npm run dev` | Regenerates the head block, sitemap and agent files, then starts the Vite development server on port 8080. |
-| `npm run build` | Regenerates the same files, builds the client and server bundles into `/dist` and prerenders `/`, `/pt/` and `/es/`. |
-| `npm run generate` | Rewrites the SEO block of `index.html`, `public/sitemap.xml` and the agent files from the portfolio data. |
+| `npm run build` | Regenerates the same files, builds the client and server bundles into `/dist`, prerenders the 72 pages, then prints the résumé PDFs and checks them. |
+| `npm run generate` | Rewrites the SEO block of `index.html`, `public/sitemap.xml`, the agent files and `packages/card/card.json` from the portfolio data. |
 | `npm run og:image` | Renders the share cards (`og-image.png`, `.pt.png`, `.es.png`) in headless Chrome. Run it when the name, role or photo changes. |
+| `npm run cv` | Prints the résumé PDFs into `public/cv/` so the dev server can serve them (headless Chrome). |
+| `npm run github:sync` | Refreshes the stars, last push and languages snapshot from the GitHub API (uses `gh auth token` locally). |
+| `npm run test:e2e` | Playwright on the production build (run `npm run build` first). |
+| `npm run lighthouse` | Lighthouse CI on the production build, with the score thresholds in `lighthouserc.json`. |
+| `npm run check:bundle` | Fails when the JavaScript every page loads first passes 120 kB gzip. |
 | `npm run preview` | Locally serves the production build from `/dist`. |
 | `npm test` | Runs the Vitest test suite once. |
 | `npm run test:watch`| Runs the Vitest test suite in interactive watch mode. |

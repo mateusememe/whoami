@@ -95,16 +95,28 @@ React renders content and nothing else. Everything that changes per frame (scrol
 | `src/webgl/scene/shaders.ts` | GLSL for the five layers. | no |
 | `src/webgl/core/capabilities.ts`, `input.ts`, `governor.ts`, `palette.ts`, `random.ts` | Device tiers, pointer tracking, adaptive pixel ratio, CSS tokens → sRGB, seeded PRNG. | no |
 | `src/hooks/useTheme.ts` | Theme state, storage, favicon, view transition. | no |
-| `src/i18n/routes.ts` | Pages and URLs: `parseRoute`, `pagePath`, `PAGES` (home + one per featured project), `<html lang>` values, base stripping. | no |
-| `src/components/SiteLayout.tsx` | Shell shared by every page: WebGL layer, header, palette, grain, cursor; route scroll, document head, agent tools. | no |
+| `src/i18n/routes.ts` | Kinds of page and their URLs: pages with an id (`project`, `talk`, `note`) and single pages (`now`, `uses`, `notes`, the last only with a published note); `parseRoute`, `pagePath`, `PAGES`, `<html lang>` values, base stripping. | no |
+| `src/i18n/pageText.ts` | Strings used only by lazy pages and panels, with `usePageText()`; loads with them. | no |
+| `src/components/SiteLayout.tsx` | Shell shared by every page: WebGL layer, header, palette, terminal, grain, cursor; route scroll, document head, agent tools, page views. | no |
 | `src/hooks/useSiteNavigation.ts` | Section links that work from any page, project links with the cover View Transition. | no |
 | `src/hooks/useRouteScroll.ts`, `useDocumentHead.ts` | Scroll on navigation (restore, hash, top) and title/meta/canonical on navigation. | no |
-| `src/lib/lazy.ts`, `src/pages/lazyPages.tsx` | Lazy parts held for synchronous rendering: one chunk per kind of page (`loadPage(kind)`) and the palette panel. | no |
-| `src/pages/ProjectPage.tsx`, `src/data/projectPages.ts` | Project pages and their content (both lazy chunks). | no |
+| `src/lib/lazy.ts`, `src/pages/lazyPages.tsx` | Lazy parts held for synchronous rendering: one chunk per kind of page (`loadPage(kind)`), the palette panel and the terminal panel. | no |
+| `src/pages/ProjectPage.tsx`, `src/data/projectPages.ts`, `src/data/github-repos.ts` | Project pages: content, cover with controls (`covers/CoverControls.tsx`), last push and languages (lazy chunks). | no |
+| `src/pages/TalkPage.tsx`, `src/data/talkPages.ts` | Talk pages: topics, prerequisites and length from the event programs and repositories (lazy chunks). | no |
+| `src/pages/NowPage.tsx`, `src/data/now.ts`; `UsesPage.tsx`, `src/data/uses.ts` | /now (derived from the data) and /uses. | no |
+| `src/content/notes/*`, `src/pages/NotesPage.tsx`, `NotePage.tsx` | Notes: metadata in `index.ts`, Markdown bodies per language rendered with `marked` in the note chunk; hidden until one is published. | no |
+| `src/components/PageFooter.tsx`, `InnerPageHeader.tsx` | Footer (with the links to /now, /uses, notes and the résumé) and header of the inner pages. | no |
+| `src/components/Terminal.tsx`, `TerminalPanel.tsx`, `src/lib/terminal.ts` | Ctrl+` listener in the main bundle; the panel in a lazy chunk; the commands as pure functions. | no |
+| `src/components/Testimonials.tsx` | Recommendations under the roles; renders nothing while `testimonials` is empty. | no |
+| `src/lib/analytics.ts`, `src/hooks/usePageViews.ts` | GoatCounter page views and events; off without `VITE_GOATCOUNTER_URL`, and for Do Not Track or GPC. | no |
+| `src/data/github-stars.ts`, `scripts/sync-github.ts` | Star counts for projects and contributions, generated from the GitHub API. | no |
+| `src/cv/cv.ts`, `scripts/render-cv.ts`, `check-cv.ts`, `chrome.ts` | The ATS résumé per language: model and print HTML, Chrome print to PDF, read-back check with pdf.js. | no |
+| `src/seo/card.ts`, `scripts/generate-card.ts`, `packages/card/` | The `npx mateusememe` business card and its generated data. | no |
+| `e2e/*`, `playwright.config.ts`, `lighthouserc.json`, `scripts/check-bundle.ts` | Browser checks on the build, Lighthouse CI thresholds, initial bundle budget. | no |
 | `src/components/CommandPalette.tsx`, `CommandPalettePanel.tsx`, `src/lib/commands.ts` | ⌘K listener in the main bundle; the panel and its commands in a lazy chunk; accent-insensitive search. | no |
 | `src/seo/meta.ts` | Title, description and path per page and language (head, JSON-LD, browser). | no |
 | `src/entry-server.tsx`, `scripts/prerender.ts` | Build-time render of every page in every language (`prepare()` loads the lazy parts first). | no |
-| `src/seo/head.ts`, `jsonld.ts`, `sitemap.ts` | The generated `<head>` block, the JSON-LD graph and the sitemap, per page and language. | no |
+| `src/seo/head.ts`, `jsonld.ts`, `sitemap.ts`, `feed.ts` | The generated `<head>` block, the JSON-LD graph, the sitemap and the notes' Atom feeds, per page and language. | no |
 | `src/seo/llms.ts`, `resume.ts`, `files.ts` | llms.txt, llms-full.txt, Markdown profiles and JSON Resume from portfolio data. | no |
 | `scripts/generate-head.ts`, `generate-sitemap.ts`, `generate-llms.ts` | Write those outputs to `index.html` and `public/` (`npm run generate`). | no |
 | `src/agents/webmcp.ts`, `useAgentTools.ts` | WebMCP tools registered on every page for browser agents. | no |
@@ -327,13 +339,16 @@ One scroll position, sampled once per frame, drives everything:
 | File | Minified | Gzip | Loaded |
 | :--- | ---: | ---: | :--- |
 | `index.html` (home, prerendered per language) | 183 kB | 25.9 kB | Always; full page content as HTML |
-| `projects/<id>/index.html` | 23 kB | 5.5 kB | Project page as HTML |
-| `index-*.js` | 348 kB | 110.5 kB | Always. React, router, Lenis, motion layer, sections, portfolio data. |
-| `index-*.css` | 53 kB | 14 kB | Always. Includes the `@font-face` rules. |
+| `projects/<id>/index.html`, `talks/<id>/index.html` | 22–25 kB | 5–6 kB | Inner pages as HTML |
+| `index-*.js` | 376 kB | 118.8 kB | Always. React, router, Lenis, motion layer, sections, portfolio data. Budget: 120 kB (`npm run check:bundle`). |
+| `index-*.css` | 56 kB | 14.7 kB | Always. Includes the `@font-face` rules. Budget: 20 kB. |
 | `WebGLBackground-*.js` | 549 kB | 140.2 kB | Lazy, only on WebGL 2 devices, when the browser is idle after hydration |
-| `sketches-*.js` | 18.4 kB | 7.7 kB | Lazy, when the first project card nears the viewport |
-| `ProjectPage-*.js` + `projectPages-*.js` | 26 kB | 9.9 kB | Lazy: before hydrating a project URL, on idle on the home page, or when a card opens |
-| `CommandPalettePanel-*.js` | 9.7 kB | 3.6 kB | Lazy: first ⌘K, or hover/focus on the palette button |
+| `sketches-*.js` | 22 kB | 9 kB | Lazy, when the first project card nears the viewport |
+| `ProjectPage-*.js` + `projectPages-*.js` | 37 kB | 13.8 kB | Lazy: before hydrating a project URL, on idle on the home page, or when a card opens |
+| `TalkPage-*.js` + `talkPages-*.js` | 17 kB | 6.4 kB | Lazy: before hydrating a talk URL, or when a talk link is followed |
+| `NowPage`, `UsesPage`, `pageText` | 13 kB | 5.7 kB | Lazy, with those pages (`pageText` is shared by every lazy page) |
+| `NotePage-*.js` | 42 kB | 13.1 kB | Lazy; `marked` and the note bodies. Unused while there is no note. |
+| `CommandPalettePanel-*.js`, `TerminalPanel-*.js` | 12 + 11 kB | 4.2 + 4.3 kB | Lazy: first ⌘K, or first Ctrl+` |
 | Photos | 14 kB AVIF / 47 kB WebP | | `<picture>` with AVIF, WebP and JPEG fallback; the AVIF avatar is preloaded |
 | Fonts (latin woff2) | 22 + 40 + 22 kB | | Space Grotesk preloaded; mono and serif on demand |
 
@@ -342,9 +357,11 @@ One scroll position, sampled once per frame, drives everything:
 | Page | Performance | Accessibility | Best practices | SEO |
 | :--- | ---: | ---: | ---: | ---: |
 | Home, before this round | 59 | 93 | 100 | 100 |
-| Home | 93–94 | 100 | 100 | 100 |
-| Project page | 92 | 100 | 100 | 100 |
+| Home | 93–97 | 100 | 100 | 100 |
+| Project page | 92–95 | 100 | 100 | 100 |
 | Home, desktop preset | 100 | 100 | 100 | 100 |
+
+Lighthouse CI (`lighthouserc.json`, median of 3 runs on the home in two languages, a project page and a talk page) fails the build below 100 in accessibility and SEO, 96 in best practices or 80 in performance; CI hardware is slower than a laptop, so the performance floor has room for its noise.
 
 What moved the numbers: hydration inside `startTransition` (React yields every few ms: Total Blocking Time 940 → 10–130 ms), the WebGL engine starting on idle, the hero photo entrance without an opacity fade (it is the Largest Contentful Paint element on phones: 4.4 → 2.6 s), AVIF photos, and the project page and palette moved to lazy chunks (main bundle 120 → 110.5 kB gzip after the new features). Inlining the stylesheet in the HTML was measured and left out: the gain was within run-to-run noise and it would double every page's HTML.
 
@@ -406,10 +423,19 @@ The page content never depends on the background or on motion. Every failure pat
 | `pages.test.tsx` | Project page (facts, details, neighbours, private and workshop projects, 404 for unknown ids), talks, command palette (search, keyboard, copy email) |
 | `llms.test.ts`, `seo.test.ts` | Agent files, `index.html` and the sitemap against the data (drift fails), routes and project pages, hreflang, head per page, share card per language, JSON-LD (events, project pages), JSON Resume, page content in every language, no phone number in any output |
 | `webmcp.test.ts` | Tool definitions, their output per language (project pages, talks), registration and cleanup |
+| `data.test.ts` | No Portuguese left in Spanish strings, experience figures stated by their text, page strings in one dictionary, the GitHub snapshot covering every linked repository |
+| `cv.test.ts` | Sentence splitting, the résumé's sections and headings per language, every role and its keywords, same structure in the three languages, contact without a phone, ATS-safe print HTML |
+| `notes.test.tsx` | The notes on a fixture: routes for the published note and none for the draft, Markdown body, list, Atom feed, `Blog`/`BlogPosting` |
+| `terminal.test.tsx` | Commands and their actions, errors per language, Tab completion, the panel (focus, history, Escape), opening from the palette |
+| `analytics.test.ts` | Off without an endpoint, off under Do Not Track, one script without the automatic count, page views and events |
+| `card.node.test.ts` | `card.json` against the data, the CLI in each language within 80 columns, the published files |
+| `e2e/pages.spec.ts` | Every prerendered URL (72) loads and hydrates without a console error |
+| `e2e/layout.spec.ts`, `checker.spec.ts` | One page per kind at nine widths (320–2560 px): no sideways scroll, no text cut at the edge, text ≥ 11 px, targets ≥ 24 px; a screenshot per width; the checker's own self-test |
+| `e2e/flows.spec.ts` | Card → project → back (scroll restored), language switch, palette, theme, résumé links per language, terminal (desktop and phone), cover controls, GitHub data on a project page |
 
 jsdom has no WebGL and no `IntersectionObserver`, so component tests run the static path, which is the same one the prerender and no-JS visitors get. GPU and canvas code stays thin: geometry and algorithms are pure functions, and those carry the tests.
 
-Visual checks use the real build in Chrome (headless with the GPU enabled): a sweep over 20 viewports from 320×568 to 2560×1440 (phones in both orientations, tablets, laptops, wide screens) that reports horizontal overflow, elements escaping the viewport, targets under 24 px and text under 11 px; screenshots in both themes; a navigation flow (card → project page → language switch → back → section link → palette); Lighthouse on the home and a project page.
+CI runs the Playwright suites and Lighthouse CI on every push and pull request, and keeps the reports (screenshots per width, traces, Lighthouse HTML) as artifacts. Manual visual checks use the real build in Chrome (headless with the GPU enabled): a sweep over 20 viewports from 320×568 to 2560×1440 (phones in both orientations, tablets, laptops, wide screens) that reports horizontal overflow, elements escaping the viewport, targets under 24 px and text under 11 px; screenshots in both themes; a navigation flow (card → project page → language switch → back → section link → palette); Lighthouse on the home and a project page.
 
 ## 9. Build and deploy
 
@@ -418,10 +444,12 @@ Visual checks use the real build in Chrome (headless with the GPU enabled): a sw
 | Head, sitemap, agent files | `prebuild` (`npm run generate`) | `generate-head.ts` rewrites the block between the `seo:start` and `seo:end` markers in `index.html`; `generate-sitemap.ts` and `generate-llms.ts` write to `public/` |
 | Client bundle | `vite build` | `base` from `VITE_BASE_PATH` (`/whoami/` in CI). A small plugin adds the display-font preload. |
 | Server entry | `vite build --ssr src/entry-server.tsx` | to `dist-ssr/`, removed after prerender |
-| Prerender + SPA fallback | `postbuild` | `scripts/prerender.ts`: `404.html` = empty shell; 39 pages (home + 12 projects, × 3 languages), each with its own `<html lang>` and head block |
+| Prerender + SPA fallback | `postbuild` | `scripts/prerender.ts`: `404.html` = empty shell; 72 pages (home, 12 projects, 9 talks, /now, /uses, × 3 languages; notes once published), each with its own `<html lang>` and head block |
+| Résumé PDFs | `postbuild` | `render-cv.ts` prints `cv/*.pdf` per language with headless Chrome (A4, tagged, no header or footer); `check-cv.ts` reads them back with pdf.js. Without Chrome it skips locally and fails in CI. |
 | Share cards | `npm run og:image` (manual) | `og-image.png`, `og-image.pt.png`, `og-image.es.png`, rendered in headless Chrome from local fonts and the profile photo |
-| CI | `.github/workflows/ci.yml` | typecheck (app + node configs, incl. scripts), lint, test, build |
-| Deploy | `.github/workflows/deploy.yml` | GitHub Pages on push to `main` |
+| GitHub snapshot | `npm run github:sync` | Stars, last push and languages of every linked repository; the deploy runs it before the build |
+| CI | `.github/workflows/ci.yml` | typecheck (app, node and e2e configs), lint, unit tests, build with the résumé check, bundle budget, Playwright, Lighthouse CI, reports as artifacts |
+| Deploy | `.github/workflows/deploy.yml` | GitHub Pages on push to `main` and every Monday; reads `SITE_URL`, `BASE_PATH` and `GOATCOUNTER_URL` from repository variables ([`CUSTOM_DOMAIN.md`](CUSTOM_DOMAIN.md)) |
 
 ### Prerender and hydration rules
 
@@ -435,11 +463,15 @@ Everything below is generated from `src/data/portfolio.ts` and `src/i18n/transla
 
 | Output | Content |
 | :--- | :--- |
-| `/`, `/pt/`, `/es/` and `/projects/<id>/` (+ `/pt/`, `/es/`) | 39 prerendered pages, each with its own title, description, canonical URL and `<html lang>` |
+| `/`, `/projects/<id>/`, `/talks/<id>/`, `/now/`, `/uses/` (+ `/pt/`, `/es/`) | 72 prerendered pages, each with its own title, description, canonical URL and `<html lang>` |
 | hreflang links | `en`, `pt-BR`, `es` and `x-default` on every page, and the same alternates in `sitemap.xml` |
 | JSON-LD `@graph` (home) | `WebSite`, `ProfilePage`, `Person` (employer, schools, languages, `sameAs`, talks as `Event`s in `performerIn`) an `ItemList` of `SoftwareSourceCode` linking the project pages, and a `ScholarlyArticle` per publication |
 | JSON-LD `@graph` (project) | `WebSite`, `Person`, `WebPage`, `SoftwareSourceCode` (repository, language, SPDX license, year, co-authors, details as `abstract`, the paper as `subjectOf` when there is one) and a `BreadcrumbList` |
-| `sitemap.xml` | 39 URLs with alternates. `lastmod` is `profile.updatedAt`, so the file only changes when the content does |
+| JSON-LD `@graph` (talk) | `WebPage` whose main entity is the `EducationEvent` (date, ISO duration, place or `VirtualLocation`, organizer, performers, the event page as `sameAs`, the material as `workFeatured`, topics as `abstract`) and a `BreadcrumbList` |
+| JSON-LD (/now, /uses; notes) | `WebPage` about the person with a breadcrumb; `Blog` and `BlogPosting` once notes are published |
+| `sitemap.xml` | 72 URLs with alternates. `lastmod` is `profile.updatedAt`, so the file only changes when the content does |
+| `feed.xml`, `.pt.xml`, `.es.xml` | Atom feed of the notes per language, linked from every head; written only when a note is published |
+| `cv/*.pdf` | The ATS résumé per language, built with the site |
 | `og-image.png`, `.pt.png`, `.es.png` | 1200x630 share card per language, in the site's visual (name, role, dot-matrix portrait) |
 | `rel="me"` | One link per public profile in `socialLinks` |
 | `site.webmanifest`, image preload | Linked from the static part of `index.html`, so Vite applies the base path |
@@ -455,7 +487,7 @@ Everything below is generated from `src/data/portfolio.ts` and `src/i18n/transla
 
 Every page links its own Markdown and JSON Resume with `rel="alternate"`, and `llms.txt` with `rel="describedby"` (GitHub Pages cannot send Link headers).
 
-**Agents that act in the browser (ARO).** `useAgentTools` registers five WebMCP tools on `document.modelContext` when the browser has it: `get_profile` (Markdown, any of the three languages), `list_projects` (projects with details and page URLs, and contributions, as JSON), `list_talks`, `get_contact`, and `go_to_section` (scrolls the page, going home first from a project page). The tools return the same data as the files. They are removed on unmount through an `AbortSignal`. WebMCP is experimental (Chrome behind `--enable-experimental-web-platform-features`); without it nothing is registered.
+**Agents that act in the browser (ARO).** `useAgentTools` registers five WebMCP tools on `document.modelContext` when the browser has it: `get_profile` (Markdown, JSON Resume or the résumé PDF URL, any of the three languages), `list_projects` (projects with details and page URLs, and contributions, as JSON), `list_talks` (with topics, length and page URLs), `get_contact`, and `go_to_section` (scrolls the page, going home first from a project page). The tools return the same data as the files. They are removed on unmount through an `AbortSignal`. WebMCP is experimental (Chrome behind `--enable-experimental-web-platform-features`); without it nothing is registered.
 
 **Limits.** robots.txt under `/whoami/` is not read by crawlers (only the domain root counts); submit the sitemap in Search Console instead. Private repositories carry no `githubUrl`, so no output links to them. No phone number or street address is in the data, and `seo.test.ts` checks the outputs for one.
 
@@ -471,8 +503,16 @@ Every page links its own Markdown and JSON Resume with `rel="alternate"`, and `l
 
 **New publication.** Add it to `publications` in `data/portfolio.ts`: `kind` (abstract or paper), title as published, authors in the order printed in the publication, venue, the proceedings section, publisher, city, year, pages, a summary per language, `projectId`, and the `url` of the proceedings with the date it was checked (`accessed`). `publicationReference()` builds the ABNT reference (NBR 6023, with "Disponível em" and "Acesso em") used on the page and in the agent files. It shows in Education and on the project page, and becomes a `ScholarlyArticle` (JSON-LD), a JSON Resume `publications` entry and a line in the Markdown profiles and `llms.txt`.
 
-**New talk.** Add it to `talks` in `data/portfolio.ts`, newest first: title as announced, event per language, organizer, city, the date as precise as the record (`YYYY-MM-DD`, `YYYY-MM` or `YYYY`), at least one link (code, slides, notebook, or the activity page in the event program as `event`), co-speakers, `online: true` for a remote session (it becomes an online `Event` in JSON-LD), and `projectId` when a featured project goes with it. `talkUrl()` picks the link that stands for the talk (slides, else code, else event page). The section, palette, JSON-LD events, agent files and WebMCP read the list; `pages.test.tsx` checks the order and the links.
+**New talk.** Add it to `talks` in `data/portfolio.ts`, newest first (and its page content to `data/talkPages.ts`: 2 or 4 topics per language from the event program or the material, the prerequisites and the length when the program states them): title as announced, event per language, organizer, city, the date as precise as the record (`YYYY-MM-DD`, `YYYY-MM` or `YYYY`), at least one link (code, slides, notebook, or the activity page in the event program as `event`), co-speakers, `online: true` for a remote session (it becomes an online `Event` in JSON-LD), and `projectId` when a featured project goes with it. `talkUrl()` picks the link that stands for the talk (slides, else code, else event page). The section, palette, JSON-LD events, agent files and WebMCP read the list; `pages.test.tsx` checks the order and the links.
 
 **New contribution.** Add a merged pull request to `contributions` in `data/portfolio.ts` (repository, URL, merge month, description in three languages). Text between backticks renders as code on the page and stays Markdown in the agent files.
 
-**New language.** Add it to `Language`, `LANGUAGE_PATHS` and `HTML_LANG` in `i18n/routes.ts`, its prefix in `AppRoutes`, every key in `translations.ts`, every localized field in `portfolio.ts` and `projectPages.ts`, and a share card in `OG_IMAGE_FILES`. The prerender, head, sitemap and agent files loop over `LANGUAGES`.
+**Add a note.** Add its metadata to `notes` in `src/content/notes/index.ts` (slug, date, title and summary in three languages, tags; `draft: true` while writing) and write `src/content/notes/<slug>/en.md`, `pt.md` and `es.md` in Markdown, without front matter. `npm run dev` shows drafts. Removing `draft` publishes it: the route, the prerendered pages, the sitemap entries, the feeds (`npm run generate`), the link in the footers and the palette, and the `BlogPosting` all follow. `seo.test.ts` fails when a language file is missing.
+
+**New recommendation.** With the author's permission, add it to `testimonials` in `data/portfolio.ts`: the quote exactly as written with its `quoteLanguage`, translations only as translations, the public `url` and the date. The block appears under the roles once the list has an entry.
+
+**New kind of page.** Add a member to `Page` and an entry in `ID_PAGES` or `SINGLE_PAGES` in `i18n/routes.ts`, a loader in `PAGE_MODULES` (`lib/lazy.ts`) and a scene in `lazyPages.tsx`, the routes in `AppRoutes`, its title and description in `seo/meta.ts` and its graph in `seo/jsonld.ts`. The prerender, sitemap, hreflang and the layout and hydration checks pick it up from `PAGES`.
+
+**Résumé.** Change the data, not `cv.ts`, when the content changes. `CV_PROJECTS` picks the projects on it. The build fails when it passes two pages; trim before shrinking the type.
+
+**New language.** Add it to `Language`, `LANGUAGE_PATHS` and `HTML_LANG` in `i18n/routes.ts`, its prefix in `AppRoutes`, every key in `translations.ts`, every localized field in `portfolio.ts`, `projectPages.ts`, `talkPages.ts`, `uses.ts` and the notes, the strings in `pageText.ts`, the résumé labels in `cv/cv.ts`, the terminal strings in `lib/terminal.ts`, the card labels in `seo/card.ts`, a share card in `OG_IMAGE_FILES` and a résumé file in `CV_FILES`. The prerender, head, sitemap and agent files loop over `LANGUAGES`.

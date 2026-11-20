@@ -69,13 +69,13 @@ Never use these overrepresented AI words and phrases:
 - **Subpath Handling**: 
   - `vite.config.ts`: `base: process.env.VITE_BASE_PATH || "/"`
   - `App.tsx`: `<BrowserRouter basename={import.meta.env.BASE_URL}>`
-- **Pages and URLs**: `/` (English), `/pt/` and `/es/` render the home page; `/projects/<id>/` (with the same prefixes) renders a featured project (`src/i18n/routes.ts`). The URL sets the language; changing the language replaces the URL with the same page. `SiteLayout` keeps the WebGL layer, header and command palette mounted across pages.
-- **Lazy parts**: the project page, its content (`src/data/projectPages.ts`) and the command palette panel are separate chunks (`src/lib/lazy.ts`). Keep them out of the main bundle: `main.tsx` loads the project page before hydrating a project URL, and `entry-server` `prepare()` loads it before the prerender.
-- **Prerender & SPA Fallback**: `postbuild` runs `scripts/prerender.ts`, which writes the empty shell to `dist/404.html` (unknown paths render client-side) and 39 prerendered pages (home and 12 projects in three languages).
-- **Generated Files**: the block between the `seo:start` and `seo:end` markers in `index.html`, plus `sitemap.xml`, `llms.txt`, `llms-full.txt`, `index{,.pt,.es}.md` and `resume{,.pt,.es}.json` in `public/`, come from portfolio data. Never edit them by hand: change the data, bump `profile.updatedAt` in `src/data/portfolio.ts`, run `npm run generate` and commit the result. Tests fail when they drift.
-- **Agent Tools**: `src/agents/webmcp.ts` registers WebMCP tools (`get_profile`, `list_projects`, `list_talks`, `get_contact`, `go_to_section`) when the browser has `document.modelContext`.
+- **Pages and URLs**: `/` (English), `/pt/` and `/es/` render the home page; with the same prefixes, `/projects/<id>/` renders a featured project, `/talks/<id>/` a talk, `/now/` and `/uses/` their pages, and `/notes/` plus `/notes/<slug>/` the notes once one is published (`src/i18n/routes.ts`). The URL sets the language; changing the language replaces the URL with the same page. `SiteLayout` keeps the WebGL layer, header, command palette and terminal mounted across pages.
+- **Lazy parts**: every page but the home page, its content (`projectPages.ts`, `talkPages.ts`, `uses.ts`, the note bodies), the page-only strings (`src/i18n/pageText.ts`) and the palette and terminal panels are separate chunks (`src/lib/lazy.ts`). Keep them out of the main bundle (`npm run check:bundle`, 120 kB gzip): `main.tsx` loads a page's chunk before hydrating its URL, and `entry-server` `prepare()` loads them all before the prerender.
+- **Prerender & SPA Fallback**: `postbuild` runs `scripts/prerender.ts`, which writes the empty shell to `dist/404.html` (unknown paths render client-side) and 72 prerendered pages (home, 12 projects, 9 talks, /now and /uses in three languages), then prints the résumé PDFs (`scripts/render-cv.ts`) and reads them back as an ATS would (`scripts/check-cv.ts`).
+- **Generated Files**: the block between the `seo:start` and `seo:end` markers in `index.html`, plus `sitemap.xml`, `llms.txt`, `llms-full.txt`, `index{,.pt,.es}.md`, `resume{,.pt,.es}.json` and (with a published note) `feed{,.pt,.es}.xml` in `public/`, and `packages/card/card.json`, come from portfolio data. Never edit them by hand: change the data, bump `profile.updatedAt` in `src/data/portfolio.ts`, run `npm run generate` and commit the result. Tests fail when they drift. `src/data/github-{stars,repos}.ts` come from `npm run github:sync`.
+- **Agent Tools**: `src/agents/webmcp.ts` registers WebMCP tools (`get_profile` with markdown, json or pdf, `list_projects`, `list_talks`, `get_contact`, `go_to_section`) when the browser has `document.modelContext`.
 - **Accessibility**: text stays at 4.5:1 in every animated state (effects change color or position, not opacity, below the `--scrub-floor`), targets are 24 px or larger, and an `aria-label` must contain the control's visible text.
-- **Workflows**: `.github/workflows/deploy.yml` runs on push to `main` with Node 22 LTS, `pages: write`, and `id-token: write` permissions.
+- **Workflows**: `.github/workflows/ci.yml` runs typecheck, lint, unit tests, the build (with the CV check), the bundle budget, Playwright and Lighthouse CI, and uploads the reports. `.github/workflows/deploy.yml` runs on push to `main` and every Monday with Node 22 LTS, `pages: write`, and `id-token: write` permissions; it syncs the GitHub snapshot first and reads the repository variables `SITE_URL`, `BASE_PATH` and `GOATCOUNTER_URL`.
 
 ---
 
@@ -90,9 +90,14 @@ npm run typecheck
 # Linting
 npm run lint
 
-# Unit tests (167 tests)
+# Unit tests (217 tests)
 npm test
 
-# Generated files + production build + prerender (39 pages) + 404 SPA fallback
+# Generated files + production build + prerender (72 pages) + 404 SPA fallback + résumé PDFs
 npm run build
+
+# Initial bundle budget, end-to-end checks (hydration, layout at 9 widths, flows), Lighthouse
+npm run check:bundle
+npm run test:e2e
+npm run lighthouse
 ```
