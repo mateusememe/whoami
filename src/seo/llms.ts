@@ -30,7 +30,7 @@ import {
 } from "@/data/portfolio";
 import { LANGUAGE_PATHS, PROJECT_PAGE_IDS, pagePath } from "@/i18n/routes";
 import { translations, type Language } from "@/i18n/translations";
-import { PROFILE_FILES, RESUME_FILES } from "@/seo/files";
+import { CV_FILES, PROFILE_FILES, RESUME_FILES } from "@/seo/files";
 import { currentRole } from "@/seo/jsonld";
 import { buildResume } from "@/seo/resume";
 import { SITE_NAME, SOURCE_REPO_URL, siteHref } from "@/seo/site";
@@ -54,6 +54,7 @@ const LABELS: Record<
     location: string;
     updated: string;
     resume: string;
+    cv: string;
     source: string;
     page: string;
   }
@@ -68,6 +69,7 @@ const LABELS: Record<
     location: "Location",
     updated: "Last updated",
     resume: "Structured data (JSON Resume)",
+    cv: "Résumé (PDF)",
   },
   pt: {
     source: "Código",
@@ -79,6 +81,7 @@ const LABELS: Record<
     location: "Local",
     updated: "Atualizado em",
     resume: "Dados estruturados (JSON Resume)",
+    cv: "Currículo (PDF)",
   },
   es: {
     source: "Código",
@@ -90,6 +93,7 @@ const LABELS: Record<
     location: "Ubicación",
     updated: "Actualizado el",
     resume: "Datos estructurados (JSON Resume)",
+    cv: "Currículum (PDF)",
   },
 };
 
@@ -152,6 +156,7 @@ export function renderProfileMarkdown(language: Language, siteUrl: string): stri
     `- ${label.website}: ${siteHref(siteUrl, LANGUAGE_PATHS[language])}`,
     `- ${label.otherLanguages}: ${others}`,
     `- ${label.resume}: ${siteHref(siteUrl, RESUME_FILES[language])}`,
+    `- ${label.cv}: ${siteHref(siteUrl, CV_FILES[language])}`,
     `- ${label.updated}: ${profile.updatedAt}`,
     "",
     `## ${tr(language, "about.title")}`,
@@ -269,6 +274,7 @@ export function renderLlmsTxt(siteUrl: string): string {
     `- [Perfil (Português)](${siteHref(siteUrl, PROFILE_FILES.pt)}): Same content in Brazilian Portuguese`,
     `- [Perfil (Español)](${siteHref(siteUrl, PROFILE_FILES.es)}): Same content in Spanish`,
     `- [JSON Resume](${siteHref(siteUrl, RESUME_FILES.en)}): The profile as structured data (jsonresume.org schema), with ISO dates`,
+    `- [Résumé (PDF)](${siteHref(siteUrl, CV_FILES.en)}): Two-page résumé laid out for applicant tracking systems; also in [Portuguese](${siteHref(siteUrl, CV_FILES.pt)}) and [Spanish](${siteHref(siteUrl, CV_FILES.es)})`,
     `- [Full context](${siteHref(siteUrl, "llms-full.txt")}): All three profiles in one file`,
     "",
     "## Projects",

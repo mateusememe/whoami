@@ -8,10 +8,9 @@
 // network. Headless Chrome takes the screenshot.
 //
 // Manual step, not part of the build: `npm run og:image`.
-// Set CHROME_PATH if Chrome is not at the default macOS location.
+// Set CHROME_PATH if Chrome is not at a usual location (scripts/chrome.ts).
 
-import { spawn } from "child_process";
-import { existsSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from "fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { tmpdir } from "os";
 import { join, resolve } from "path";
 import { pathToFileURL } from "url";
@@ -20,10 +19,10 @@ import { LANGUAGES } from "../src/i18n/routes";
 import { translations, type Language } from "../src/i18n/translations";
 import { OG_IMAGE_FILES } from "../src/seo/files";
 import { DEFAULT_SITE_URL, SITE_NAME } from "../src/seo/site";
+import { baseFlags, findChrome, runChrome } from "./chrome";
 
 const WIDTH = 1200;
 const HEIGHT = 630;
-const CHROME = process.env.CHROME_PATH || "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 
 // Dark theme tokens (src/index.css)
 const BG = "#141414";
@@ -127,46 +126,21 @@ function cardHtml(language: Language): string {
 </body></html>`;
 }
 
-/**
- * Headless Chrome on macOS can keep running after it writes the screenshot,
- * so wait for a fresh file and stop the process ourselves.
- */
 async function screenshot(htmlPath: string, output: string, profileDir: string): Promise<void> {
-  const startedAt = Date.now();
-  const chrome = spawn(
-    CHROME,
+  const chrome = findChrome();
+  if (!chrome) throw new Error("Chrome not found: set CHROME_PATH");
+  await runChrome(
+    chrome,
     [
-      "--headless=new",
-      "--disable-gpu",
-      "--hide-scrollbars",
+      ...baseFlags(profileDir),
       "--force-device-scale-factor=1",
-      "--allow-file-access-from-files",
-      `--user-data-dir=${profileDir}`,
       `--window-size=${WIDTH},${HEIGHT}`,
       "--virtual-time-budget=5000",
       `--screenshot=${output}`,
       pathToFileURL(htmlPath).href,
     ],
-    { stdio: "ignore" },
+    output,
   );
-
-  try {
-    for (let waited = 0; waited < 60_000; waited += 250) {
-      if (existsSync(output) && statSync(output).mtimeMs >= startedAt && statSync(output).size > 0) {
-        await new Promise((r) => setTimeout(r, 500)); // let the write finish
-        return;
-      }
-      if (chrome.exitCode !== null) throw new Error(`Chrome exited with code ${chrome.exitCode}`);
-      await new Promise((r) => setTimeout(r, 250));
-    }
-    throw new Error("Timed out waiting for the screenshot");
-  } finally {
-    if (chrome.exitCode === null) {
-      const exited = new Promise((r) => chrome.once("exit", r));
-      chrome.kill();
-      await exited;
-    }
-  }
 }
 
 const workdir = mkdtempSync(join(tmpdir(), "og-"));

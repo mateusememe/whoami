@@ -13,6 +13,7 @@ import {
   ArrowUp,
   ArrowUpRight,
   Braces,
+  FileDown,
   Bot,
   Code2,
   Copy,
@@ -31,7 +32,7 @@ import { projects, socialLinks, talkUrl, talks } from "@/data/portfolio";
 import { useSiteNavigation } from "@/hooks/useSiteNavigation";
 import { useTheme } from "@/hooks/useTheme";
 import { LANGUAGES, PROJECT_PAGE_IDS } from "@/i18n/routes";
-import { RESUME_FILES } from "@/seo/files";
+import { CV_FILES, RESUME_FILES } from "@/seo/files";
 import { SOURCE_REPO_URL } from "@/seo/site";
 import { scrollToTarget, setScrollLocked } from "@/motion/scroll";
 import { runViewTransition } from "@/motion/viewTransition";
@@ -192,6 +193,16 @@ const CommandPalettePanel = ({ onClose, onToast }: CommandPalettePanelProps) => 
           run: () => runViewTransition(() => flushSync(() => setLanguage(code))),
         }),
       ),
+      {
+        id: "cv",
+        group: "actions",
+        label: t("palette.cv"),
+        hint: "PDF",
+        keywords: "cv resume curriculo curriculum pdf download baixar descargar",
+        icon: FileDown,
+        external: true,
+        run: () => openExternal(`${base}${CV_FILES[language]}`),
+      },
       {
         id: "resume",
         group: "actions",

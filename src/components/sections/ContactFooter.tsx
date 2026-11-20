@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowUp, ArrowUpRight, Check, Copy } from "lucide-react";
+import { ArrowUp, ArrowUpRight, Check, Copy, FileDown } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Reveal, SectionHeading } from "@/components/ds";
 import { LocalClock } from "@/components/LocalClock";
@@ -8,6 +8,7 @@ import { Marquee } from "@/components/motion/Marquee";
 import { renderSocialIcon } from "@/components/SocialIcons";
 import { socialLinks } from "@/data/portfolio";
 import { sectionIndex } from "@/data/navigation";
+import { CV_FILES } from "@/seo/files";
 
 const mail = socialLinks.find((link) => link.href.startsWith("mailto:"));
 const channels = socialLinks.filter((link) => link !== mail);
@@ -19,7 +20,7 @@ const email = mail?.displayText ?? "";
  * service mesh returns behind it.
  */
 const ContactFooter = () => {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const [copied, setCopied] = useState(false);
 
   const copyEmail = async () => {
@@ -61,6 +62,18 @@ const ContactFooter = () => {
                 {copied ? <Check size={14} className="text-signal" /> : <Copy size={14} />}
                 <span aria-live="polite">{copied ? t("contact.copied") : t("contact.copy")}</span>
               </button>
+            </Magnetic>
+            <Magnetic>
+              <a
+                href={`${import.meta.env.BASE_URL}${CV_FILES[language]}`}
+                download
+                type="application/pdf"
+                className="glass-card inline-flex h-11 items-center gap-2.5 rounded-full px-5 font-mono text-xs text-foreground transition-colors duration-base hover:text-signal"
+              >
+                <FileDown size={14} aria-hidden="true" />
+                {t("cv.download")}
+                <span className="text-muted-foreground">PDF</span>
+              </a>
             </Magnetic>
           </div>
         )}

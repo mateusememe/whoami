@@ -1,5 +1,5 @@
 import { useRef, type CSSProperties } from "react";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, FileDown } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { socialLinks } from "@/data/portfolio";
 import { LocalClock } from "@/components/LocalClock";
@@ -8,6 +8,7 @@ import { renderSocialIcon } from "@/components/SocialIcons";
 import { IconButton } from "@/components/ds";
 import { Magnetic } from "@/components/motion/Magnetic";
 import { useProgress } from "@/motion/useProgress";
+import { CV_FILES } from "@/seo/files";
 
 const NAME = "Mateus Mendonça Monteiro";
 const NAME_LINES = NAME.split(" ");
@@ -19,7 +20,7 @@ const NAME_LINES = NAME.split(" ");
  * own speed.
  */
 const HeroSection = () => {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const ref = useRef<HTMLElement>(null);
   useProgress(ref, { mode: "exit" });
 
@@ -95,7 +96,7 @@ const HeroSection = () => {
                 className="hero-fade label group flex items-center gap-3 rounded-full bg-background py-1 pl-4 pr-1 text-muted-foreground transition-colors duration-base hover:text-foreground"
                 style={{ "--i": 4 } as CSSProperties}
               >
-                <span>{t("hero.scroll")}</span>
+                <span className="whitespace-nowrap">{t("hero.scroll")}</span>
                 <span className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-border">
                   <ArrowDown size={13} className="animate-scroll-cue" />
                 </span>
@@ -122,29 +123,38 @@ const HeroSection = () => {
               {t("hero.summary")}
             </p>
 
-            <ul
-              className="hero-fade flex flex-wrap content-start gap-1.5 md:col-span-4 md:justify-end"
-              style={{ "--i": 3 } as CSSProperties}
-              aria-label={t("a11y.socialLinks")}
-            >
-              {socialLinks.map((social) => (
-                <li key={social.label}>
-                  <Magnetic strength={0.3}>
-                    <IconButton
-                      asChild
-                      tone="outline"
-                      size="lg"
-                      aria-label={social.label}
-                      className="rounded-full hover:border-signal/40 sm:h-10 sm:w-10"
-                    >
-                      <a href={social.href} target="_blank" rel="noopener noreferrer">
-                        {renderSocialIcon(social.iconName, 17)}
-                      </a>
-                    </IconButton>
-                  </Magnetic>
-                </li>
-              ))}
-            </ul>
+            <div className="hero-fade flex flex-col gap-3 md:col-span-4 md:items-end" style={{ "--i": 3 } as CSSProperties}>
+              <ul className="flex flex-wrap content-start gap-1.5 md:justify-end" aria-label={t("a11y.socialLinks")}>
+                {socialLinks.map((social) => (
+                  <li key={social.label}>
+                    <Magnetic strength={0.3}>
+                      <IconButton
+                        asChild
+                        tone="outline"
+                        size="lg"
+                        aria-label={social.label}
+                        className="rounded-full hover:border-signal/40 sm:h-10 sm:w-10"
+                      >
+                        <a href={social.href} target="_blank" rel="noopener noreferrer">
+                          {renderSocialIcon(social.iconName, 17)}
+                        </a>
+                      </IconButton>
+                    </Magnetic>
+                  </li>
+                ))}
+              </ul>
+              {/* The résumé as a PDF in the page language, laid out for applicant tracking systems. */}
+              <a
+                href={`${import.meta.env.BASE_URL}${CV_FILES[language]}`}
+                download
+                type="application/pdf"
+                className="label inline-flex h-10 items-center gap-2 self-start rounded-full border border-border px-4 text-foreground transition-colors duration-base hover:border-signal/50 hover:text-signal md:self-end"
+              >
+                <FileDown size={14} aria-hidden="true" />
+                {t("cv.download")}
+                <span className="text-muted-foreground">PDF</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>

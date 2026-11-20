@@ -14,6 +14,8 @@ import { NAV_ITEMS, type SectionId } from "@/data/navigation";
 import { contributions, projects, profile, socialLinks, spokenLanguages, talks } from "@/data/portfolio";
 import { PROJECT_PAGE_IDS, pagePath } from "@/i18n/routes";
 import type { Language } from "@/i18n/translations";
+import { CV_FILES } from "@/seo/files";
+import { siteHref } from "@/seo/site";
 
 interface AgentTool {
   name: string;
@@ -64,17 +66,18 @@ export function createAgentTools({ language, siteUrl, goToSection }: AgentToolsO
   return [
     {
       name: "get_profile",
-      description: `Returns the full professional profile of ${profile.name}: summary, experience, education, skills, projects, open-source contributions and contact. Use format "markdown" to read it or "json" for JSON Resume (jsonresume.org) with ISO dates.`,
+      description: `Returns the full professional profile of ${profile.name}: summary, experience, education, skills, projects, open-source contributions and contact. Use format "markdown" to read it, "json" for JSON Resume (jsonresume.org) with ISO dates, or "pdf" for the URL of the two-page résumé PDF.`,
       inputSchema: {
         type: "object",
         properties: {
           language: languageProperty,
-          format: { type: "string", enum: ["markdown", "json"], description: 'Defaults to "markdown".' },
+          format: { type: "string", enum: ["markdown", "json", "pdf"], description: 'Defaults to "markdown".' },
         },
       },
       annotations: { readOnlyHint: true },
       execute: async (input) => {
         const chosen = pickLanguage(input, language);
+        if (input.format === "pdf") return text(siteHref(siteUrl, CV_FILES[chosen]));
         if (input.format === "json") {
           const { buildResume } = await import("@/seo/resume");
           return text(JSON.stringify(buildResume(chosen, siteUrl), null, 2));

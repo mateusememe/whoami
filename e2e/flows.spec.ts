@@ -66,3 +66,22 @@ test("the theme toggle flips the color scheme and remembers it", async ({ page }
   await page.reload();
   await expect.poll(() => page.evaluate(() => document.documentElement.classList.contains("dark"))).toBe(!dark);
 });
+
+for (const [path, label] of [
+  ["/", "Download CV"],
+  ["/pt/", "Baixar CV"],
+  ["/es/", "Descargar CV"],
+] as const) {
+  test(`the hero links the résumé PDF in its language (${path})`, async ({ page, request }) => {
+    await page.goto(path);
+    const link = page.locator("#top, section").first().getByRole("link", { name: new RegExp(label) });
+    await expect(link).toBeVisible();
+    const href = await link.getAttribute("href");
+    expect(href).toMatch(/\/cv\/mateus-mendonca-monteiro-[a-z]+-(en|pt|es)\.pdf$/);
+    expect(href).toContain(path === "/" ? "-en.pdf" : `-${path.slice(1, 3)}.pdf`);
+    const response = await request.get(href!);
+    expect(response.status()).toBe(200);
+    expect(response.headers()["content-type"]).toContain("application/pdf");
+    expect((await response.body()).subarray(0, 5).toString()).toBe("%PDF-");
+  });
+}

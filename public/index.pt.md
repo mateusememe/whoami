@@ -8,6 +8,7 @@ Python, Java, Go, Kubernetes | Microserviços • Mensageria • Cloud | Mestran
 - Site: https://mateusememe.github.io/whoami/pt/
 - Outros idiomas: [English](https://mateusememe.github.io/whoami/index.md) · [Español](https://mateusememe.github.io/whoami/index.es.md)
 - Dados estruturados (JSON Resume): https://mateusememe.github.io/whoami/resume.pt.json
+- Currículo (PDF): https://mateusememe.github.io/whoami/cv/mateus-mendonca-monteiro-curriculo-pt.pdf
 - Atualizado em: 2026-11-20
 
 ## Sobre Mim

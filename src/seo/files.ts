@@ -20,3 +20,10 @@ export const OG_IMAGE_FILES: Record<Language, string> = {
   pt: "og-image.pt.png",
   es: "og-image.es.png",
 };
+
+/** Résumé PDF per language (ATS layout), printed at build time by scripts/render-cv.ts. */
+export const CV_FILES: Record<Language, string> = {
+  en: "cv/mateus-mendonca-monteiro-resume-en.pdf",
+  pt: "cv/mateus-mendonca-monteiro-curriculo-pt.pdf",
+  es: "cv/mateus-mendonca-monteiro-curriculum-es.pdf",
+};

@@ -242,6 +242,12 @@ export const translations: Translations = {
   "palette.copied": { pt: "Email copiado", en: "Email copied", es: "Email copiado" },
   "palette.theme": { pt: "Alternar tema claro/escuro", en: "Toggle light/dark theme", es: "Cambiar tema claro/oscuro" },
   "palette.language": { pt: "Ler em {lang}", en: "Read in {lang}", es: "Leer en {lang}" },
+  "cv.download": { pt: "Baixar CV", en: "Download CV", es: "Descargar CV" },
+  "palette.cv": {
+    pt: "Baixar o currículo em PDF",
+    en: "Download the résumé (PDF)",
+    es: "Descargar el currículum en PDF",
+  },
   "palette.resume": {
     pt: "Currículo em JSON (JSON Resume)",
     en: "Résumé as JSON (JSON Resume)",
