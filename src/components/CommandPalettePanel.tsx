@@ -135,7 +135,11 @@ const CommandPalettePanel = ({ onClose, onToast }: CommandPalettePanelProps) => 
           }),
         ),
       ...projects
-        .filter((project) => !PROJECT_PAGE_IDS.includes(project.id) && (project.githubUrl || project.liveUrl))
+        // This site's own repository is the "source" action below.
+        .filter(
+          (project) =>
+            !PROJECT_PAGE_IDS.includes(project.id) && (project.githubUrl || project.liveUrl) && project.githubUrl !== SOURCE_REPO_URL,
+        )
         .map(
           (project): Command => ({
             id: `repo-${project.id}`,
@@ -281,7 +285,8 @@ const CommandPalettePanel = ({ onClose, onToast }: CommandPalettePanelProps) => 
   const ordered = useMemo(() => GROUPS.flatMap((group) => results.filter((command) => command.group === group.id)), [results]);
   const activeCommand = ordered[Math.min(active, ordered.length - 1)];
 
-  useEffect(() => setActive(0), [query]);
+  // The best match is active, even when its group is listed lower: Enter runs what the query found best.
+  useEffect(() => setActive(query.trim() && results[0] ? Math.max(0, ordered.indexOf(results[0])) : 0), [query, results, ordered]);
 
   // Keep the active option in view.
   useEffect(() => {
