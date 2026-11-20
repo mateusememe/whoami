@@ -55,6 +55,14 @@ export const translations: Translations = {
     es: "La máquina y las herramientas que Mateus usa a diario: editor y terminal, IA, contenedores, APIs y datos, investigación y escritura.",
   },
 
+  "seo.notesTitle": { pt: "Notas — Mateus Mendonça", en: "Notes — Mateus Mendonça", es: "Notas — Mateus Mendonça" },
+  "seo.notesDescription": {
+    pt: "Notas de Mateus Mendonça sobre backend, dados e IA, com código e números.",
+    en: "Notes by Mateus Mendonça on backend, data and AI, with code and numbers.",
+    es: "Notas de Mateus Mendonça sobre backend, datos e IA, con código y números.",
+  },
+  "seo.noteTitle": { pt: "{title} — Mateus Mendonça", en: "{title} — Mateus Mendonça", es: "{title} — Mateus Mendonça" },
+
   // Hero
   "hero.title": {
     pt: "Backend Software Engineer",
@@ -215,6 +223,7 @@ export const translations: Translations = {
   "talks.project": { pt: "Projeto", en: "Project", es: "Proyecto" },
   "pages.now": { pt: "Agora", en: "Now", es: "Ahora" },
   "pages.uses": { pt: "Ferramentas", en: "Uses", es: "Herramientas" },
+  "pages.notes": { pt: "Notas", en: "Notes", es: "Notas" },
   "pages.more": { pt: "Mais páginas", en: "More pages", es: "Más páginas" },
   "talk.page": { pt: "Página da palestra", en: "Talk page", es: "Página de la charla" },
 

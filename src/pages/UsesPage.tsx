@@ -59,7 +59,7 @@ const UsesPage = () => {
         </div>
       </article>
 
-      <PageFooter section="skills" backLabel={t("nav.skills")} />
+      <PageFooter back={{ section: "skills" }} backLabel={t("nav.skills")} />
     </main>
   );
 };

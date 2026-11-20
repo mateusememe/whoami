@@ -97,7 +97,7 @@ const NowPage = () => {
         )}
       </article>
 
-      <PageFooter section="about" backLabel={t("nav.about")} />
+      <PageFooter back={{ section: "about" }} backLabel={t("nav.about")} />
     </main>
   );
 };

@@ -31,6 +31,8 @@ import {
 import { LANGUAGE_PATHS, PROJECT_PAGE_IDS, pagePath } from "@/i18n/routes";
 import { translations, type Language } from "@/i18n/translations";
 import { CV_FILES, PROFILE_FILES, RESUME_FILES } from "@/seo/files";
+import { FEED_FILES, renderAtomFeed } from "@/seo/feed";
+import { publishedNotes } from "@/content/notes";
 import { currentRole } from "@/seo/jsonld";
 import { buildResume } from "@/seo/resume";
 import { SITE_NAME, SOURCE_REPO_URL, siteHref } from "@/seo/site";
@@ -279,6 +281,9 @@ export function renderLlmsTxt(siteUrl: string): string {
     `- [Full context](${siteHref(siteUrl, "llms-full.txt")}): All three profiles in one file`,
     `- [Now](${siteHref(siteUrl, pagePath("en", { kind: "now" }))}): What Mateus is doing at the moment: role, degree, newest projects, latest talk and contribution`,
     `- [Uses](${siteHref(siteUrl, pagePath("en", { kind: "uses" }))}): The machine and the tools he uses every day`,
+    ...(publishedNotes.length
+      ? [`- [Notes](${siteHref(siteUrl, pagePath("en", { kind: "notes" }))}): ${publishedNotes.length} notes; Atom feed at ${siteHref(siteUrl, FEED_FILES.en)}`]
+      : []),
     "",
     "## Projects",
     "",
@@ -359,6 +364,8 @@ export function renderAgentFiles(siteUrl: string): Record<string, string> {
   for (const language of LANGUAGES) {
     files[PROFILE_FILES[language]] = renderProfileMarkdown(language, siteUrl);
     files[RESUME_FILES[language]] = `${JSON.stringify(buildResume(language, siteUrl), null, 2)}\n`;
+    // The notes feed exists once there is a published note.
+    if (publishedNotes.length) files[FEED_FILES[language]] = renderAtomFeed(language, siteUrl, publishedNotes);
   }
   return files;
 }

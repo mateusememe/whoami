@@ -3,6 +3,7 @@
  * build-time <head> (head.ts) and the browser, which updates the document
  * head on client-side navigation (useDocumentHead).
  */
+import { publishedNotes } from "@/content/notes";
 import { experiences, projects, talks } from "@/data/portfolio";
 import { pagePath, type Page } from "@/i18n/routes";
 import { translations, type Language } from "@/i18n/translations";
@@ -73,6 +74,11 @@ export function pageMeta(page: Page, language: Language): PageMeta {
       description: tr(language, "seo.nowDescription", { role: role?.role[language] ?? "", company: role?.company ?? "" }),
       path,
     };
+  }
+  if (page.kind === "notes") return { title: tr(language, "seo.notesTitle"), description: tr(language, "seo.notesDescription"), path };
+  if (page.kind === "note") {
+    const note = publishedNotes.find((item) => item.slug === page.id);
+    if (note) return { title: tr(language, "seo.noteTitle", { title: note.title[language] }), description: clip(note.summary[language]), path };
   }
   if (page.kind === "uses") return { title: tr(language, "seo.usesTitle"), description: tr(language, "seo.usesDescription"), path };
   return { title: tr(language, "seo.title"), description: seoDescription(language), path };

@@ -4,6 +4,7 @@ import { resolve } from "path";
 import { describe, it, expect } from "vitest";
 import { contributions, education, experiences, profile, projects, publications, socialLinks, talks } from "@/data/portfolio";
 import {
+  HAS_NOTES,
   HTML_LANG,
   LANGUAGE_PATHS,
   LANGUAGES,
@@ -90,6 +91,19 @@ describe("language routes", () => {
       }
     }
     expect(paths.size).toBe(PAGES.length * LANGUAGES.length);
+  });
+
+  it("hides the notes until one is published, and every note has a body per language", async () => {
+    const { notes, publishedNotes } = await import("@/content/notes");
+    const { noteFiles } = await import("@/content/notes/bodies");
+    expect(HAS_NOTES).toBe(publishedNotes.length > 0);
+    if (!HAS_NOTES) {
+      expect(parseRoute("/notes/").page).toBeNull();
+      expect(PAGES.some((page) => page.kind === "notes" || page.kind === "note")).toBe(false);
+    }
+    for (const note of notes) {
+      for (const language of LANGUAGES) expect(noteFiles, note.slug).toContain(`./${note.slug}/${language}.md`);
+    }
   });
 
   it("strips the deployment base", () => {

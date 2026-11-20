@@ -21,6 +21,7 @@ import {
 } from "@/data/portfolio";
 import { HOME, HTML_LANG, LANGUAGE_PATHS, LANGUAGES, PROJECT_PAGE_IDS, pagePath, type Page } from "@/i18n/routes";
 import { translations, type Language } from "@/i18n/translations";
+import { publishedNotes, type NoteMeta } from "@/content/notes";
 import { projectPages } from "@/data/projectPages";
 import { talkPages } from "@/data/talkPages";
 import { OG_IMAGE_FILES } from "@/seo/files";
@@ -98,6 +99,7 @@ export function buildJsonLd(language: Language, siteUrl: string, target: Page = 
   if (target.kind === "project") return buildProjectJsonLd(language, siteUrl, target.id);
   if (target.kind === "talk") return buildTalkJsonLd(language, siteUrl, target.id);
   if (target.kind === "now" || target.kind === "uses") return buildSinglePageJsonLd(language, siteUrl, target);
+  if (target.kind === "notes" || target.kind === "note") return buildNotesJsonLd(language, siteUrl, target);
   const home = siteHref(siteUrl);
   const page = siteHref(siteUrl, LANGUAGE_PATHS[language]);
   const personId = `${home}#person`;
@@ -373,6 +375,63 @@ function buildSinglePageJsonLd(language: Language, siteUrl: string, target: Page
         itemListElement: [
           { "@type": "ListItem", position: 1, name: profile.name, item: homeUrl },
           { "@type": "ListItem", position: 2, name: tr(language, `pages.${target.kind}`), item: url },
+        ],
+      },
+    ],
+  };
+}
+
+/** /notes as a Blog, a note as a BlogPosting in it. */
+function buildNotesJsonLd(language: Language, siteUrl: string, target: Page): Record<string, unknown> {
+  const home = siteHref(siteUrl);
+  const personId = `${home}#person`;
+  const websiteId = `${home}#website`;
+  const homeUrl = siteHref(siteUrl, LANGUAGE_PATHS[language]);
+  const blogUrl = siteHref(siteUrl, pagePath(language, { kind: "notes" }));
+  const blogId = `${blogUrl}#blog`;
+  const posting = (note: NoteMeta) => {
+    const url = siteHref(siteUrl, pagePath(language, { kind: "note", id: note.slug }));
+    return {
+      "@type": "BlogPosting",
+      "@id": `${url}#posting`,
+      url,
+      headline: note.title[language],
+      description: note.summary[language],
+      datePublished: note.date,
+      dateModified: note.updated ?? note.date,
+      inLanguage: HTML_LANG[language],
+      author: { "@id": personId },
+      isPartOf: { "@id": blogId },
+      ...(note.tags.length ? { keywords: note.tags.join(", ") } : {}),
+    };
+  };
+  const note = target.kind === "note" ? publishedNotes.find((item) => item.slug === target.id) : undefined;
+  const meta = pageMeta(target, language);
+  const url = siteHref(siteUrl, meta.path);
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      { "@type": "WebSite", "@id": websiteId, url: home, name: profile.name, publisher: { "@id": personId } },
+      { "@type": "Person", "@id": personId, name: profile.name, url: home },
+      {
+        "@type": "Blog",
+        "@id": blogId,
+        url: blogUrl,
+        name: tr(language, "seo.notesTitle"),
+        description: tr(language, "seo.notesDescription"),
+        inLanguage: HTML_LANG[language],
+        author: { "@id": personId },
+        ...(note ? {} : { blogPost: publishedNotes.map(posting) }),
+      },
+      ...(note ? [posting(note)] : []),
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${url}#breadcrumb`,
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: profile.name, item: homeUrl },
+          { "@type": "ListItem", position: 2, name: tr(language, "pages.notes"), item: blogUrl },
+          ...(note ? [{ "@type": "ListItem", position: 3, name: note.title[language], item: url }] : []),
         ],
       },
     ],

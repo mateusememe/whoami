@@ -205,7 +205,7 @@ const TalkPage = () => {
         )}
       </nav>
 
-      <PageFooter section="talks" backLabel={t("talk.back")} />
+      <PageFooter back={{ section: "talks" }} backLabel={t("talk.back")} />
     </main>
   );
 };

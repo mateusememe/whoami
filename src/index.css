@@ -738,3 +738,82 @@ html[data-vt="reveal"]::view-transition-new(root) {
     animation: none;
   }
 }
+
+/* ---------- Note body (Markdown rendered in src/pages/NotePage.tsx) ---------- */
+.note-body {
+  color: hsl(var(--muted-foreground));
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+.note-body > * + * {
+  margin-top: 1.25em;
+}
+.note-body :is(h2, h3) {
+  color: hsl(var(--foreground));
+  font-family: "Space Grotesk Variable", "Space Grotesk Fallback", system-ui, sans-serif;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-top: 2em;
+}
+.note-body h2 {
+  font-size: 1.6rem;
+}
+.note-body h3 {
+  font-size: 1.25rem;
+}
+.note-body a {
+  color: hsl(var(--foreground));
+  text-decoration: underline;
+  text-decoration-color: hsl(var(--signal));
+  text-underline-offset: 0.2em;
+}
+.note-body strong {
+  color: hsl(var(--foreground));
+}
+.note-body :is(ul, ol) {
+  padding-left: 1.4em;
+}
+.note-body ul {
+  list-style: disc;
+}
+.note-body ol {
+  list-style: decimal;
+}
+.note-body li + li {
+  margin-top: 0.4em;
+}
+.note-body blockquote {
+  border-left: 2px solid hsl(var(--signal));
+  padding-left: 1em;
+  font-style: italic;
+}
+.note-body :not(pre) > code {
+  color: hsl(var(--foreground));
+  font-family: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.9em;
+}
+.note-body pre {
+  overflow-x: auto;
+  border: 1px solid hsl(var(--border));
+  border-radius: 1rem;
+  background: hsl(var(--card));
+  padding: 1rem 1.25rem;
+  font-family: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: hsl(var(--foreground));
+}
+.note-body img {
+  max-width: 100%;
+  border-radius: 1rem;
+}
+.note-body table {
+  display: block;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+.note-body :is(th, td) {
+  border-bottom: 1px solid hsl(var(--border));
+  padding: 0.5em 0.75em;
+  text-align: left;
+}

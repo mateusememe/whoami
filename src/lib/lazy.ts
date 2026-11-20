@@ -10,6 +10,8 @@ const PAGE_MODULES: Record<LazyPageKind, () => Promise<{ default: ComponentType 
   talk: () => import("@/pages/TalkPage"),
   now: () => import("@/pages/NowPage"),
   uses: () => import("@/pages/UsesPage"),
+  notes: () => import("@/pages/NotesPage"),
+  note: () => import("@/pages/NotePage"),
 };
 
 /**

@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { LanguageProvider, useLanguage, type Language } from "@/contexts/LanguageContext";
-import { languageFromPath, pagePath, parseRoute, stripBase } from "@/i18n/routes";
+import { HAS_NOTES, languageFromPath, pagePath, parseRoute, stripBase } from "@/i18n/routes";
 import SiteLayout from "@/components/SiteLayout";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
@@ -60,6 +60,12 @@ export const AppRoutes = () => (
           <Route key={`${prefix}/talks`} path={`${prefix}/talks/:id`} element={<LazyPage kind="talk" />} />,
           <Route key={`${prefix}/now`} path={`${prefix}/now`} element={<LazyPage kind="now" />} />,
           <Route key={`${prefix}/uses`} path={`${prefix}/uses`} element={<LazyPage kind="uses" />} />,
+          ...(HAS_NOTES
+            ? [
+                <Route key={`${prefix}/notes`} path={`${prefix}/notes`} element={<LazyPage kind="notes" />} />,
+                <Route key={`${prefix}/notes/id`} path={`${prefix}/notes/:id`} element={<LazyPage kind="note" />} />,
+              ]
+            : []),
         ])}
         <Route path="*" element={<NotFound />} />
       </Route>

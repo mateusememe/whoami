@@ -235,7 +235,7 @@ const ProjectPage = () => {
         )}
       </nav>
 
-      <PageFooter section="projects" backLabel={t("project.back")} />
+      <PageFooter back={{ section: "projects" }} backLabel={t("project.back")} />
     </main>
   );
 };

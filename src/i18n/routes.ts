@@ -1,3 +1,4 @@
+import { publishedNotes } from "@/content/notes";
 import { projects, talks } from "@/data/portfolio";
 import type { Language } from "@/i18n/translations";
 
@@ -11,6 +12,8 @@ import type { Language } from "@/i18n/translations";
  *   talk      /talks/x/    /pt/talks/x/    /es/talks/x/
  *   now       /now/        /pt/now/        /es/now/
  *   uses      /uses/       /pt/uses/       /es/uses/
+ *   notes     /notes/      /pt/notes/      /es/notes/     (with a published note)
+ *   note      /notes/x/    /pt/notes/x/    /es/notes/x/
  *
  * A new kind of page is a member of `Page`, an entry in ID_PAGES or
  * SINGLE_PAGES, a loader in src/lib/lazy.ts and a route in App.tsx.
@@ -34,7 +37,9 @@ export type Page =
   | { kind: "project"; id: string }
   | { kind: "talk"; id: string }
   | { kind: "now" }
-  | { kind: "uses" };
+  | { kind: "uses" }
+  | { kind: "notes" }
+  | { kind: "note"; id: string };
 
 export type PageKind = Page["kind"];
 type IdPage = Extract<Page, { id: string }>;
@@ -48,17 +53,27 @@ export const PROJECT_PAGE_IDS: string[] = projects.filter((project) => project.f
 /** Every talk has a page (content in src/data/talkPages.ts). */
 export const TALK_PAGE_IDS: string[] = talks.map((talk) => talk.id);
 
+/** Published notes (src/content/notes); drafts only on the dev server. */
+export const NOTE_IDS: string[] = publishedNotes.map((note) => note.slug);
+
 /** Pages with an id: the URL segment before the id, and the ids that have a page. */
 const ID_PAGES: { [K in IdPage["kind"]]: { segment: string; ids: string[] } } = {
   project: { segment: "projects", ids: PROJECT_PAGE_IDS },
   talk: { segment: "talks", ids: TALK_PAGE_IDS },
+  note: { segment: "notes", ids: NOTE_IDS },
 };
 
 /** Pages without an id: their URL segment. */
-const SINGLE_PAGES: { [K in SinglePage["kind"]]: string } = { now: "now", uses: "uses" };
+const SINGLE_PAGES: { [K in SinglePage["kind"]]: string } = { now: "now", uses: "uses", notes: "notes" };
+
+/** Single pages that exist only under a condition: the notes list needs a published note. */
+const SINGLE_PAGE_ENABLED: { [K in SinglePage["kind"]]?: boolean } = { notes: NOTE_IDS.length > 0 };
 
 const idKinds = Object.keys(ID_PAGES) as IdPage["kind"][];
-const singleKinds = Object.keys(SINGLE_PAGES) as SinglePage["kind"][];
+const singleKinds = (Object.keys(SINGLE_PAGES) as SinglePage["kind"][]).filter((kind) => SINGLE_PAGE_ENABLED[kind] !== false);
+
+/** True when the site has the notes list (at least one published note). */
+export const HAS_NOTES = NOTE_IDS.length > 0;
 
 /** Every prerendered page, in sitemap order. */
 export const PAGES: Page[] = [

@@ -24,6 +24,7 @@ import {
   Hash,
   Languages,
   Moon,
+  NotebookPen,
   Presentation,
   Search,
   type LucideIcon,
@@ -33,7 +34,7 @@ import { NAV_ITEMS } from "@/data/navigation";
 import { projects, socialLinks, talks } from "@/data/portfolio";
 import { useSiteNavigation } from "@/hooks/useSiteNavigation";
 import { useTheme } from "@/hooks/useTheme";
-import { LANGUAGES, PROJECT_PAGE_IDS, pagePath } from "@/i18n/routes";
+import { HAS_NOTES, LANGUAGES, PROJECT_PAGE_IDS, pagePath } from "@/i18n/routes";
 import { CV_FILES, RESUME_FILES } from "@/seo/files";
 import { SOURCE_REPO_URL } from "@/seo/site";
 import { scrollToTarget, setScrollLocked } from "@/motion/scroll";
@@ -158,6 +159,19 @@ const CommandPalettePanel = ({ onClose, onToast }: CommandPalettePanelProps) => 
           run: () => navigate(pagePath(language, { kind: "talk", id: talk.id })),
         }),
       ),
+      ...(HAS_NOTES
+        ? [
+            {
+              id: "page-notes",
+              group: "pages" as const,
+              label: t("pages.notes"),
+              hint: "/notes",
+              keywords: "notes notas blog posts",
+              icon: NotebookPen,
+              run: () => navigate(pagePath(language, { kind: "notes" })),
+            },
+          ]
+        : []),
       ...(["now", "uses"] as const).map(
         (kind): Command => ({
           id: `page-${kind}`,

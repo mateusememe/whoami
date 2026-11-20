@@ -10,6 +10,14 @@ import type { Language } from "@/i18n/translations";
 type Params = Record<string, string | number>;
 
 export const pageTranslations: Record<string, Record<Language, string>> = {
+  "notes.lead": {
+    pt: "Notas sobre o que construo e estudo, com o código e os números.",
+    en: "Notes on what I build and study, with the code and the numbers.",
+    es: "Notas sobre lo que construyo y estudio, con el código y los números.",
+  },
+  "notes.updated": { pt: "atualizado em {date}", en: "updated {date}", es: "actualizado el {date}" },
+  "notes.draft": { pt: "rascunho", en: "draft", es: "borrador" },
+  "notes.back": { pt: "Todas as notas", en: "All notes", es: "Todas las notas" },
   "talk.date": { pt: "Data", en: "Date", es: "Fecha" },
   "talk.place": { pt: "Local", en: "Place", es: "Lugar" },
   "talk.length": { pt: "Duração", en: "Length", es: "Duración" },

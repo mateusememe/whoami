@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { profile, socialLinks } from "@/data/portfolio";
-import { pagePath } from "@/i18n/routes";
+import { HAS_NOTES, pagePath, type Page } from "@/i18n/routes";
 import { CV_FILES } from "@/seo/files";
 import type { SectionId } from "@/data/navigation";
 import { useSiteNavigation } from "@/hooks/useSiteNavigation";
@@ -9,8 +9,8 @@ import { useSiteNavigation } from "@/hooks/useSiteNavigation";
 const mail = socialLinks.find((link) => link.href.startsWith("mailto:"));
 
 interface PageFooterProps {
-  /** Home page section the page belongs to; the back link lands there. */
-  section: SectionId;
+  /** Where the back link goes: a home page section, or another page (a note goes back to /notes/). */
+  back: { section: SectionId } | { page: Page };
   backLabel: string;
 }
 
@@ -20,6 +20,11 @@ export const SiteLinks = () => {
   const { language, t } = useLanguage();
   return (
     <>
+      {HAS_NOTES && (
+        <Link to={pagePath(language, { kind: "notes" })} className="link-underline inline-block min-w-6 py-1.5 text-center hover:text-foreground">
+          {t("pages.notes")}
+        </Link>
+      )}
       <Link to={pagePath(language, { kind: "now" })} className="link-underline inline-block min-w-6 py-1.5 text-center hover:text-foreground">
         {t("pages.now")}
       </Link>
@@ -33,7 +38,8 @@ export const SiteLinks = () => {
   );
 };
 
-export const PageFooter = ({ section, backLabel }: PageFooterProps) => {
+export const PageFooter = ({ back, backLabel }: PageFooterProps) => {
+  const { language } = useLanguage();
   const { sectionHref, onSectionClick } = useSiteNavigation();
   return (
     <footer className="shell flex flex-wrap items-center justify-between gap-4 border-t border-border/60 py-8 font-mono text-xs text-muted-foreground">
@@ -47,9 +53,15 @@ export const PageFooter = ({ section, backLabel }: PageFooterProps) => {
             {mail.displayText}
           </a>
         )}
-        <a href={sectionHref(section)} onClick={onSectionClick(section)} className="link-underline inline-block py-1.5 hover:text-foreground">
-          ← {backLabel}
-        </a>
+        {"page" in back ? (
+          <Link to={pagePath(language, back.page)} className="link-underline inline-block py-1.5 hover:text-foreground">
+            ← {backLabel}
+          </Link>
+        ) : (
+          <a href={sectionHref(back.section)} onClick={onSectionClick(back.section)} className="link-underline inline-block py-1.5 hover:text-foreground">
+            ← {backLabel}
+          </a>
+        )}
       </span>
     </footer>
   );
