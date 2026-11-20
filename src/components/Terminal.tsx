@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { TERMINAL_EVENT } from "@/lib/commands";
 import { lazyParts, loadTerminal } from "@/lib/lazy";
+import { trackEvent } from "@/lib/analytics";
 
 /**
  * Opens the whoami terminal with Ctrl+` (or ⌃` on a Mac) and from the
@@ -14,6 +15,7 @@ const Terminal = () => {
 
   const show = useCallback(() => {
     returnFocus.current = document.activeElement as HTMLElement | null;
+    trackEvent("terminal-open");
     loadTerminal().then(() => setOpen(true));
   }, []);
 

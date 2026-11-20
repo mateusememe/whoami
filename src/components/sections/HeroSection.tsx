@@ -9,6 +9,7 @@ import { IconButton } from "@/components/ds";
 import { Magnetic } from "@/components/motion/Magnetic";
 import { useProgress } from "@/motion/useProgress";
 import { CV_FILES } from "@/seo/files";
+import { trackEvent } from "@/lib/analytics";
 
 const NAME = "Mateus Mendonça Monteiro";
 const NAME_LINES = NAME.split(" ");
@@ -148,6 +149,7 @@ const HeroSection = () => {
                 href={`${import.meta.env.BASE_URL}${CV_FILES[language]}`}
                 download
                 type="application/pdf"
+                onClick={() => trackEvent("cv-download")}
                 className="label inline-flex h-10 items-center gap-2 self-start rounded-full border border-border px-4 text-foreground transition-colors duration-base hover:border-signal/50 hover:text-signal md:self-end"
               >
                 <FileDown size={14} aria-hidden="true" />

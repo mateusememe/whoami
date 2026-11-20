@@ -10,6 +10,7 @@ import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { useAgentTools } from "@/agents/useAgentTools";
 import { useDocumentHead } from "@/hooks/useDocumentHead";
 import { useRouteScroll } from "@/hooks/useRouteScroll";
+import { usePageViews } from "@/hooks/usePageViews";
 import { useSceneDirector } from "@/motion/useSceneDirector";
 import { loadPage } from "@/lib/lazy";
 
@@ -24,6 +25,7 @@ const SiteLayout = () => {
   useRouteScroll();
   useDocumentHead();
   useAgentTools();
+  usePageViews();
 
   // Fetch the project page chunk once the browser is idle, so opening a project is instant.
   useEffect(() => {

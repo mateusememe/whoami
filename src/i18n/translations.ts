@@ -315,6 +315,11 @@ export const translations: Translations = {
   "contact.copied": { pt: "Copiado", en: "Copied", es: "Copiado" },
   "contact.channels": { pt: "Outros canais", en: "Other channels", es: "Otros canales" },
   "footer.localTime": { pt: "Horário local", en: "Local time", es: "Hora local" },
+  "footer.analytics": {
+    pt: "Visitas contadas pelo GoatCounter, sem cookies.",
+    en: "Visits counted by GoatCounter, without cookies.",
+    es: "Visitas contadas por GoatCounter, sin cookies.",
+  },
 
   // 404
   "notFound.title": { pt: "Página não encontrada", en: "Page Not Found", es: "Página no encontrada" },

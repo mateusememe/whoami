@@ -10,6 +10,7 @@ import { socialLinks } from "@/data/portfolio";
 import { sectionIndex } from "@/data/navigation";
 import { SiteLinks } from "@/components/PageFooter";
 import { CV_FILES } from "@/seo/files";
+import { analyticsEnabled, trackEvent } from "@/lib/analytics";
 
 const mail = socialLinks.find((link) => link.href.startsWith("mailto:"));
 const channels = socialLinks.filter((link) => link !== mail);
@@ -69,6 +70,7 @@ const ContactFooter = () => {
                 href={`${import.meta.env.BASE_URL}${CV_FILES[language]}`}
                 download
                 type="application/pdf"
+                onClick={() => trackEvent("cv-download")}
                 className="glass-card inline-flex h-11 items-center gap-2.5 rounded-full px-5 font-mono text-xs text-foreground transition-colors duration-base hover:text-signal"
               >
                 <FileDown size={14} aria-hidden="true" />
@@ -120,6 +122,7 @@ const ContactFooter = () => {
         <nav aria-label={t("pages.more")} className="flex flex-wrap items-center gap-x-6 gap-y-1 font-mono text-xs text-muted-foreground">
           <SiteLinks />
         </nav>
+        {analyticsEnabled && <p className="font-mono text-[11px] text-muted-foreground sm:text-xs">{t("footer.analytics")}</p>}
         <p className="label flex items-center gap-3">
           <span>{t("footer.localTime")}</span>
           <LocalClock className="text-foreground" />

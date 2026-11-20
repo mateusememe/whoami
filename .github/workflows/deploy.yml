@@ -48,6 +48,8 @@ jobs:
         env:
           VITE_BASE_PATH: /whoami/
           VITE_SITE_URL: https://mateusememe.github.io/whoami
+          # GoatCounter endpoint (https://<code>.goatcounter.com/count); empty leaves analytics off.
+          VITE_GOATCOUNTER_URL: ${{ vars.GOATCOUNTER_URL }}
         run: npm run build
 
       - name: Setup Pages

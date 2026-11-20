@@ -3,6 +3,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { profile, socialLinks } from "@/data/portfolio";
 import { HAS_NOTES, pagePath, type Page } from "@/i18n/routes";
 import { CV_FILES } from "@/seo/files";
+import { trackEvent } from "@/lib/analytics";
 import type { SectionId } from "@/data/navigation";
 import { useSiteNavigation } from "@/hooks/useSiteNavigation";
 
@@ -31,7 +32,7 @@ export const SiteLinks = () => {
       <Link to={pagePath(language, { kind: "uses" })} className="link-underline inline-block min-w-6 py-1.5 text-center hover:text-foreground">
         {t("pages.uses")}
       </Link>
-      <a href={`${import.meta.env.BASE_URL}${CV_FILES[language]}`} download type="application/pdf" className="link-underline inline-block min-w-6 py-1.5 text-center hover:text-foreground">
+      <a href={`${import.meta.env.BASE_URL}${CV_FILES[language]}`} download type="application/pdf" onClick={() => trackEvent("cv-download")} className="link-underline inline-block min-w-6 py-1.5 text-center hover:text-foreground">
         CV (PDF)
       </a>
     </>

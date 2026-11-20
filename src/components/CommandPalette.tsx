@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { PALETTE_EVENT } from "@/lib/commands";
 import { lazyParts, loadCommandPalette } from "@/lib/lazy";
+import { trackEvent } from "@/lib/analytics";
 
 /**
  * Keyboard-first navigation, in the voice of the `$ whoami` prompt. Opens
@@ -19,6 +20,7 @@ const CommandPalette = () => {
 
   const show = useCallback(() => {
     returnFocus.current = document.activeElement as HTMLElement | null;
+    trackEvent("palette-open");
     loadCommandPalette().then(() => setOpen(true));
   }, []);
 
