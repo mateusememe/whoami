@@ -1,0 +1,29 @@
+{
+  "ci": {
+    "collect": {
+      "startServerCommand": "npx vite preview --port 4174 --strictPort",
+      "startServerReadyPattern": "Local",
+      "url": [
+        "http://localhost:4174/",
+        "http://localhost:4174/pt/",
+        "http://localhost:4174/projects/rinha-backend-2026-c/"
+      ],
+      "numberOfRuns": 3,
+      "settings": {
+        "chromeFlags": "--no-sandbox"
+      }
+    },
+    "assert": {
+      "assertions": {
+        "categories:accessibility": ["error", { "minScore": 1, "aggregationMethod": "median-run" }],
+        "categories:seo": ["error", { "minScore": 1, "aggregationMethod": "median-run" }],
+        "categories:best-practices": ["error", { "minScore": 0.96, "aggregationMethod": "median-run" }],
+        "categories:performance": ["error", { "minScore": 0.8, "aggregationMethod": "median-run" }]
+      }
+    },
+    "upload": {
+      "target": "filesystem",
+      "outputDir": ".lighthouseci/reports"
+    }
+  }
+}

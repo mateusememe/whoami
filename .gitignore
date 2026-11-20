@@ -146,3 +146,8 @@ vite.config.ts.timestamp-*
 # Graphify analysis output
 graphify-out/
 .DS_Store
+
+# End-to-end and Lighthouse output
+test-results/
+playwright-report/
+.lighthouseci/

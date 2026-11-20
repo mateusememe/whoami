@@ -8,7 +8,7 @@ on:
 
 jobs:
   validate:
-    name: Lint, Typecheck, Test & Build
+    name: Lint, Typecheck, Test, Build & QA
     runs-on: ubuntu-latest
 
     steps:
@@ -35,3 +35,34 @@ jobs:
 
       - name: Build production bundle
         run: npm run build
+
+      - name: Check the initial bundle budget
+        run: npm run check:bundle
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      # Every page hydrates without errors; one page per kind holds its layout at nine widths; key flows work.
+      - name: End-to-end tests
+        run: npm run test:e2e
+
+      # Accessibility and SEO at 100, best practices at 96+, performance at 80+ (median of 3 runs).
+      - name: Lighthouse CI
+        run: npm run lighthouse
+
+      - name: Upload the reports (screenshots per width, traces, Lighthouse)
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-reports
+          path: |
+            playwright-report/
+            test-results/
+            .lighthouseci/reports/
+          retention-days: 14
