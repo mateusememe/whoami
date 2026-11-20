@@ -223,6 +223,23 @@ describe("Publications", () => {
   });
 });
 
+describe("Publication registries", () => {
+  it("link the work in ORCID or Scholar when it is there, and publish it as sameAs", () => {
+    // None is registered yet; try one on a copy of the data and put it back.
+    expect(publications[0].sameAs).toBeUndefined();
+    const entry = { label: "ORCID", url: "https://orcid.org/0009-0009-6468-8493/work/1" };
+    publications[0].sameAs = [entry];
+    try {
+      renderWithProviders(<EducationSection />, "en");
+      expect(screen.getByRole("link", { name: /ORCID/ })).toHaveAttribute("href", entry.url);
+      const graph = JSON.stringify(buildJsonLd("en", "https://example.test/whoami"));
+      expect(graph).toContain(`"sameAs":["${entry.url}"]`);
+    } finally {
+      delete publications[0].sameAs;
+    }
+  });
+});
+
 describe("Talk data", () => {
   it("lists talks newest first, each with at least one link", () => {
     const dates = talks.map((talk) => talk.date);

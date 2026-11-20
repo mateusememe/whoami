@@ -91,6 +91,7 @@ function article(item: (typeof publications)[number], personId: string, about?: 
     },
     publisher: { "@type": "Organization", name: item.publisher },
     ...(item.url ? { url: item.url } : {}),
+    ...(item.sameAs?.length ? { sameAs: item.sameAs.map((entry) => entry.url) } : {}),
     ...(about ? { about: { "@id": about } } : {}),
   };
 }

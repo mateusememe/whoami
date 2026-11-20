@@ -122,6 +122,18 @@ const EducationSection = () => {
                         <ArrowUpRight size={13} aria-hidden="true" />
                       </a>
                     )}
+                    {item.sameAs?.map((entry) => (
+                      <a
+                        key={entry.url}
+                        href={entry.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex h-9 items-center gap-1.5 rounded-full border border-border px-3.5 font-mono text-[11px] text-foreground transition-colors duration-base hover:border-signal/50 hover:text-signal"
+                      >
+                        {entry.label}
+                        <ArrowUpRight size={13} aria-hidden="true" />
+                      </a>
+                    ))}
                   </div>
                 </li>
               );

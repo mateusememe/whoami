@@ -138,6 +138,11 @@ export interface Publication {
   url?: string;
   /** Date the URL was last checked, `YYYY-MM-DD` (ABNT "Acesso em"). */
   accessed?: string;
+  /**
+   * The same work in research registries, such as its ORCID work or Google
+   * Scholar entry. Shown as links and published as JSON-LD sameAs.
+   */
+  sameAs?: Array<{ label: string; url: string }>;
 }
 
 /**
