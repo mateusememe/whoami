@@ -148,3 +148,33 @@ test("a project page shows the repository's languages and last push from the sna
   await expect(page.getByText("Last push")).toBeVisible();
   await expect(page.locator("#project-languages + div + dl dt").first()).toHaveText("C");
 });
+
+test("moving between kinds of page renders each page, never the previous kind", async ({ page }) => {
+  const errors = collectErrors(page);
+  const notFound = page.getByText("Page Not Found");
+  await page.goto("/projects/git-github-in-action/");
+  await settle(page);
+
+  // Project → talk (the "Presented at" link).
+  await page.getByRole("link", { name: /Git e GitHub em Ação/ }).first().click();
+  await expect(page).toHaveURL(/\/talks\/git-infoeste-2023\/$/);
+  await expect(page.getByRole("heading", { level: 1, name: "Git e GitHub em Ação" })).toBeVisible();
+  await expect(notFound).toHaveCount(0);
+
+  // Talk → project (the project link).
+  await page.getByRole("link", { name: /git-github-in-action/ }).first().click();
+  await expect(page).toHaveURL(/\/projects\/git-github-in-action\/$/);
+  await expect(page.getByRole("heading", { level: 1, name: "git-github-in-action" })).toBeVisible();
+
+  // Project → /now → /uses → a project, through the footer and the /now chips.
+  await page.locator("footer").last().getByRole("link", { name: "Now" }).click();
+  await expect(page.getByRole("heading", { level: 1, name: "Now" })).toBeVisible();
+  await page.locator("footer").last().getByRole("link", { name: "Uses" }).click();
+  await expect(page.getByRole("heading", { level: 1, name: "Uses" })).toBeVisible();
+  await page.goBack();
+  await expect(page.getByRole("heading", { level: 1, name: "Now" })).toBeVisible();
+  await page.getByRole("link", { name: "rinha-backend-2026-c" }).click();
+  await expect(page.getByRole("heading", { level: 1, name: "rinha-backend-2026-c" })).toBeVisible();
+  await expect(notFound).toHaveCount(0);
+  expect(errors).toEqual([]);
+});

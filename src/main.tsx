@@ -7,6 +7,22 @@ import "./index.css";
 
 const container = document.getElementById("root")!;
 
+// A tab opened before a deploy asks for chunks the deploy replaced. Reload
+// once to get the new build, at most every 30 seconds so a real outage
+// cannot loop.
+window.addEventListener("vite:preloadError", (event) => {
+  try {
+    const key = "whoami:reloaded-for-deploy";
+    const last = Number(sessionStorage.getItem(key) ?? 0);
+    if (Date.now() - last < 30_000) return;
+    sessionStorage.setItem(key, String(Date.now()));
+  } catch {
+    return;
+  }
+  event.preventDefault();
+  window.location.reload();
+});
+
 // Every page in src/i18n/routes.ts is prerendered (scripts/prerender.ts):
 // hydrate it there. Dev, the 404.html shell, and hosts that serve index.html
 // for unknown paths render from scratch instead.
