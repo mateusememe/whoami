@@ -69,6 +69,7 @@
       "endDate": "2026-04",
       "summary": "Trabajo en el motor de búsqueda y en microservicios de alto tráfico, usados por millones de personas al día. Stack con Java (Spring Boot, Quarkus), Node.js (Fastify) y TypeScript, integrando con MongoDB, Redis y Elasticsearch. Implementé circuit breakers y fallbacks y reduje en 20% el tiempo de sincronización de datos de productos al optimizar la reindexación en Elasticsearch. APIs GraphQL (Apollo Federation) y REST, mensajería con RabbitMQ y Pub/Sub, y despliegues en Kubernetes sobre GCP y Magalu Cloud vía ArgoCD.",
       "highlights": [
+        "−20% tiempo de sincronización de datos de productos",
         "Java, Spring Boot, Quarkus, Node.js, Fastify, TypeScript, MongoDB, Redis, Elasticsearch, GraphQL, Apollo Federation, RabbitMQ, Pub/Sub, GCP, MagaluCloud, Kubernetes, ArgoCD, Datadog, Grafana"
       ]
     },
@@ -80,6 +81,7 @@
       "endDate": "2024-12",
       "summary": "Desarrollo y mantenimiento de microservicios Java con Spring y Quarkus en Kubernetes, incluidos servicios de alto volumen con Kafka. Reducción de 10% en el tiempo de inicio y en el uso de memoria. APIs REST, autenticación con Spring Security y JWT, bases MySQL y MongoDB, y CI/CD con Docker, Jenkins, SonarQube y Bitbucket. Equipo de 12 personas.",
       "highlights": [
+        "−10% tiempo de inicio y uso de memoria",
         "Java, Spring, Quarkus, Kafka, Kubernetes, MySQL, MongoDB, Firestore, Spring Security, JWT, Docker, Jenkins, SonarQube, Bitbucket"
       ]
     },
@@ -91,6 +93,7 @@
       "endDate": "2023-04",
       "summary": "Desarrollo de aplicaciones web con Next.js, React y TypeScript. Optimización de renderizado y SEO con 20% de mejora en métricas de rendimiento. Integración de APIs REST y creación de interfaces interactivas para constructores de flujo no-code.",
       "highlights": [
+        "+20% métricas de rendimiento de renderizado y SEO",
         "Next.js, React, TypeScript, API Integration, SEO"
       ]
     },
@@ -102,6 +105,7 @@
       "endDate": "2024-07",
       "summary": "Mantenimiento y evolución del SRE (Sistema de Registro de Ofertas) de la CVM. Frontend con AngularJS y jQuery; backend en Java EE (VRaptor, EJB, Quartz, Liquibase). Lideré la migración de Java 8 a Java 11, que redujo en 15% los bugs en producción, y refactoricé consultas SQL Server para reducir el tiempo de respuesta.",
       "highlights": [
+        "−15% bugs en producción tras la migración a Java 11",
         "Java EE, VRaptor, Quartz, Jacoco, Liquibase, EJB, Angular.js, jQuery, HTML5, CSS3, JavaScript, SQL Server"
       ]
     },
@@ -113,6 +117,8 @@
       "endDate": "2022-09",
       "summary": "Desarrollo de funciones para plataforma SaaS de planificación de obras civiles, atendiendo a más de 200 empresas y 1.000 usuarios en 2.600 obras. Trabajo con React, Node.js y Docker en el equipo de User Insights.",
       "highlights": [
+        "200+ empresas atendidas",
+        "2.600 obras",
         "JavaScript, React, Node.js, Docker"
       ]
     },

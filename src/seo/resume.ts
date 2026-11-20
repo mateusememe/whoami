@@ -50,7 +50,10 @@ export function buildResume(language: Language, siteUrl: string): Record<string,
       location: experience.location,
       ...parsePeriod(experience.period.en),
       summary: experience.desc[language],
-      highlights: [experience.tech.join(", ")],
+      highlights: [
+        ...(experience.results ?? []).map((result) => `${result.value[language]} ${result.label[language]}`),
+        experience.tech.join(", "),
+      ],
     })),
     education: education.map((item) => {
       const [studyType, area] = tr(language, item.degreeKey).split(DEGREE_SEPARATOR[language]);

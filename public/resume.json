@@ -69,6 +69,7 @@
       "endDate": "2026-04",
       "summary": "Worked on the search engine and high-throughput microservices used by millions of people a day. Stack: Java (Spring Boot, Quarkus), Node.js (Fastify), and TypeScript, backed by MongoDB, Redis, and Elasticsearch. Implemented circuit breakers and fallbacks, and cut product data synchronization time by 20% by optimizing Elasticsearch re-indexing. Built GraphQL (Apollo Federation) and REST APIs, async messaging with RabbitMQ and Pub/Sub, deployed to Kubernetes on GCP and Magalu Cloud via ArgoCD.",
       "highlights": [
+        "−20% product data sync time",
         "Java, Spring Boot, Quarkus, Node.js, Fastify, TypeScript, MongoDB, Redis, Elasticsearch, GraphQL, Apollo Federation, RabbitMQ, Pub/Sub, GCP, MagaluCloud, Kubernetes, ArgoCD, Datadog, Grafana"
       ]
     },
@@ -80,6 +81,7 @@
       "endDate": "2024-12",
       "summary": "Maintained and deployed Java microservices with Spring and Quarkus on Kubernetes, including high-throughput services with Kafka. Lowered startup time and memory use by 10%. Built REST APIs, authentication with Spring Security and JWT, MySQL and MongoDB storage, with CI/CD on Docker, Jenkins, SonarQube, and Bitbucket. Team of 12.",
       "highlights": [
+        "−10% startup time and memory use",
         "Java, Spring, Quarkus, Kafka, Kubernetes, MySQL, MongoDB, Firestore, Spring Security, JWT, Docker, Jenkins, SonarQube, Bitbucket"
       ]
     },
@@ -91,6 +93,7 @@
       "endDate": "2023-04",
       "summary": "Built web applications using Next.js, React, and TypeScript. Improved rendering and SEO metrics by 20%. Integrated REST APIs and created interactive interfaces for no-code workflow builders.",
       "highlights": [
+        "+20% rendering and SEO performance metrics",
         "Next.js, React, TypeScript, API Integration, SEO"
       ]
     },
@@ -102,6 +105,7 @@
       "endDate": "2024-07",
       "summary": "Maintained and updated the Offer Registration System (SRE) for the CVM. Frontend in AngularJS and jQuery; backend in Java EE (VRaptor, EJB, Quartz, Liquibase). Led the migration from Java 8 to Java 11, which reduced production bugs by 15%, and refactored SQL Server queries to cut response times.",
       "highlights": [
+        "−15% production bugs after the move to Java 11",
         "Java EE, VRaptor, Quartz, Jacoco, Liquibase, EJB, Angular.js, jQuery, HTML5, CSS3, JavaScript, SQL Server"
       ]
     },
@@ -113,6 +117,8 @@
       "endDate": "2022-09",
       "summary": "Built features for a construction planning SaaS platform used by 200+ companies and 1,000+ users across 2,600 job sites. Worked with React, Node.js, and Docker in the User Insights team.",
       "highlights": [
+        "200+ companies served",
+        "2,600 job sites",
         "JavaScript, React, Node.js, Docker"
       ]
     },

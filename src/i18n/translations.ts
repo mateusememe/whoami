@@ -102,6 +102,7 @@ export const translations: Translations = {
     es: "{roles} cargos en {companies} empresas, de {from} a hoy.",
   },
   "exp.current": { pt: "Atual", en: "Current", es: "Actual" },
+  "exp.results": { pt: "Resultados", en: "Results", es: "Resultados" },
 
   // Education
   "edu.title": { pt: "Educação", en: "Education", es: "Educación" },

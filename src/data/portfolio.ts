@@ -11,6 +11,14 @@ export interface LocalizedString {
   es: string;
 }
 
+/** A number a role moved, as its description states it. */
+export interface ExperienceResult {
+  /** The figure, written as each language writes numbers ("−20%", "2.600"). */
+  value: LocalizedString;
+  /** What the figure measures. */
+  label: LocalizedString;
+}
+
 export interface Experience {
   company: string;
   /** City and state, language neutral (e.g. "São Paulo, SP"). */
@@ -18,6 +26,8 @@ export interface Experience {
   role: LocalizedString;
   period: LocalizedString;
   desc: LocalizedString;
+  /** Figures from the description, shown on their own. Only numbers the description states. */
+  results?: ExperienceResult[];
   tech: string[];
 }
 
@@ -255,6 +265,9 @@ export const experiences: Experience[] = [
       en: "Worked on the search engine and high-throughput microservices used by millions of people a day. Stack: Java (Spring Boot, Quarkus), Node.js (Fastify), and TypeScript, backed by MongoDB, Redis, and Elasticsearch. Implemented circuit breakers and fallbacks, and cut product data synchronization time by 20% by optimizing Elasticsearch re-indexing. Built GraphQL (Apollo Federation) and REST APIs, async messaging with RabbitMQ and Pub/Sub, deployed to Kubernetes on GCP and Magalu Cloud via ArgoCD.",
       es: "Trabajo en el motor de búsqueda y en microservicios de alto tráfico, usados por millones de personas al día. Stack con Java (Spring Boot, Quarkus), Node.js (Fastify) y TypeScript, integrando con MongoDB, Redis y Elasticsearch. Implementé circuit breakers y fallbacks y reduje en 20% el tiempo de sincronización de datos de productos al optimizar la reindexación en Elasticsearch. APIs GraphQL (Apollo Federation) y REST, mensajería con RabbitMQ y Pub/Sub, y despliegues en Kubernetes sobre GCP y Magalu Cloud vía ArgoCD.",
     },
+    results: [
+      { value: { pt: "−20%", en: "−20%", es: "−20%" }, label: { pt: "tempo de sincronização de dados de produtos", en: "product data sync time", es: "tiempo de sincronización de datos de productos" } },
+    ],
     tech: [
       "Java",
       "Spring Boot",
@@ -295,6 +308,9 @@ export const experiences: Experience[] = [
       en: "Maintained and deployed Java microservices with Spring and Quarkus on Kubernetes, including high-throughput services with Kafka. Lowered startup time and memory use by 10%. Built REST APIs, authentication with Spring Security and JWT, MySQL and MongoDB storage, with CI/CD on Docker, Jenkins, SonarQube, and Bitbucket. Team of 12.",
       es: "Desarrollo y mantenimiento de microservicios Java con Spring y Quarkus en Kubernetes, incluidos servicios de alto volumen con Kafka. Reducción de 10% en el tiempo de inicio y en el uso de memoria. APIs REST, autenticación con Spring Security y JWT, bases MySQL y MongoDB, y CI/CD con Docker, Jenkins, SonarQube y Bitbucket. Equipo de 12 personas.",
     },
+    results: [
+      { value: { pt: "−10%", en: "−10%", es: "−10%" }, label: { pt: "tempo de inicialização e consumo de memória", en: "startup time and memory use", es: "tiempo de inicio y uso de memoria" } },
+    ],
     tech: [
       "Java",
       "Spring",
@@ -330,6 +346,9 @@ export const experiences: Experience[] = [
       en: "Built web applications using Next.js, React, and TypeScript. Improved rendering and SEO metrics by 20%. Integrated REST APIs and created interactive interfaces for no-code workflow builders.",
       es: "Desarrollo de aplicaciones web con Next.js, React y TypeScript. Optimización de renderizado y SEO con 20% de mejora en métricas de rendimiento. Integración de APIs REST y creación de interfaces interactivas para constructores de flujo no-code.",
     },
+    results: [
+      { value: { pt: "+20%", en: "+20%", es: "+20%" }, label: { pt: "métricas de performance de renderização e SEO", en: "rendering and SEO performance metrics", es: "métricas de rendimiento de renderizado y SEO" } },
+    ],
     tech: ["Next.js", "React", "TypeScript", "API Integration", "SEO"],
   },
   {
@@ -350,6 +369,9 @@ export const experiences: Experience[] = [
       en: "Maintained and updated the Offer Registration System (SRE) for the CVM. Frontend in AngularJS and jQuery; backend in Java EE (VRaptor, EJB, Quartz, Liquibase). Led the migration from Java 8 to Java 11, which reduced production bugs by 15%, and refactored SQL Server queries to cut response times.",
       es: "Mantenimiento y evolución del SRE (Sistema de Registro de Ofertas) de la CVM. Frontend con AngularJS y jQuery; backend en Java EE (VRaptor, EJB, Quartz, Liquibase). Lideré la migración de Java 8 a Java 11, que redujo en 15% los bugs en producción, y refactoricé consultas SQL Server para reducir el tiempo de respuesta.",
     },
+    results: [
+      { value: { pt: "−15%", en: "−15%", es: "−15%" }, label: { pt: "bugs em produção após a migração para o Java 11", en: "production bugs after the move to Java 11", es: "bugs en producción tras la migración a Java 11" } },
+    ],
     tech: [
       "Java EE",
       "VRaptor",
@@ -383,6 +405,10 @@ export const experiences: Experience[] = [
       en: "Built features for a construction planning SaaS platform used by 200+ companies and 1,000+ users across 2,600 job sites. Worked with React, Node.js, and Docker in the User Insights team.",
       es: "Desarrollo de funciones para plataforma SaaS de planificación de obras civiles, atendiendo a más de 200 empresas y 1.000 usuarios en 2.600 obras. Trabajo con React, Node.js y Docker en el equipo de User Insights.",
     },
+    results: [
+      { value: { pt: "200+", en: "200+", es: "200+" }, label: { pt: "empresas atendidas", en: "companies served", es: "empresas atendidas" } },
+      { value: { pt: "2.600", en: "2,600", es: "2.600" }, label: { pt: "canteiros de obras", en: "job sites", es: "obras" } },
+    ],
     tech: ["JavaScript", "React", "Node.js", "Docker"],
   },
   {

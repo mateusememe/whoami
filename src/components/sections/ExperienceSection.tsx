@@ -95,6 +95,20 @@ const ExperienceSection = () => {
                   <p className="mt-1.5 font-serif text-xl italic text-foreground/75 sm:text-2xl">{exp.role[language]}</p>
 
                   <p className="mt-5 max-w-[62ch] text-body-lg text-muted-foreground text-pretty">{exp.desc[language]}</p>
+                  {exp.results?.length ? (
+                    <dl aria-label={t("exp.results")} className="mt-6 flex flex-wrap gap-x-10 gap-y-4">
+                      {exp.results.map((result) => (
+                        <div key={result.label.en} className="flex max-w-[15rem] flex-col-reverse gap-1">
+                          <dt className="font-mono text-[11px] leading-snug text-muted-foreground sm:text-xs">
+                            {result.label[language]}
+                          </dt>
+                          <dd className="font-display text-display-sm font-semibold tabular-nums leading-none text-signal">
+                            {result.value[language]}
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                  ) : null}
                   <TagList items={exp.tech} label={t("a11y.expTech")} tone="outline" className="mt-6" />
                 </article>
               </li>

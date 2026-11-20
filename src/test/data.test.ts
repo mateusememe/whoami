@@ -21,6 +21,23 @@ const PROPER_NOUNS = /São Paulo|Mendonça|França|Florianópolis|Ciências? [^,
 // Letters Spanish does not use, and short Portuguese words with no Spanish homograph.
 const PORTUGUESE = /[ãõçêôâ]|\b(com|não|você|em|uma|seu|sua|também|então|isso|esse|essa|pelo|pela|nos|ao|aos|até|onde)\b/i;
 
+describe("Experience results", () => {
+  it("only show figures the description states, in every language", () => {
+    const withResults = portfolio.experiences.filter((item) => item.results?.length);
+    expect(withResults.length).toBeGreaterThan(3);
+    for (const experience of withResults) {
+      for (const result of experience.results!) {
+        for (const language of ["pt", "en", "es"] as const) {
+          // "−20%" → "20%", "200+" → "200", "2,600" → "2,600": the digits as the text writes them.
+          const figure = result.value[language].replace(/^[−+-]/, "").replace(/\+$/, "");
+          expect(experience.desc[language], `${experience.company}: ${figure}`).toContain(figure);
+          expect(result.label[language].length).toBeGreaterThan(3);
+        }
+      }
+    }
+  });
+});
+
 describe("Spanish copy", () => {
   it("has no Portuguese words or letters left over from translation", () => {
     const strings = [
