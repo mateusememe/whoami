@@ -13,3 +13,10 @@ export function formatMonth(month: string, language: string): string {
   if (!index) return String(year);
   return `${(MONTHS[language] ?? MONTHS.en)[index - 1]} ${year}`;
 }
+
+/** `2025-10-31` → `31 Oct 2025`; shorter dates fall back to formatMonth. */
+export function formatDate(date: string, language: string): string {
+  const [year, month, day] = date.split("-").map(Number);
+  if (!day) return formatMonth(date, language);
+  return `${day} ${(MONTHS[language] ?? MONTHS.en)[month - 1]} ${year}`;
+}

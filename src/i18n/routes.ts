@@ -1,4 +1,4 @@
-import { projects } from "@/data/portfolio";
+import { projects, talks } from "@/data/portfolio";
 import type { Language } from "@/i18n/translations";
 
 /**
@@ -8,6 +8,7 @@ import type { Language } from "@/i18n/translations";
  *
  *   home      /            /pt/            /es/
  *   project   /projects/x/ /pt/projects/x/ /es/projects/x/
+ *   talk      /talks/x/    /pt/talks/x/    /es/talks/x/
  *
  * A new kind of page is a member of `Page`, an entry in ID_PAGES or
  * SINGLE_PAGES, a loader in src/lib/lazy.ts and a route in App.tsx.
@@ -23,9 +24,10 @@ export const LANGUAGES: Language[] = ["en", "pt", "es"];
 
 /**
  * A page of the site, independent of language. Pages with an `id` exist once
- * per item (one per featured project); the others once per language.
+ * per item (one per featured project, one per talk); the others once per
+ * language.
  */
-export type Page = { kind: "home" } | { kind: "project"; id: string };
+export type Page = { kind: "home" } | { kind: "project"; id: string } | { kind: "talk"; id: string };
 
 export type PageKind = Page["kind"];
 type IdPage = Extract<Page, { id: string }>;
@@ -36,9 +38,13 @@ export const HOME: Page = { kind: "home" };
 /** Projects with their own page: the featured ones (content in src/data/projectPages.ts). */
 export const PROJECT_PAGE_IDS: string[] = projects.filter((project) => project.featured).map((project) => project.id);
 
+/** Every talk has a page (content in src/data/talkPages.ts). */
+export const TALK_PAGE_IDS: string[] = talks.map((talk) => talk.id);
+
 /** Pages with an id: the URL segment before the id, and the ids that have a page. */
 const ID_PAGES: { [K in IdPage["kind"]]: { segment: string; ids: string[] } } = {
   project: { segment: "projects", ids: PROJECT_PAGE_IDS },
+  talk: { segment: "talks", ids: TALK_PAGE_IDS },
 };
 
 /** Pages without an id: their URL segment. */

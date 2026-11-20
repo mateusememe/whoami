@@ -49,7 +49,14 @@ const TalksSection = () => {
                   <span aria-hidden="true">·</span>
                   <span>{talk.event[language]}</span>
                 </p>
-                <h3 className="mt-3 font-display text-display-sm font-semibold text-foreground">{talk.title}</h3>
+                <h3 lang={talk.titleLang ?? "pt-BR"} className="mt-3 font-display text-display-sm font-semibold text-foreground">
+                  <Link
+                    to={pagePath(language, { kind: "talk", id: talk.id })}
+                    className="link-underline inline-block py-0.5 transition-colors duration-base hover:text-signal"
+                  >
+                    {talk.title}
+                  </Link>
+                </h3>
                 <p className="mt-3 max-w-[62ch] text-body-lg text-muted-foreground text-pretty">{talk.desc[language]}</p>
                 <p className="mt-3 font-mono text-[11px] text-muted-foreground sm:text-xs">
                   {talk.organizer} · {talk.online ? t("talks.online") : talk.city}

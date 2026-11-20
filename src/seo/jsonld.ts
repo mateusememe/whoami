@@ -22,22 +22,32 @@ import {
 import { HOME, HTML_LANG, LANGUAGE_PATHS, LANGUAGES, PROJECT_PAGE_IDS, pagePath, type Page } from "@/i18n/routes";
 import { translations, type Language } from "@/i18n/translations";
 import { projectPages } from "@/data/projectPages";
+import { talkPages } from "@/data/talkPages";
 import { OG_IMAGE_FILES } from "@/seo/files";
-import { currentRole, pageMeta, projectById, seoDescription, tr } from "@/seo/meta";
+import { currentRole, pageMeta, projectById, seoDescription, talkById, tr } from "@/seo/meta";
 import { parsePeriod, siteHref } from "@/seo/site";
 
 export { currentRole, seoDescription };
 
 const SPDX = (id: string) => `https://spdx.org/licenses/${id}.html`;
 
-/** A talk as a schema.org Event. Dates are as precise as the record: `2022-10-28`, `2026-10` or `2023`. */
-function talkEvent(language: Language, talk: (typeof talks)[number], personId: string) {
+/**
+ * A talk as a schema.org Event (EducationEvent for a workshop), with its
+ * page on the site as the URL and the open material as the featured work.
+ * Dates are as precise as the record: `2022-10-28`, `2026-10` or `2023`.
+ */
+function talkEvent(language: Language, siteUrl: string, talk: (typeof talks)[number], personId: string) {
   const [city, region] = talk.city.split(", ");
+  const page = siteHref(siteUrl, pagePath(language, { kind: "talk", id: talk.id }));
+  const hours = talkPages[talk.id]?.hours;
+  const material = talk.links.slides ?? talk.links.repo;
   return {
-    "@type": "Event",
+    "@type": talk.kind === "workshop" ? "EducationEvent" : "Event",
+    "@id": `${page}#event`,
     name: `${talk.title} — ${talk.event[language]}`,
     description: talk.desc[language],
     startDate: talk.date,
+    ...(hours ? { duration: `PT${hours}H` } : {}),
     ...(talk.online
       ? {
           eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
@@ -53,7 +63,10 @@ function talkEvent(language: Language, talk: (typeof talks)[number], personId: s
         }),
     organizer: { "@type": "Organization", name: talk.organizer },
     performer: [{ "@id": personId }, ...(talk.coSpeakers ?? []).map((name) => ({ "@type": "Person", name }))],
-    ...(talkUrl(talk) ? { url: talkUrl(talk) } : {}),
+    url: page,
+    ...(talk.links.event ? { sameAs: talk.links.event } : {}),
+    ...(material ? { workFeatured: { "@type": "CreativeWork", name: talk.title, url: material } } : {}),
+    ...(talk.tech.length ? { keywords: talk.tech.join(", ") } : {}),
     inLanguage: "pt-BR",
   };
 }
@@ -83,6 +96,7 @@ function article(item: (typeof publications)[number], personId: string, about?: 
 
 export function buildJsonLd(language: Language, siteUrl: string, target: Page = HOME): Record<string, unknown> {
   if (target.kind === "project") return buildProjectJsonLd(language, siteUrl, target.id);
+  if (target.kind === "talk") return buildTalkJsonLd(language, siteUrl, target.id);
   const home = siteHref(siteUrl);
   const page = siteHref(siteUrl, LANGUAGE_PATHS[language]);
   const personId = `${home}#person`;
@@ -170,7 +184,7 @@ export function buildJsonLd(language: Language, siteUrl: string, target: Page = 
           })),
         ],
         award: tr(language, "skills.scholarship"),
-        performerIn: talks.map((talk) => talkEvent(language, talk, personId)),
+        performerIn: talks.map((talk) => talkEvent(language, siteUrl, talk, personId)),
         sameAs: socialLinks.filter((link) => !link.href.startsWith("mailto:")).map((link) => link.href),
         ...(mail
           ? {
@@ -271,6 +285,55 @@ function buildProjectJsonLd(language: Language, siteUrl: string, id: string): Re
           { "@type": "ListItem", position: 1, name: profile.name, item: homeUrl },
           { "@type": "ListItem", position: 2, name: tr(language, "projects.title"), item: `${homeUrl}#projects` },
           { "@type": "ListItem", position: 3, name: project.name, item: url },
+        ],
+      },
+    ],
+  };
+}
+
+function buildTalkJsonLd(language: Language, siteUrl: string, id: string): Record<string, unknown> {
+  const talk = talkById(id);
+  if (!talk) throw new Error(`Unknown talk: ${id}`);
+  const home = siteHref(siteUrl);
+  const meta = pageMeta({ kind: "talk", id }, language);
+  const url = siteHref(siteUrl, meta.path);
+  const personId = `${home}#person`;
+  const websiteId = `${home}#website`;
+  const homeUrl = siteHref(siteUrl, LANGUAGE_PATHS[language]);
+  const event = talkEvent(language, siteUrl, talk, personId);
+  const topics = talkPages[id]?.topics[language];
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      { "@type": "WebSite", "@id": websiteId, url: home, name: profile.name, publisher: { "@id": personId } },
+      { "@type": "Person", "@id": personId, name: profile.name, url: home },
+      {
+        "@type": "WebPage",
+        "@id": `${url}#webpage`,
+        url,
+        name: meta.title,
+        description: meta.description,
+        inLanguage: HTML_LANG[language],
+        isPartOf: { "@id": websiteId },
+        mainEntity: { "@id": event["@id"] },
+        breadcrumb: { "@id": `${url}#breadcrumb` },
+        dateModified: profile.updatedAt,
+        primaryImageOfPage: {
+          "@type": "ImageObject",
+          url: siteHref(siteUrl, OG_IMAGE_FILES[language]),
+          width: 1200,
+          height: 630,
+        },
+      },
+      { ...event, ...(topics ? { abstract: topics.join(" ") } : {}) },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${url}#breadcrumb`,
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: profile.name, item: homeUrl },
+          { "@type": "ListItem", position: 2, name: tr(language, "talks.title"), item: `${homeUrl}#talks` },
+          { "@type": "ListItem", position: 3, name: talk.title, item: url },
         ],
       },
     ],

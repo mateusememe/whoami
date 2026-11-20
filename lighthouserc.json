@@ -6,7 +6,8 @@
       "url": [
         "http://localhost:4174/",
         "http://localhost:4174/pt/",
-        "http://localhost:4174/projects/rinha-backend-2026-c/"
+        "http://localhost:4174/projects/rinha-backend-2026-c/",
+        "http://localhost:4174/talks/time-series-infoeste-2024/"
       ],
       "numberOfRuns": 3,
       "settings": {

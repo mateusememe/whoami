@@ -9,6 +9,7 @@ import {
   LANGUAGES,
   PAGES,
   PROJECT_PAGE_IDS,
+  TALK_PAGE_IDS,
   isHomePath,
   isPrerenderedPath,
   languageFromPath,
@@ -70,7 +71,9 @@ describe("language routes", () => {
     expect(isPrerenderedPath("/projects/kruskal-algorithm/")).toBe(false);
     expect(isPrerenderedPath("/projects/nope/")).toBe(false);
     expect(isPrerenderedPath("/en/")).toBe(false);
-    expect(PAGES).toHaveLength(1 + PROJECT_PAGE_IDS.length);
+    expect(PAGES).toHaveLength(1 + PROJECT_PAGE_IDS.length + TALK_PAGE_IDS.length);
+    expect(isPrerenderedPath("/es/talks/git-infoeste-2022/")).toBe(true);
+    expect(isPrerenderedPath("/talks/nope/")).toBe(false);
   });
 
   it("maps every page to one URL per language and back", () => {
@@ -251,11 +254,12 @@ describe("JSON-LD", () => {
 
   it("lists the talks as events the person performed in", () => {
     expect(person.performerIn).toHaveLength(talks.length);
-    for (const event of person.performerIn) {
-      expect(event["@type"]).toBe("Event");
+    person.performerIn.forEach((event: any, index: number) => {
+      expect(event["@type"]).toBe(talks[index].kind === "workshop" ? "EducationEvent" : "Event");
+      expect(event.url).toBe(siteHref(DEFAULT_SITE_URL, `talks/${talks[index].id}/`));
       expect(event.startDate).toMatch(/^\d{4}(-\d{2}(-\d{2})?)?$/);
       expect(event.performer[0]["@id"]).toBe(person["@id"]);
-    }
+    });
     const online = person.performerIn.filter((event: any) => event.eventAttendanceMode.endsWith("OnlineEventAttendanceMode"));
     expect(online).toHaveLength(talks.filter((talk) => talk.online).length);
     for (const event of online) expect(event.location["@type"]).toBe("VirtualLocation");

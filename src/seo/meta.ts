@@ -3,7 +3,7 @@
  * build-time <head> (head.ts) and the browser, which updates the document
  * head on client-side navigation (useDocumentHead).
  */
-import { experiences, projects } from "@/data/portfolio";
+import { experiences, projects, talks } from "@/data/portfolio";
 import { pagePath, type Page } from "@/i18n/routes";
 import { translations, type Language } from "@/i18n/translations";
 
@@ -40,6 +40,10 @@ export function projectById(id: string) {
   return projects.find((project) => project.id === id);
 }
 
+export function talkById(id: string) {
+  return talks.find((talk) => talk.id === id);
+}
+
 export function pageMeta(page: Page, language: Language): PageMeta {
   const path = pagePath(language, page);
   if (page.kind === "project") {
@@ -48,6 +52,16 @@ export function pageMeta(page: Page, language: Language): PageMeta {
       return {
         title: tr(language, "seo.projectTitle", { name: project.name }),
         description: clip(project.desc[language]),
+        path,
+      };
+    }
+  }
+  if (page.kind === "talk") {
+    const talk = talkById(page.id);
+    if (talk) {
+      return {
+        title: tr(language, "seo.talkTitle", { title: talk.title, kind: tr(language, `talks.${talk.kind}`).toLowerCase() }),
+        description: clip(talk.desc[language]),
         path,
       };
     }

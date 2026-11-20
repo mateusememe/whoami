@@ -124,8 +124,9 @@ function citation(item: (typeof publications)[number]): string {
   return publicationReference(item).full;
 }
 
-function talkLine(language: Language, talk: (typeof talks)[number]): string {
+function talkLine(language: Language, talk: (typeof talks)[number], siteUrl: string): string {
   const links = [
+    `[${tr(language, "talk.page")}](${siteHref(siteUrl, pagePath(language, { kind: "talk", id: talk.id }))})`,
     talk.links.repo ? `[${tr(language, "talks.repo")}](${talk.links.repo})` : "",
     talk.links.slides ? `[${tr(language, "talks.slides")}](${talk.links.slides})` : "",
     talk.links.notebook ? `[${tr(language, "talks.notebook")}](${talk.links.notebook})` : "",
@@ -234,7 +235,7 @@ export function renderProfileMarkdown(language: Language, siteUrl: string): stri
   }
 
   lines.push("", `## ${tr(language, "talks.title")}`, "");
-  for (const talk of talks) lines.push(talkLine(language, talk));
+  for (const talk of talks) lines.push(talkLine(language, talk, siteUrl));
 
   lines.push("", `## ${tr(language, "contact.title")}`, "", tr(language, "contact.cta"), "", ...contactLines(), "");
   return lines.join("\n");
@@ -306,9 +307,12 @@ export function renderLlmsTxt(siteUrl: string): string {
 
   lines.push("", "## Talks", "");
   for (const talk of talks) {
-    const url = talkUrl(talk);
+    const page = siteHref(siteUrl, pagePath("en", { kind: "talk", id: talk.id }));
+    const material = talkUrl(talk);
     const people = talk.coSpeakers?.length ? ` With ${talk.coSpeakers.join(", ")}.` : "";
-    if (url) lines.push(`- [${talk.title}](${url}): Workshop at ${talk.event.en}, ${talk.date}. ${inline(talk.desc.en)}${people}`);
+    lines.push(
+      `- [${talk.title}](${page}): Workshop at ${talk.event.en}, ${talk.date}. ${inline(talk.desc.en)}${people}${material ? ` [Material](${material})` : ""}`,
+    );
   }
 
   lines.push(

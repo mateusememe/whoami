@@ -4,10 +4,13 @@ import { Route, Routes } from "react-router-dom";
 import CommandPalette from "@/components/CommandPalette";
 import TalksSection from "@/components/sections/TalksSection";
 import ProjectPage from "@/pages/ProjectPage";
+import TalkPage from "@/pages/TalkPage";
 import { projects, publications, talkUrl, talks } from "@/data/portfolio";
 import EducationSection from "@/components/sections/EducationSection";
 import { projectPages } from "@/data/projectPages";
-import { PROJECT_PAGE_IDS } from "@/i18n/routes";
+import { talkPages } from "@/data/talkPages";
+import { PROJECT_PAGE_IDS, TALK_PAGE_IDS } from "@/i18n/routes";
+import { buildJsonLd } from "@/seo/jsonld";
 import { filterCommands } from "@/lib/commands";
 import { renderWithProviders } from "@/test/render";
 
@@ -66,12 +69,82 @@ describe("Project page", () => {
   });
 });
 
+const renderTalk = (id: string, language: "en" | "pt" | "es" = "en") =>
+  renderWithProviders(
+    <Routes>
+      <Route path="/talks/:id" element={<TalkPage />} />
+      <Route path="/:lang/talks/:id" element={<TalkPage />} />
+    </Routes>,
+    language,
+    language === "en" ? `/talks/${id}/` : `/${language}/talks/${id}/`,
+  );
+
+describe("Talk page", () => {
+  it("shows the talk with its facts, topics, prerequisites and material", () => {
+    const talk = talks.find((item) => item.id === "react-infoeste-2022")!;
+    renderTalk(talk.id, "pt");
+    expect(screen.getByRole("heading", { level: 1, name: talk.title })).toHaveAttribute("lang", "pt-BR");
+    expect(screen.getByText("27 Out 2022")).toBeInTheDocument();
+    expect(screen.getByText("8 horas")).toBeInTheDocument();
+    expect(screen.getByText(talk.coSpeakers!.join(", "))).toBeInTheDocument();
+    for (const topic of talkPages[talk.id].topics.pt) expect(screen.getByText(topic)).toBeInTheDocument();
+    expect(screen.getByText(talkPages[talk.id].prerequisites!.pt)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Página do evento/ })).toHaveAttribute("href", talk.links.event);
+  });
+
+  it("links the code, the slides and the project page, and marks an English title", () => {
+    const talk = talks.find((item) => item.id === "mcp-devfest-2026")!;
+    renderTalk(talk.id);
+    expect(screen.getByRole("heading", { level: 1, name: talk.title })).toHaveAttribute("lang", "en");
+    expect(screen.getByRole("link", { name: /Code/ })).toHaveAttribute("href", talk.links.repo);
+    expect(screen.getByRole("link", { name: /Slides/ })).toHaveAttribute("href", talk.links.slides);
+    expect(screen.getByRole("link", { name: /megabrain-context-protocol/ })).toHaveAttribute(
+      "href",
+      "/projects/megabrain-context-protocol/",
+    );
+  });
+
+  it("links the neighbouring talks and renders 404 content for an unknown id", () => {
+    renderTalk(TALK_PAGE_IDS[0], "es");
+    const hrefs = within(screen.getByRole("navigation", { name: "Otras charlas" }))
+      .getAllByRole("link")
+      .map((link) => link.getAttribute("href"));
+    expect(hrefs).toEqual([`/es/talks/${TALK_PAGE_IDS.at(-1)}/`, `/es/talks/${TALK_PAGE_IDS[1]}/`]);
+  });
+
+  it("has content for every talk, with 2 or 4 topics in each language", () => {
+    expect(Object.keys(talkPages).sort()).toEqual([...TALK_PAGE_IDS].sort());
+    for (const content of Object.values(talkPages)) {
+      for (const language of ["pt", "en", "es"] as const) {
+        expect([2, 4]).toContain(content.topics[language].length);
+        expect(content.topics[language].length).toBe(content.topics.en.length);
+      }
+    }
+  });
+
+  it("describes the talk as an event in JSON-LD, with its length and material", () => {
+    // JSON-LD read back as untyped JSON.
+    type Node = Record<string, unknown> & { "@id"?: string; mainEntity?: { "@id": string }; itemListElement?: unknown[] };
+    const graph = buildJsonLd("en", "https://example.test/whoami", { kind: "talk", id: "node-infoeste-2022" })["@graph"] as Node[];
+    const event = graph.find((node) => node["@type"] === "EducationEvent")!;
+    expect(event.url).toBe("https://example.test/whoami/talks/node-infoeste-2022/");
+    expect(event.duration).toBe("PT8H");
+    expect(event.sameAs).toBe(talks.find((item) => item.id === "node-infoeste-2022")!.links.event);
+    const page = graph.find((node) => node["@type"] === "WebPage")!;
+    expect(page.mainEntity?.["@id"]).toBe(event["@id"]);
+    expect(graph.find((node) => node["@type"] === "BreadcrumbList")!.itemListElement).toHaveLength(3);
+  });
+});
+
 describe("Talks", () => {
   it("lists every talk with its event, date and open material", () => {
     renderWithProviders(<TalksSection />, "en");
     expect(screen.getByRole("heading", { level: 2, name: /Talks & workshops/ })).toBeInTheDocument();
     for (const talk of talks) {
-      expect(screen.getByRole("heading", { level: 3, name: talk.title })).toBeInTheDocument();
+      expect(within(screen.getByRole("heading", { level: 3, name: talk.title })).getByRole("link")).toHaveAttribute(
+        "href",
+        `/talks/${talk.id}/`,
+      );
       const links = screen.getByRole("list", { name: `Material for ${talk.title}` });
       if (talk.links.repo) expect(within(links).getByRole("link", { name: /Code/ })).toHaveAttribute("href", talk.links.repo);
       if (talk.links.slides) expect(within(links).getByRole("link", { name: /Slides/ })).toHaveAttribute("href", talk.links.slides);

@@ -3,8 +3,8 @@
 // - dist/404.html: the empty SPA shell, so unknown paths render NotFound on
 //   the client instead of hydrating the home page markup.
 // - One index.html per page and language (src/i18n/routes.ts): the home page
-//   at /, /pt/, /es/ and each featured project at /projects/<id>/ (and the
-//   /pt/, /es/ versions), with that page's <html lang>, title, descriptions,
+//   at /, /pt/, /es/, each featured project at /projects/<id>/ and each talk
+//   at /talks/<id>/ (and the /pt/, /es/ versions), with that page's <html lang>, title, descriptions,
 //   canonical URL, hreflang links and JSON-LD. Crawlers and agents get
 //   content and metadata without running JavaScript.
 
@@ -51,7 +51,9 @@ for (const target of PAGES) {
 }
 
 rmSync(ssrDir, { recursive: true, force: true });
-const homes = written.filter((line) => !line.includes("/projects/"));
+const perKind = PAGES.reduce<Record<string, number>>((counts, page) => ({ ...counts, [page.kind]: (counts[page.kind] ?? 0) + LANGUAGES.length }), {});
 console.log(
-  `✓ prerendered ${written.length} pages: ${homes.join(", ")} and ${written.length - homes.length} project pages; 404.html shell written`,
+  `✓ prerendered ${written.length} pages (${Object.entries(perKind)
+    .map(([kind, count]) => `${count} ${kind}`)
+    .join(", ")}); 404.html shell written`,
 );

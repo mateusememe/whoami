@@ -36,6 +36,12 @@ export const translations: Translations = {
     es: "{name} — proyecto de Mateus Mendonça",
   },
 
+  "seo.talkTitle": {
+    pt: "{title} — {kind} de Mateus Mendonça",
+    en: "{title} — {kind} by Mateus Mendonça",
+    es: "{title} — {kind} de Mateus Mendonça",
+  },
+
   // Hero
   "hero.title": {
     pt: "Backend Software Engineer",
@@ -193,6 +199,18 @@ export const translations: Translations = {
   "talks.online": { pt: "Online", en: "Online", es: "En línea" },
   "talks.event": { pt: "Página do evento", en: "Event page", es: "Página del evento" },
   "talks.project": { pt: "Projeto", en: "Project", es: "Proyecto" },
+  "talk.date": { pt: "Data", en: "Date", es: "Fecha" },
+  "talk.place": { pt: "Local", en: "Place", es: "Lugar" },
+  "talk.length": { pt: "Duração", en: "Length", es: "Duración" },
+  "talk.hours": { pt: "{hours} horas", en: "{hours} hours", es: "{hours} horas" },
+  "talk.organizer": { pt: "Organização", en: "Organizer", es: "Organización" },
+  "talk.coSpeakers": { pt: "Com", en: "With", es: "Con" },
+  "talk.topics": { pt: "O que foi visto", en: "What it covered", es: "Qué se vio" },
+  "talk.prerequisites": { pt: "Pré-requisitos", en: "Prerequisites", es: "Requisitos previos" },
+  "talk.material": { pt: "Material", en: "Material", es: "Material" },
+  "talk.video": { pt: "Gravação", en: "Recording", es: "Grabación" },
+  "talk.page": { pt: "Página da palestra", en: "Talk page", es: "Página de la charla" },
+  "talk.back": { pt: "Todas as palestras", en: "All talks", es: "Todas las charlas" },
 
   // Project pages
   "project.back": { pt: "Todos os projetos", en: "All projects", es: "Todos los proyectos" },
@@ -352,5 +370,7 @@ export const translations: Translations = {
   "a11y.openProject": { pt: "Abrir a página de {name}", en: "Open the {name} page", es: "Abrir la página de {name}" },
   "a11y.talkLinks": { pt: "Material de {title}", en: "Material for {title}", es: "Material de {title}" },
   "a11y.projectNav": { pt: "Outros projetos", en: "Other projects", es: "Otros proyectos" },
+  "a11y.talkTech": { pt: "Tecnologias de {title}", en: "Technologies in {title}", es: "Tecnologías de {title}" },
+  "a11y.talkNav": { pt: "Outras palestras", en: "Other talks", es: "Otras charlas" },
   "a11y.breadcrumb": { pt: "Você está em", en: "You are here", es: "Estás en" },
 };

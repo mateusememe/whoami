@@ -82,6 +82,8 @@ export interface TalkItem {
   id: string;
   /** Title as announced, in the language it was given. */
   title: string;
+  /** Language of the title when it is not Portuguese (BCP 47), for screen readers. */
+  titleLang?: string;
   kind: "workshop" | "talk";
   event: LocalizedString;
   organizer: string;
@@ -861,6 +863,7 @@ export const talks: TalkItem[] = [
   {
     id: "mcp-devfest-2026",
     title: "MCP: MegaBrain Context Protocol",
+    titleLang: "en",
     kind: "workshop",
     event: { pt: "DevFest Presidente Prudente 2026", en: "DevFest Presidente Prudente 2026", es: "DevFest Presidente Prudente 2026" },
     organizer: "GDG Presidente Prudente",
@@ -905,6 +908,7 @@ export const talks: TalkItem[] = [
   {
     id: "ai-autopsy-devfest-2025",
     title: "AI Autopsy",
+    titleLang: "en",
     kind: "workshop",
     event: { pt: "DevFest Presidente Prudente 2025", en: "DevFest Presidente Prudente 2025", es: "DevFest Presidente Prudente 2025" },
     organizer: "GDG Presidente Prudente",
@@ -928,6 +932,7 @@ export const talks: TalkItem[] = [
   {
     id: "api-hero-devfest-2025",
     title: "API Hero",
+    titleLang: "en",
     kind: "workshop",
     event: { pt: "DevFest Presidente Prudente 2025", en: "DevFest Presidente Prudente 2025", es: "DevFest Presidente Prudente 2025" },
     organizer: "GDG Presidente Prudente",

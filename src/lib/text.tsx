@@ -12,4 +12,4 @@ export const withCode = (text: string): ReactNode =>
     ),
   );
 
-export { formatMonth } from "./dates";
+export { formatDate, formatMonth } from "./dates";

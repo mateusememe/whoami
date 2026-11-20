@@ -57,6 +57,7 @@ export const AppRoutes = () => (
         {["", "/pt", "/es"].map((prefix) => [
           <Route key={`${prefix}/`} path={prefix || "/"} element={<Index />} />,
           <Route key={`${prefix}/projects`} path={`${prefix}/projects/:id`} element={<LazyPage kind="project" />} />,
+          <Route key={`${prefix}/talks`} path={`${prefix}/talks/:id`} element={<LazyPage kind="talk" />} />,
         ])}
         <Route path="*" element={<NotFound />} />
       </Route>

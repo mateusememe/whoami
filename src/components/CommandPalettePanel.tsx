@@ -28,10 +28,10 @@ import {
 } from "lucide-react";
 import { useLanguage, type Language } from "@/contexts/LanguageContext";
 import { NAV_ITEMS } from "@/data/navigation";
-import { projects, socialLinks, talkUrl, talks } from "@/data/portfolio";
+import { projects, socialLinks, talks } from "@/data/portfolio";
 import { useSiteNavigation } from "@/hooks/useSiteNavigation";
 import { useTheme } from "@/hooks/useTheme";
-import { LANGUAGES, PROJECT_PAGE_IDS } from "@/i18n/routes";
+import { LANGUAGES, PROJECT_PAGE_IDS, pagePath } from "@/i18n/routes";
 import { CV_FILES, RESUME_FILES } from "@/seo/files";
 import { SOURCE_REPO_URL } from "@/seo/site";
 import { scrollToTarget, setScrollLocked } from "@/motion/scroll";
@@ -152,8 +152,7 @@ const CommandPalettePanel = ({ onClose, onToast }: CommandPalettePanelProps) => 
           hint: talk.event[language],
           keywords: `${talk.tech.join(" ")} ${t(`talks.${talk.kind}`)}`,
           icon: Presentation,
-          external: true,
-          run: () => openExternal(talkUrl(talk) ?? ""),
+          run: () => navigate(pagePath(language, { kind: "talk", id: talk.id })),
         }),
       ),
       ...(mail

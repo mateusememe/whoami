@@ -129,11 +129,12 @@ export function createAgentTools({ language, siteUrl, goToSection }: AgentToolsO
     },
     {
       name: "list_talks",
-      description: `Lists the talks and workshops ${profile.name} gave, with event, date, co-speakers and links to the code and slides.`,
+      description: `Lists the talks and workshops ${profile.name} gave, with event, date, co-speakers, what each covered, its page on the site and links to the code and slides.`,
       inputSchema: { type: "object", properties: { language: languageProperty } },
       annotations: { readOnlyHint: true },
-      execute: (input) => {
+      execute: async (input) => {
         const chosen = pickLanguage(input, language);
+        const { talkPages } = await import("@/data/talkPages");
         return text(
           JSON.stringify(
             {
@@ -146,6 +147,9 @@ export function createAgentTools({ language, siteUrl, goToSection }: AgentToolsO
                 date: talk.date,
                 description: talk.desc[chosen],
                 coSpeakers: talk.coSpeakers ?? [],
+                topics: talkPages[talk.id]?.topics[chosen] ?? [],
+                ...(talkPages[talk.id]?.hours ? { hours: talkPages[talk.id].hours } : {}),
+                page: `${siteUrl}${pagePath(chosen, { kind: "talk", id: talk.id })}`,
                 links: talk.links,
               })),
             },
