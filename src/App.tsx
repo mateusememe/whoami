@@ -5,7 +5,7 @@ import { languageFromPath, pagePath, parseRoute, stripBase } from "@/i18n/routes
 import SiteLayout from "@/components/SiteLayout";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-import { ProjectPageRoute } from "./pages/lazyPages";
+import { LazyPage } from "./pages/lazyPages";
 
 interface AppProvidersProps {
   children: ReactNode;
@@ -56,7 +56,7 @@ export const AppRoutes = () => (
       <Route element={<SiteLayout />}>
         {["", "/pt", "/es"].map((prefix) => [
           <Route key={`${prefix}/`} path={prefix || "/"} element={<Index />} />,
-          <Route key={`${prefix}/projects`} path={`${prefix}/projects/:id`} element={<ProjectPageRoute />} />,
+          <Route key={`${prefix}/projects`} path={`${prefix}/projects/:id`} element={<LazyPage kind="project" />} />,
         ])}
         <Route path="*" element={<NotFound />} />
       </Route>

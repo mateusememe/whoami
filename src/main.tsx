@@ -2,7 +2,7 @@ import { startTransition } from "react";
 import { createRoot, hydrateRoot } from "react-dom/client";
 import App from "./App.tsx";
 import { parseRoute, stripBase } from "@/i18n/routes";
-import { loadProjectPage } from "@/lib/lazy";
+import { loadPage } from "@/lib/lazy";
 import "./index.css";
 
 const container = document.getElementById("root")!;
@@ -22,9 +22,8 @@ if (container.firstElementChild && page) {
     startTransition(() => {
       hydrateRoot(container, <App />);
     });
-  // A project page is a separate chunk: load it first so the first render matches the HTML.
-  if (page.kind === "project") loadProjectPage().then(hydrate);
-  else hydrate();
+  // Every page but the home page is a separate chunk: load it first so the first render matches the HTML.
+  loadPage(page.kind).then(hydrate);
 } else {
   container.replaceChildren();
   createRoot(container).render(<App />);

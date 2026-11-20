@@ -2,10 +2,10 @@ import { renderToString } from "react-dom/server";
 import { StaticRouter } from "react-router-dom/server";
 import { AppProviders, AppRoutes } from "@/App";
 import { languageFromPath } from "@/i18n/routes";
-import { loadProjectPage } from "@/lib/lazy";
+import { loadAllPages } from "@/lib/lazy";
 
 /** Loads the lazily split pages, so render() can produce them synchronously. Await once before rendering. */
-export const prepare = () => loadProjectPage();
+export const prepare = () => loadAllPages();
 
 /**
  * Build-time render of a route to HTML. scripts/prerender.ts injects the

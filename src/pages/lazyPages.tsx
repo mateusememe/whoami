@@ -1,21 +1,23 @@
 import { useEffect, useState, type ComponentType } from "react";
-import { lazyParts, loadProjectPage } from "@/lib/lazy";
+import { lazyParts, loadPage, type LazyPageKind } from "@/lib/lazy";
 
-/** Route element for /projects/:id: the page when its chunk is loaded, a placeholder until then. */
-export const ProjectPageRoute = () => {
-  const [Page, setPage] = useState<ComponentType | null>(() => lazyParts.projectPage);
+/** Formation behind each page while its chunk loads, so the background does not jump. */
+const SCENES: Record<LazyPageKind, string> = { project: "4" };
+
+/** Route element for a lazily split page: the page when its chunk is loaded, a placeholder until then. */
+export const LazyPage = ({ kind }: { kind: LazyPageKind }) => {
+  const [Page, setPage] = useState<ComponentType | null>(() => lazyParts.pages[kind] ?? null);
 
   useEffect(() => {
     if (Page) return;
     let live = true;
-    loadProjectPage().then(() => {
-      if (live) setPage(() => lazyParts.projectPage);
+    loadPage(kind).then(() => {
+      if (live) setPage(() => lazyParts.pages[kind] ?? null);
     });
     return () => {
       live = false;
     };
-  }, [Page]);
+  }, [Page, kind]);
 
-  // Same scene as the page, so the background does not jump while the chunk arrives.
-  return Page ? <Page /> : <main data-scene="4" aria-busy="true" className="min-h-[100svh]" />;
+  return Page ? <Page /> : <main data-scene={SCENES[kind]} aria-busy="true" className="min-h-[100svh]" />;
 };

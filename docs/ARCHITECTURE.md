@@ -99,7 +99,7 @@ React renders content and nothing else. Everything that changes per frame (scrol
 | `src/components/SiteLayout.tsx` | Shell shared by every page: WebGL layer, header, palette, grain, cursor; route scroll, document head, agent tools. | no |
 | `src/hooks/useSiteNavigation.ts` | Section links that work from any page, project links with the cover View Transition. | no |
 | `src/hooks/useRouteScroll.ts`, `useDocumentHead.ts` | Scroll on navigation (restore, hash, top) and title/meta/canonical on navigation. | no |
-| `src/lib/lazy.ts`, `src/pages/lazyPages.tsx` | Lazy parts held for synchronous rendering: the project page and the palette panel. | no |
+| `src/lib/lazy.ts`, `src/pages/lazyPages.tsx` | Lazy parts held for synchronous rendering: one chunk per kind of page (`loadPage(kind)`) and the palette panel. | no |
 | `src/pages/ProjectPage.tsx`, `src/data/projectPages.ts` | Project pages and their content (both lazy chunks). | no |
 | `src/components/CommandPalette.tsx`, `CommandPalettePanel.tsx`, `src/lib/commands.ts` | ⌘K listener in the main bundle; the panel and its commands in a lazy chunk; accent-insensitive search. | no |
 | `src/seo/meta.ts` | Title, description and path per page and language (head, JSON-LD, browser). | no |
@@ -297,7 +297,7 @@ The URL wins over the saved language. At `/` a returning visitor with a saved la
 
 ```
 Card click → openProject(id, cover)
-  → loadProjectPage()                      (usually loaded already: idle preload)
+  → loadPage("project")                    (usually loaded already: idle preload)
   → cover.style.viewTransitionName = "project-cover"
   → View Transition: navigate("/projects/<id>/")
       → useRouteScroll (layout effect): new page → scroll to 0, before the "after" snapshot
@@ -425,7 +425,7 @@ Visual checks use the real build in Chrome (headless with the GPU enabled): a sw
 
 ### Prerender and hydration rules
 
-`main.tsx` hydrates every prerendered page (inside `startTransition`) and renders from scratch elsewhere. On a project URL it loads the project page chunk first, so the first client render matches the HTML; the prerender does the same through `prepare()`. Hydration needs the first client render to match the build output, so **no component may read browser state (localStorage, matchMedia, WebGL, window size, the clock) during its first render**. Read it in an effect instead, as `useTheme`, `LanguageContext`, `SceneBackground`, `Reveal`, `ProjectsSection` (pinned mode) and `LocalClock` do. Imperative DOM writes (`data-visible`, `--progress`, cover canvases) happen after mount and on attributes React does not manage. The inline script in `index.html` sets the `dark` class before paint. `src/test/prerender.test.tsx` fails on any mismatch.
+`main.tsx` hydrates every prerendered page (inside `startTransition`) and renders from scratch elsewhere. Every page but the home page is its own chunk: `main.tsx` loads it first (`loadPage(kind)`), so the first client render matches the HTML; the prerender loads them all through `prepare()`. Hydration needs the first client render to match the build output, so **no component may read browser state (localStorage, matchMedia, WebGL, window size, the clock) during its first render**. Read it in an effect instead, as `useTheme`, `LanguageContext`, `SceneBackground`, `Reveal`, `ProjectsSection` (pinned mode) and `LocalClock` do. Imperative DOM writes (`data-visible`, `--progress`, cover canvases) happen after mount and on attributes React does not manage. The inline script in `index.html` sets the `dark` class before paint. `src/test/prerender.test.tsx` fails on any mismatch.
 
 ### Search, agent and crawler surface
 

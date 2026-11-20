@@ -5,7 +5,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { HOME, pagePath, parseRoute } from "@/i18n/routes";
 import { scrollToTarget } from "@/motion/scroll";
 import { runViewTransition } from "@/motion/viewTransition";
-import { loadProjectPage } from "@/lib/lazy";
+import { loadPage } from "@/lib/lazy";
 
 /** True for clicks the browser should handle itself (new tab, new window, download). */
 export function isModifiedClick(event: MouseEvent): boolean {
@@ -64,7 +64,7 @@ export function useSiteNavigation() {
       const path = pagePath(language, { kind: "project", id });
       // The page chunk is usually loaded already (idle preload); wait for it so
       // the transition's "after" snapshot shows the page, not a placeholder.
-      loadProjectPage().then(() => {
+      loadPage("project").then(() => {
         if (cover) cover.style.viewTransitionName = "project-cover";
         runViewTransition(() =>
           flushSync(() => {

@@ -73,6 +73,19 @@ describe("language routes", () => {
     expect(PAGES).toHaveLength(1 + PROJECT_PAGE_IDS.length);
   });
 
+  it("maps every page to one URL per language and back", () => {
+    const paths = new Set<string>();
+    for (const page of PAGES) {
+      for (const language of LANGUAGES) {
+        const path = pagePath(language, page);
+        expect(path).toMatch(/\/$/);
+        expect(parseRoute(path)).toEqual({ language: language === "en" ? null : language, page });
+        paths.add(path);
+      }
+    }
+    expect(paths.size).toBe(PAGES.length * LANGUAGES.length);
+  });
+
   it("strips the deployment base", () => {
     expect(stripBase("/whoami/pt/", "/whoami/")).toBe("/pt/");
     expect(stripBase("/whoami/", "/whoami/")).toBe("/");

@@ -10,7 +10,7 @@ import { useAgentTools } from "@/agents/useAgentTools";
 import { useDocumentHead } from "@/hooks/useDocumentHead";
 import { useRouteScroll } from "@/hooks/useRouteScroll";
 import { useSceneDirector } from "@/motion/useSceneDirector";
-import { loadProjectPage } from "@/lib/lazy";
+import { loadPage } from "@/lib/lazy";
 
 /**
  * Shell shared by the home page and the project pages. The WebGL layer,
@@ -27,7 +27,7 @@ const SiteLayout = () => {
   // Fetch the project page chunk once the browser is idle, so opening a project is instant.
   useEffect(() => {
     if (typeof window.requestIdleCallback !== "function") return;
-    const id = window.requestIdleCallback(() => void loadProjectPage(), { timeout: 5000 });
+    const id = window.requestIdleCallback(() => void loadPage("project"), { timeout: 5000 });
     return () => window.cancelIdleCallback(id);
   }, []);
 
