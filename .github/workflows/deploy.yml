@@ -46,8 +46,9 @@ jobs:
 
       - name: Build production bundle
         env:
-          VITE_BASE_PATH: /whoami/
-          VITE_SITE_URL: https://mateusememe.github.io/whoami
+          # Repository variables SITE_URL and BASE_PATH move the site to a custom domain (docs/CUSTOM_DOMAIN.md).
+          VITE_BASE_PATH: ${{ vars.BASE_PATH || '/whoami/' }}
+          VITE_SITE_URL: ${{ vars.SITE_URL || 'https://mateusememe.github.io/whoami' }}
           # GoatCounter endpoint (https://<code>.goatcounter.com/count); empty leaves analytics off.
           VITE_GOATCOUNTER_URL: ${{ vars.GOATCOUNTER_URL }}
         run: npm run build
