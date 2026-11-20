@@ -1,0 +1,86 @@
+{
+  "en": {
+    "name": "Mateus Mendonça Monteiro",
+    "headline": "Backend Software Engineer · Itaú Unibanco",
+    "summary": "I build backend services in Go, Python, and Java, focusing on messaging and cloud infrastructure. Currently at Itaú Unibanco and doing MSc research at UNESP.",
+    "links": [
+      {
+        "label": "Site",
+        "value": "mateusememe.github.io/whoami"
+      },
+      {
+        "label": "GitHub",
+        "value": "github.com/mateusememe"
+      },
+      {
+        "label": "LinkedIn",
+        "value": "linkedin.com/in/mateus-men"
+      },
+      {
+        "label": "Email",
+        "value": "matt.mendon@gmail.com"
+      },
+      {
+        "label": "Résumé",
+        "value": "mateusememe.github.io/whoami/cv/mateus-mendonca-monteiro-resume-en.pdf"
+      }
+    ],
+    "hint": "Other languages: npx mateusememe --pt | --es"
+  },
+  "pt": {
+    "name": "Mateus Mendonça Monteiro",
+    "headline": "Backend Software Engineer · Itaú Unibanco",
+    "summary": "Desenvolvo microsserviços em Go, Python e Java, com foco em mensageria e infraestrutura em nuvem. Trabalho no Itaú Unibanco e pesquiso no mestrado pela UNESP.",
+    "links": [
+      {
+        "label": "Site",
+        "value": "mateusememe.github.io/whoami/pt"
+      },
+      {
+        "label": "GitHub",
+        "value": "github.com/mateusememe"
+      },
+      {
+        "label": "LinkedIn",
+        "value": "linkedin.com/in/mateus-men"
+      },
+      {
+        "label": "Email",
+        "value": "matt.mendon@gmail.com"
+      },
+      {
+        "label": "Currículo",
+        "value": "mateusememe.github.io/whoami/cv/mateus-mendonca-monteiro-curriculo-pt.pdf"
+      }
+    ],
+    "hint": "Outros idiomas: npx mateusememe --en | --es"
+  },
+  "es": {
+    "name": "Mateus Mendonça Monteiro",
+    "headline": "Backend Software Engineer · Itaú Unibanco",
+    "summary": "Desarrollo microservicios en Go, Python y Java, enfocados en mensajería e infraestructura en la nube. Trabajo en Itaú Unibanco e investigo en maestría en la UNESP.",
+    "links": [
+      {
+        "label": "Sitio",
+        "value": "mateusememe.github.io/whoami/es"
+      },
+      {
+        "label": "GitHub",
+        "value": "github.com/mateusememe"
+      },
+      {
+        "label": "LinkedIn",
+        "value": "linkedin.com/in/mateus-men"
+      },
+      {
+        "label": "Email",
+        "value": "matt.mendon@gmail.com"
+      },
+      {
+        "label": "Currículum",
+        "value": "mateusememe.github.io/whoami/cv/mateus-mendonca-monteiro-curriculum-es.pdf"
+      }
+    ],
+    "hint": "Otros idiomas: npx mateusememe --en | --pt"
+  }
+}

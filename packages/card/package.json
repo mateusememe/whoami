@@ -1,0 +1,31 @@
+{
+  "name": "mateusememe",
+  "version": "1.0.0",
+  "description": "Business card of Mateus Mendonça Monteiro, backend software engineer. Run: npx mateusememe",
+  "type": "module",
+  "bin": {
+    "mateusememe": "index.js"
+  },
+  "files": [
+    "index.js",
+    "card.json",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "business-card",
+    "npx",
+    "card",
+    "whoami"
+  ],
+  "author": "Mateus Mendonça Monteiro",
+  "homepage": "https://mateusememe.github.io/whoami",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mateusememe/whoami.git",
+    "directory": "packages/card"
+  },
+  "license": "MIT"
+}
