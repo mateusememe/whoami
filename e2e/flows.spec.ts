@@ -124,3 +124,20 @@ test("the terminal fills a phone screen and keeps its layout", async ({ page }) 
   await input.press("Enter");
   expect(await layoutIssues(page)).toEqual([]);
 });
+
+test("a project cover can be paused, stepped and scrubbed", async ({ page }) => {
+  await page.goto("/projects/8-puzzle/");
+  await settle(page);
+  const time = page.locator("output");
+  await expect.poll(async () => parseFloat((await time.textContent()) ?? "0")).toBeGreaterThan(0.2);
+  await page.getByRole("button", { name: "Pause the animation" }).click();
+  const paused = parseFloat((await time.textContent()) ?? "0");
+  await page.waitForTimeout(400);
+  expect(parseFloat((await time.textContent()) ?? "0")).toBe(paused);
+  await page.getByRole("button", { name: "Forward 0.5 s" }).click();
+  await expect.poll(async () => parseFloat((await time.textContent()) ?? "0")).toBeCloseTo(paused + 0.5, 1);
+  await page.getByRole("slider", { name: "Animation timeline" }).fill("12");
+  await expect(time).toHaveText("12.0 s");
+  await page.getByRole("button", { name: "Restart" }).click();
+  await expect(time).toHaveText("00.0 s");
+});

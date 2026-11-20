@@ -1,9 +1,10 @@
-import type { CSSProperties } from "react";
+import { useRef, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight, ArrowUpRight, BookOpen, ExternalLink, Github, Lock, Presentation, Star } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Reveal, TagList } from "@/components/ds";
-import { ProjectCover } from "@/components/covers/ProjectCover";
+import { ProjectCover, type CoverClock } from "@/components/covers/ProjectCover";
+import { CoverControls } from "@/components/covers/CoverControls";
 import { Magnetic } from "@/components/motion/Magnetic";
 import { publications, talks } from "@/data/portfolio";
 import { projectPages } from "@/data/projectPages";
@@ -13,6 +14,32 @@ import { formatMonth, withCode } from "@/lib/text";
 import { projectById } from "@/seo/meta";
 import { PageFooter } from "@/components/PageFooter";
 import NotFound from "./NotFound";
+
+/**
+ * The live cover with its controls and caption. Keyed by project, so moving
+ * to the next project starts a fresh clock at zero.
+ */
+const CoverFigure = ({ id, index, caption }: { id: string; index: string; caption: string }) => {
+  const { t } = useLanguage();
+  const clock = useRef<CoverClock>({ t: 0, playing: true, speed: 1 });
+  return (
+    <figure className="page-fade mt-10 lg:mt-14" style={{ "--i": 3 } as CSSProperties}>
+      <div
+        className="glass-card relative aspect-[4/3] overflow-hidden rounded-[1.75rem] sm:aspect-[16/9] lg:aspect-[21/9] lg:rounded-[2.25rem]"
+        style={{ viewTransitionName: "project-cover" } as CSSProperties}
+      >
+        <ProjectCover id={id} clock={clock} className="absolute inset-0 h-full w-full" />
+      </div>
+      <CoverControls clock={clock} />
+      <figcaption className="mt-3 max-w-[70ch] font-mono text-[11px] leading-relaxed text-muted-foreground sm:text-xs">
+        <span className="text-signal">
+          {t("project.figure")} {index}
+        </span>{" "}
+        — {withCode(caption)}
+      </figcaption>
+    </figure>
+  );
+};
 
 /**
  * One featured project: the live cover at full width, the facts, the
@@ -95,20 +122,7 @@ const ProjectPage = () => {
           </dl>
         </header>
 
-        <figure className="page-fade mt-10 lg:mt-14" style={{ "--i": 3 } as CSSProperties}>
-          <div
-            className="glass-card relative aspect-[4/3] overflow-hidden rounded-[1.75rem] sm:aspect-[16/9] lg:aspect-[21/9] lg:rounded-[2.25rem]"
-            style={{ viewTransitionName: "project-cover" } as CSSProperties}
-          >
-            <ProjectCover id={project.id} className="absolute inset-0 h-full w-full" />
-          </div>
-          <figcaption className="mt-3 max-w-[70ch] font-mono text-[11px] leading-relaxed text-muted-foreground sm:text-xs">
-            <span className="text-signal">
-              {t("project.figure")} {index}
-            </span>{" "}
-            — {withCode(content.cover[language])}
-          </figcaption>
-        </figure>
+        <CoverFigure key={project.id} id={project.id} index={index} caption={content.cover[language]} />
 
         <div className="mt-14 grid gap-x-10 gap-y-10 lg:mt-20 lg:grid-cols-12">
           <Reveal as="p" className="text-display-sm text-foreground text-pretty lg:col-span-7">

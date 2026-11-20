@@ -1,13 +1,31 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type MutableRefObject } from "react";
 import { prefersReducedMotion } from "@/motion/env";
 import { observe, supportsObserver } from "@/motion/observe";
 import { addTick, TICK } from "@/motion/ticker";
 import { cn } from "@/lib/utils";
 
+/**
+ * An outside clock for the cover, so a page can pause it, change its speed
+ * and move through it (src/components/covers/CoverControls.tsx). The cover
+ * reads and advances it every frame; nothing here is React state.
+ */
+export interface CoverClock {
+  /** Seconds into the animation. */
+  t: number;
+  playing: boolean;
+  speed: number;
+  /** Set by the cover: applies a change to `playing`, `speed` or `t` right away. */
+  sync?: () => void;
+  /** Called with the time after each drawn frame. */
+  onFrame?: (t: number) => void;
+}
+
 interface ProjectCoverProps {
   /** Project id; picks the sketch. */
   id: string;
   className?: string;
+  /** Drive the animation from this clock instead of running it freely. */
+  clock?: MutableRefObject<CoverClock>;
 }
 
 /**
@@ -16,7 +34,7 @@ interface ProjectCoverProps {
  * runs only while it is visible. With reduced motion it draws one still
  * frame. Static HTML gets the empty, styled box.
  */
-export const ProjectCover = ({ id, className }: ProjectCoverProps) => {
+export const ProjectCover = ({ id, className, clock }: ProjectCoverProps) => {
   const hostRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -29,9 +47,28 @@ export const ProjectCover = ({ id, className }: ProjectCoverProps) => {
     let draw: ((seconds: number) => void) | null = null;
     let refreshColors: (() => void) | null = null;
     let startedAt = 0;
+    let last = 0;
+    const external = clock?.current;
 
     const play = () => {
       if (!draw || !visible) return;
+      if (external) {
+        if (!external.playing) {
+          stopTick?.();
+          stopTick = null;
+          last = 0;
+          draw(external.t);
+          external.onFrame?.(external.t);
+          return;
+        }
+        stopTick ??= addTick((time) => {
+          if (last) external.t += (time - last) * external.speed;
+          last = time;
+          draw?.(external.t);
+          external.onFrame?.(external.t);
+        }, TICK.ui);
+        return;
+      }
       if (prefersReducedMotion()) {
         draw(3.4);
         return;
@@ -75,6 +112,8 @@ export const ProjectCover = ({ id, className }: ProjectCoverProps) => {
       play();
     };
 
+    if (external) external.sync = play;
+
     let requested = false;
     const unobserve = observe(
       host,
@@ -83,6 +122,7 @@ export const ProjectCover = ({ id, className }: ProjectCoverProps) => {
         if (!visible) {
           stopTick?.();
           stopTick = null;
+          last = 0;
           return;
         }
         if (!requested) {
@@ -104,9 +144,10 @@ export const ProjectCover = ({ id, className }: ProjectCoverProps) => {
       unobserve();
       themeObserver.disconnect();
       stopTick?.();
+      if (external) external.sync = undefined;
       host.querySelector("canvas")?.remove();
     };
-  }, [id]);
+  }, [id, clock]);
 
   return <div ref={hostRef} className={cn("cover", className)} />;
 };

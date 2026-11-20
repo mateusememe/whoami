@@ -817,3 +817,8 @@ html[data-vt="reveal"]::view-transition-new(root) {
   padding: 0.5em 0.75em;
   text-align: left;
 }
+
+/* Timeline slider under a project cover (src/components/covers/CoverControls.tsx). */
+.cover-range {
+  accent-color: hsl(var(--signal));
+}

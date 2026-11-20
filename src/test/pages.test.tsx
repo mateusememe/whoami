@@ -41,6 +41,18 @@ describe("Project page", () => {
     expect(screen.getByRole("navigation", { name: "You are here" })).toHaveTextContent(project.id);
   });
 
+  it("puts play, step, restart, speed and timeline controls under the cover", () => {
+    renderProject("8-puzzle");
+    const pause = screen.getByRole("button", { name: "Pause the animation" });
+    fireEvent.click(pause);
+    expect(screen.getByRole("button", { name: "Play the animation" })).toHaveAttribute("aria-pressed", "true");
+    for (const name of ["Back 0.5 s", "Forward 0.5 s", "Restart"]) expect(screen.getByRole("button", { name })).toBeInTheDocument();
+    const speed = screen.getByRole("button", { name: /Speed/ });
+    fireEvent.click(speed);
+    expect(speed).toHaveTextContent("2×");
+    expect(screen.getByRole("slider", { name: "Animation timeline" })).toHaveAttribute("max", "30");
+  });
+
   it("links the neighbouring projects in the page language", () => {
     renderProject(PROJECT_PAGE_IDS[0], "pt");
     const nav = screen.getByRole("navigation", { name: "Outros projetos" });
