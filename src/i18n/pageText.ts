@@ -10,6 +10,10 @@ import type { Language } from "@/i18n/translations";
 type Params = Record<string, string | number>;
 
 export const pageTranslations: Record<string, Record<Language, string>> = {
+  "terminal.title": { pt: "Terminal", en: "Terminal", es: "Terminal" },
+  "terminal.close": { pt: "Fechar o terminal", en: "Close the terminal", es: "Cerrar el terminal" },
+  "terminal.output": { pt: "Saída do terminal", en: "Terminal output", es: "Salida del terminal" },
+  "terminal.command": { pt: "Comando", en: "Command", es: "Comando" },
   "notes.lead": {
     pt: "Notas sobre o que construo e estudo, com o código e os números.",
     en: "Notes on what I build and study, with the code and the numbers.",

@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import SceneBackground from "@/components/scene/SceneBackground";
 import Header from "@/components/Header";
 import CommandPalette from "@/components/CommandPalette";
+import Terminal from "@/components/Terminal";
 import { Cursor } from "@/components/motion/Cursor";
 import { Grain } from "@/components/motion/Grain";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
@@ -39,6 +40,7 @@ const SiteLayout = () => {
       <Header />
       <Outlet />
       <CommandPalette />
+      <Terminal />
       <Grain />
       <Cursor />
     </div>

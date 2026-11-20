@@ -280,6 +280,7 @@ export const translations: Translations = {
   "palette.theme": { pt: "Alternar tema claro/escuro", en: "Toggle light/dark theme", es: "Cambiar tema claro/oscuro" },
   "palette.language": { pt: "Ler em {lang}", en: "Read in {lang}", es: "Leer en {lang}" },
   "cv.download": { pt: "Baixar CV", en: "Download CV", es: "Descargar CV" },
+  "palette.terminal": { pt: "Abrir o terminal whoami", en: "Open the whoami terminal", es: "Abrir el terminal whoami" },
   "palette.cv": {
     pt: "Baixar o currículo em PDF",
     en: "Download the résumé (PDF)",

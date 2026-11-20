@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { collectErrors, settle } from "./support";
+import { collectErrors, layoutIssues, settle } from "./support";
 
 test.use({ viewport: { width: 1440, height: 900 } });
 
@@ -85,3 +85,42 @@ for (const [path, label] of [
     expect((await response.body()).subarray(0, 5).toString()).toBe("%PDF-");
   });
 }
+
+test("the terminal opens with Ctrl+`, answers and navigates", async ({ page }) => {
+  const errors = collectErrors(page);
+  await page.goto("/pt/");
+  await settle(page);
+  await page.keyboard.press("Control+Backquote");
+  const dialog = page.getByRole("dialog", { name: "Terminal" });
+  await expect(dialog).toBeVisible();
+  const input = dialog.getByRole("textbox", { name: "Comando" });
+  await expect(input).toBeFocused();
+  await input.fill("whoami");
+  await input.press("Enter");
+  await expect(dialog.getByRole("log")).toContainText("Mateus Mendonça Monteiro");
+  expect(await layoutIssues(page)).toEqual([]);
+  await input.fill("open us");
+  await input.press("Tab");
+  await expect(input).toHaveValue("open uses ");
+  await input.press("Enter");
+  await expect(page).toHaveURL(/\/pt\/uses\/$/);
+  await expect(dialog).toBeHidden();
+  await expect(page.getByRole("heading", { level: 1, name: "Ferramentas" })).toBeVisible();
+  expect(errors).toEqual([]);
+});
+
+test("the terminal fills a phone screen and keeps its layout", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 700 });
+  await page.goto("/");
+  await settle(page);
+  await page.keyboard.press("Control+Backquote");
+  const dialog = page.getByRole("dialog", { name: "Terminal" });
+  await expect(dialog).toBeVisible();
+  // Measured once the opening animation (a slight scale) has finished.
+  await expect.poll(async () => (await dialog.boundingBox())?.width ?? 0).toBeGreaterThanOrEqual(374);
+  expect((await dialog.boundingBox())?.height).toBeGreaterThanOrEqual(699);
+  const input = dialog.getByRole("textbox", { name: "Command" });
+  await input.fill("ls projects");
+  await input.press("Enter");
+  expect(await layoutIssues(page)).toEqual([]);
+});

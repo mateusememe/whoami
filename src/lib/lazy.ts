@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
 import type { CommandPalettePanelProps } from "@/components/CommandPalettePanel";
+import type { TerminalPanelProps } from "@/components/TerminalPanel";
 import type { PageKind } from "@/i18n/routes";
 
 /** Every page but the home page is its own chunk. */
@@ -21,10 +22,12 @@ const PAGE_MODULES: Record<LazyPageKind, () => Promise<{ default: ComponentType 
 export const lazyParts: {
   pages: Partial<Record<LazyPageKind, ComponentType>>;
   palettePanel: ComponentType<CommandPalettePanelProps> | null;
-} = { pages: {}, palettePanel: null };
+  terminalPanel: ComponentType<TerminalPanelProps> | null;
+} = { pages: {}, palettePanel: null, terminalPanel: null };
 
 const pending: Partial<Record<LazyPageKind, Promise<void>>> = {};
 let palettePanel: Promise<void> | null = null;
+let terminalPanel: Promise<void> | null = null;
 
 /**
  * A page chunk. main.tsx awaits it before hydrating a URL of that kind and
@@ -50,4 +53,12 @@ export function loadCommandPalette(): Promise<void> {
     lazyParts.palettePanel = module.default;
   });
   return palettePanel;
+}
+
+/** The terminal panel, loaded on first open. */
+export function loadTerminal(): Promise<void> {
+  terminalPanel ??= import("@/components/TerminalPanel").then((module) => {
+    lazyParts.terminalPanel = module.default;
+  });
+  return terminalPanel;
 }

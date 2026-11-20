@@ -38,3 +38,10 @@ export function filterCommands<T extends Searchable>(commands: T[], query: strin
   return scored.sort((a, b) => a.score - b.score).map((entry) => entry.command);
 }
 
+
+/** Event that opens the whoami terminal (palette command, Ctrl+`). */
+export const TERMINAL_EVENT = "whoami:terminal";
+
+export function openTerminal(): void {
+  window.dispatchEvent(new CustomEvent(TERMINAL_EVENT));
+}

@@ -24,6 +24,7 @@ import {
   Hash,
   Languages,
   Moon,
+  SquareTerminal,
   NotebookPen,
   Presentation,
   Search,
@@ -39,7 +40,7 @@ import { CV_FILES, RESUME_FILES } from "@/seo/files";
 import { SOURCE_REPO_URL } from "@/seo/site";
 import { scrollToTarget, setScrollLocked } from "@/motion/scroll";
 import { runViewTransition } from "@/motion/viewTransition";
-import { filterCommands } from "@/lib/commands";
+import { filterCommands, openTerminal } from "@/lib/commands";
 import { cn } from "@/lib/utils";
 
 type Group = "sections" | "projects" | "talks" | "pages" | "actions" | "links";
@@ -224,6 +225,15 @@ const CommandPalettePanel = ({ onClose, onToast }: CommandPalettePanelProps) => 
           run: () => runViewTransition(() => flushSync(() => setLanguage(code))),
         }),
       ),
+      {
+        id: "terminal",
+        group: "actions",
+        label: t("palette.terminal"),
+        hint: "Ctrl+`",
+        keywords: "whoami terminal shell console cli",
+        icon: SquareTerminal,
+        run: () => openTerminal(),
+      },
       {
         id: "cv",
         group: "actions",
